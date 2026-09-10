@@ -20,26 +20,42 @@ const WAYPOINTS = [
 
 export function TrailSection() {
   return (
-    <section id="trail" className="bg-pine-2 py-32">
-      <div className="mx-auto max-w-[var(--page-w)] px-6">
-        <h2 className="mb-16 font-display text-4xl font-bold text-chalk">
-          Bản đồ hành trình
-        </h2>
+    <section id="trail" className="flex py-32">
+      <div
+        className="mx-auto flex w-full max-w-[var(--page-w)] flex-col px-6"
+        style={{ maxHeight: "calc(100svh - 8rem)" }}
+      >
+        <Reveal direction="left">
+          <h2 className="mb-8 font-display text-3xl font-bold text-ink sm:text-4xl">
+            Bản đồ hành trình
+          </h2>
+        </Reveal>
 
-        <div className="relative">
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-moss-dim" />
+        <div className="relative overflow-y-auto pr-2">
+          {/* đường nối - căn giữa tâm hình tròn (w-10 = 40px -> tâm ở 20px = left-5) */}
+          <div className="absolute left-5 top-0 bottom-0 w-px bg-sage/40" />
 
-          {WAYPOINTS.map((wp) => (
-            <Reveal key={wp.title}>
-              <div className="relative mb-16 pl-16">
-                <div className="absolute left-0 top-0 h-12 w-12 rounded-full border border-moss-dim bg-pine" />
-                <div className="mb-2 font-mono text-xs text-moss">
+          {WAYPOINTS.map((wp, i) => (
+            <Reveal key={wp.title} direction={i % 2 === 0 ? "right" : "left"}>
+              <div className="group relative mb-8 pl-16">
+                {/* hình tròn mốc */}
+                <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border border-sage bg-paper transition-colors duration-700 ease-out group-hover:border-ochre">
+                  <span className="h-2.5 w-2.5 scale-0 rounded-full bg-ochre transition-transform duration-500 ease-out group-hover:scale-100" />
+                </div>
+
+                <div className="mb-1 font-mono text-xs text-sage">
                   {wp.elev}
                 </div>
-                <h3 className="mb-2 font-display text-2xl font-semibold text-chalk">
+
+                {/* tiêu đề - vệt sáng chạy từ trái sang khi hover */}
+                <h3 className="relative mb-1 inline-block font-display text-xl font-semibold text-ink sm:text-2xl">
                   {wp.title}
+                  <span className="absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 bg-ochre transition-transform duration-500 ease-out group-hover:scale-x-100" />
                 </h3>
-                <p className="max-w-[56ch] text-paper/70">{wp.body}</p>
+
+                <p className="max-w-[56ch] text-sm text-ink/70 transition-colors duration-500 group-hover:text-ink sm:text-base">
+                  {wp.body}
+                </p>
               </div>
             </Reveal>
           ))}

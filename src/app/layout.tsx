@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  Newsreader,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const display = Bricolage_Grotesque({
+const display = Plus_Jakarta_Sans({
   variable: "--font-display-raw",
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["600", "700", "800"],
 });
 
-const body = Newsreader({
+const body = Inter({
   variable: "--font-body-raw",
   subsets: ["latin", "vietnamese"],
-  style: ["normal", "italic"],
   weight: ["400", "500"],
 });
 
@@ -26,9 +21,14 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Đăng & Núi — Hành trình",
+  title: "Sunshine Center — Giá trị tạo nên thương hiệu",
   description:
-    "Trang cá nhân ghi lại hành trình leo núi và dạy học của một nhà cố vấn.",
+    "Sunshine Center - nơi tạo nên những giá trị bền vững cho cộng đồng.",
+  icons: {
+    icon: "/images/Sunshine_brand_without_slogan.png",
+    shortcut: "/images/Sunshine_brand_without_slogan.png",
+    apple: "/images/Sunshine_brand_without_slogan.png",
+  },
 };
 
 export default function RootLayout({

@@ -2,19 +2,33 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-export function Reveal({ children }: { children: ReactNode }) {
-  // chỉ đơn giản trỏ đến phần tử div mà chúng ta muốn quan sát
+type Direction = "up" | "left" | "right" | "scale";
+
+const HIDDEN_CLASS: Record<Direction, string> = {
+  up: "opacity-0 translate-y-6",
+  left: "opacity-0 -translate-x-10",
+  right: "opacity-0 translate-x-10",
+  scale: "opacity-0 scale-90",
+};
+
+export function Reveal({
+  children,
+  direction = "up",
+  delay = 0,
+}: {
+  children: ReactNode;
+  direction?: Direction;
+  delay?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // tạo một IntersectionObserver để quan sát phần tử div
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // nếu phần tử div xuất hiện trong viewport, chúng ta sẽ setVisible thành true
-        // và ngừng quan sát phần tử đó
         if (entry.isIntersecting) {
           setVisible(true);
           observer.unobserve(el);
@@ -22,7 +36,7 @@ export function Reveal({ children }: { children: ReactNode }) {
       },
       { threshold: 0.15 },
     );
-    // bắt đầu quan sát phần tử div
+
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
@@ -30,8 +44,11 @@ export function Reveal({ children }: { children: ReactNode }) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`transition-all duration-700 ease-out ${
+        visible
+          ? "opacity-100 translate-x-0 translate-y-0 scale-100"
+          : HIDDEN_CLASS[direction]
       }`}
     >
       {children}

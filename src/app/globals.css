@@ -1,25 +1,38 @@
 @import "tailwindcss";
 
 @theme {
-  --color-pine: #16241b;
-  --color-pine-2: #1e2e22;
-  --color-paper: #f3eede;
-  --color-chalk: #fffdf6;
-  --color-ochre: #d98a2e;
-  --color-rust: #9c4a24;
-  --color-moss: #8ca07a;
-  --color-moss-dim: #5c6e4c;
-  --color-ink: #161c14;
-  --font-display: var(--font-display-raw), sans-serif;
-  --font-body: var(--font-body-raw), serif;
-  --font-mono: var(--font-mono-raw), monospace;
+  /* Nền chính - giữ tông sáng ấm nhẹ, không đổi nhiều */
+  --color-cream: #fbf7ee;
+  --color-paper: #f4efe3;
+
+  /* Chữ chính - đổi từ nâu ấm sang navy đậm gần đen */
+  --color-ink: #1b2333;
+
+  /* Điểm nhấn chính - đổi từ cam sang vàng gold thật của logo */
+  --color-sun: #d8a73d;
+  --color-sun-soft: #f1d998;
+
+  /* Đang dùng cho nhãn nhỏ/viền phụ - đổi sang navy nhạt hơn */
+  --color-sage: #1d3868;
+
+  /* Dùng cho khối CTA nổi bật (NextTripSection) - đổi từ đỏ đất
+     sang navy đậm, khớp đúng tinh thần banner thật của Sunshine Center
+     (nền navy, chữ vàng) */
+  --color-rust: #142850;
+
+  --color-blush: #e8b7a4;
+
+  --color-navy-light: #24407a;
+}
+:root {
+  --page-w: 72rem;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--color-pine);
-  color: var(--color-paper);
-}
-
-:root {
-  --page-w: 72rem; /* tương đương max-w-6xl (1152px), đổi 1 chỗ này là mọi nơi đổi theo */
+  background: var(--color-cream);
+  color: var(--color-ink);
 }

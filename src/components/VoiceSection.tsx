@@ -1,3 +1,5 @@
+import { Reveal } from "./Reveal";
+
 const VOICES = [
   {
     quote:
@@ -18,18 +20,27 @@ const VOICES = [
 
 export function VoicesSection() {
   return (
-    <section id="voices" className="bg-pine-2 py-32">
+    <section id="voices" className="bg-sage/15 border border-sage/30 py-32">
       <div className="mx-auto max-w-[var(--page-w)] px-6">
-        <h2 className="mb-16 font-display text-4xl font-bold text-chalk">
+        <h2 className="mb-16 font-display text-4xl font-bold text-ink">
           Từ những người đã đi cùng
         </h2>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {VOICES.map((v) => (
-            <div key={v.who} className="rounded-sm border border-paper/15 p-7">
-              <p className="font-body italic text-paper/85">{v.quote}</p>
-              <div className="mt-5 font-mono text-xs text-moss">{v.who}</div>
-            </div>
+          {VOICES.map((v, i) => (
+            <Reveal
+              key={v.who}
+              direction={i % 2 === 0 ? "left" : "right"}
+              delay={i * 100}
+            >
+              <div
+                key={v.who}
+                className="rounded-sm border border-paper/15 p-7"
+              >
+                <p className="font-body italic text-ink/80">{v.quote}</p>
+                <div className="mt-5 font-mono text-xs text-sage">{v.who}</div>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
