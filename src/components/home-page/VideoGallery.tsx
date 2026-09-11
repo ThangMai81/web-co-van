@@ -1,4 +1,4 @@
-import { Reveal } from "./Reveal";
+import { Reveal } from "../animation/Reveal";
 
 const VIDEOS = [
   { title: "Ba ngày trên Tà Xùa", place: "Sơn La · Núi", len: "04:12" },
@@ -34,7 +34,7 @@ export function VideoGallery() {
             <Reveal key={v.title} direction="scale" delay={i * 80}>
               <div
                 key={v.title}
-                className="flex aspect-[4/5] cursor-pointer flex-col justify-between rounded-sm bg-sage/15 border border-sage/30 p-4 text-ink transition-transform hover:-translate-y-1"
+                className="flex aspect-[4/5] cursor-pointer flex-col justify-between rounded-sm bg-sage/15 border border-sage/30 p-4 text-ink shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-black/25"
               >
                 <span className="self-start rounded-sm bg-black/40 px-2 py-1 font-mono text-xs">
                   {v.len}

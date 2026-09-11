@@ -36,3 +36,9 @@ body {
   background: var(--color-cream);
   color: var(--color-ink);
 }
+@theme {
+  /* ... */
+  --font-display: var(--font-display-raw), sans-serif;
+  --font-body: var(--font-body-raw), serif;
+  --font-mono: Arial, Helvetica, sans-serif;
+}

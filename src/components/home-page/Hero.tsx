@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Reveal } from "./Reveal";
+import { Reveal } from "../animation/Reveal";
 
 export function Hero() {
   return (

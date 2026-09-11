@@ -1,4 +1,4 @@
-import { Reveal } from "./Reveal";
+import { Reveal } from "../animation/Reveal";
 
 const WAYPOINTS = [
   {
