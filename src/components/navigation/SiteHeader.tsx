@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getStoredUser, clearSession, type StoredUser } from "@/lib/auth";
 
 const NAV_LINKS = [
   { href: "/programs", label: "Chương trình" },
-  { href: "/coaching", label: "Dịch vụ coaching 1:1" },
+  // { href: "/coaching", label: "Dịch vụ coaching 1:1" },
+  { href: "/courses", label: "Khóa học" },
   { href: "/library", label: "Thư viện" },
   { href: "/stories", label: "Câu chuyện RNI" },
 ];
@@ -14,12 +17,35 @@ const NAV_LINKS = [
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<StoredUser | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    // Đọc trạng thái đăng nhập ngay khi component mount
+    setUser(getStoredUser());
+
+    // Lắng nghe sự kiện đăng nhập/đăng xuất phát ra từ bất kỳ đâu trong app
+    const onAuthChange = () => setUser(getStoredUser());
+    window.addEventListener("authchange", onAuthChange);
+    window.addEventListener("storage", onAuthChange);
+
+    return () => {
+      window.removeEventListener("authchange", onAuthChange);
+      window.removeEventListener("storage", onAuthChange);
+    };
+  }, []);
+
+  function handleLogout() {
+    clearSession();
+    setMenuOpen(false);
+    router.push("/");
+  }
 
   return (
     <>
@@ -56,12 +82,42 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/sign-in"
-              className="rounded-full bg-sun px-5 py-2 font-mono text-xs uppercase tracking-wider text-ink transition-colors hover:brightness-90"
-            >
-              Đăng nhập
-            </Link>
+
+            {user ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 rounded-full bg-sage/15 py-1.5 pl-1.5 pr-4">
+                  {user.avatarUrl ? (
+                    <Image
+                      src={user.avatarUrl}
+                      alt={user.name}
+                      width={28}
+                      height={28}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sun font-mono text-xs font-bold text-ink">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-ink">
+                    {user.name}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-full border border-crimson/40 px-4 py-2 font-mono text-xs uppercase tracking-wider text-crimson transition-colors hover:bg-crimson/10"
+                >
+                  Đăng xuất
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="rounded-full bg-sun px-5 py-2 font-mono text-xs uppercase tracking-wider text-ink transition-colors hover:brightness-90"
+              >
+                Đăng nhập
+              </Link>
+            )}
           </nav>
 
           <button
@@ -86,6 +142,26 @@ export function SiteHeader() {
         >
           ✕
         </button>
+
+        {user && (
+          <div className="flex items-center gap-3 rounded-full bg-sage/15 px-4 py-3">
+            {user.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.name}
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sun font-mono text-xs font-bold text-ink">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <span className="font-medium text-ink">{user.name}</span>
+          </div>
+        )}
+
         {NAV_LINKS.map((link) => (
           <Link
             key={link.href}
@@ -96,13 +172,23 @@ export function SiteHeader() {
             {link.label}
           </Link>
         ))}
-        <Link
-          href="/sign-in"
-          onClick={() => setMenuOpen(false)}
-          className="rounded-full bg-sun px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-ink"
-        >
-          Đăng nhập
-        </Link>
+
+        {user ? (
+          <button
+            onClick={handleLogout}
+            className="rounded-full border border-crimson/40 px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-crimson"
+          >
+            Đăng xuất
+          </button>
+        ) : (
+          <Link
+            href="/sign-in"
+            onClick={() => setMenuOpen(false)}
+            className="rounded-full bg-sun px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-ink"
+          >
+            Đăng nhập
+          </Link>
+        )}
       </div>
     </>
   );
