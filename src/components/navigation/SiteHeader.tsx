@@ -11,7 +11,7 @@ const NAV_LINKS = [
   // { href: "/coaching", label: "Dịch vụ coaching 1:1" },
   { href: "/courses", label: "Khóa học" },
   { href: "/library", label: "Thư viện" },
-  { href: "/stories", label: "Câu chuyện RNI" },
+  { href: "/mission", label: "Sứ mệnh" },
 ];
 
 export function SiteHeader() {

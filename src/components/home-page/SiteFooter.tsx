@@ -58,8 +58,11 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap justify-between gap-2 border-t border-paper/15 pt-6 text-xs text-ink/40">
-          <span>© 2026 Trần Minh Đăng</span>
-          <span>Thiết kế minh hoạ — thay nội dung thật khi triển khai</span>
+          <span>© 2026 Lê Thị Kim Yến</span>
+          <span>
+            Khai tâm mở lối - Tìm lại chính mình - Chạm đỉnh vinh quang - Sống
+            đời xuất chúng
+          </span>
         </div>
       </div>
     </footer>

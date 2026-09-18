@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { StoriesPage } from "./StoriesPage";
+import { StoriesPage } from "./MissionPage";
 
 export const metadata: Metadata = {
-  title: "Câu chuyện chuyển hoá — Sunshine Center",
+  title: "Sứ mệnh — Sunshine Center",
 };
 
 export default function Page() {

@@ -8,7 +8,7 @@ export function Hero() {
         <Reveal direction="up">
           <div className="mb-5 flex items-center justify-center gap-3 font-mono text-xs uppercase tracking-widest text-sun">
             <span className="block h-px w-6 bg-sun" />
-            Câu chuyện RNI
+            Câu chuyện Sunshine Center
           </div>
           <h1 className="font-display text-3xl font-bold leading-tight text-chalk md:text-5xl">
             Khai tâm mở lối, tìm lại chính mình, chạm đỉnh vinh quang, sống đời
