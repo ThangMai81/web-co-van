@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 import { getStoredUser, clearSession, type StoredUser } from "@/lib/auth";
 
 const NAV_LINKS = [
-  { href: "/programs", label: "Chương trình" },
+  { href: "/programs", label: "CHƯƠNG TRÌNH" },
   // { href: "/coaching", label: "Dịch vụ coaching 1:1" },
-  { href: "/courses", label: "Khóa học" },
-  { href: "/library", label: "Thư viện" },
-  { href: "/mission", label: "Sứ mệnh" },
+  { href: "/courses", label: "KHÓA HỌC" },
+  { href: "/library", label: "THƯ VIỆN" },
+  { href: "/mission", label: "SỨ MỆNH" },
 ];
 
 export function SiteHeader() {
@@ -27,10 +27,8 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    // Đọc trạng thái đăng nhập ngay khi component mount
     setUser(getStoredUser());
 
-    // Lắng nghe sự kiện đăng nhập/đăng xuất phát ra từ bất kỳ đâu trong app
     const onAuthChange = () => setUser(getStoredUser());
     window.addEventListener("authchange", onAuthChange);
     window.addEventListener("storage", onAuthChange);
@@ -41,8 +39,8 @@ export function SiteHeader() {
     };
   }, []);
 
-  function handleLogout() {
-    clearSession();
+  async function handleLogout() {
+    await clearSession();
     setMenuOpen(false);
     router.push("/");
   }
@@ -50,23 +48,23 @@ export function SiteHeader() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 bg-cream/95 backdrop-blur-sm transition-shadow ${
+        className={`fixed inset-x-0 top-0 z-50 bg-white backdrop-blur-sm transition-shadow ${
           scrolled ? "shadow-[0_2px_20px_rgba(20,40,80,0.08)]" : ""
         }`}
       >
         <div className="mx-auto flex max-w-[var(--page-w)] items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/images/Sunshine_brand.png"
+              src="/images/Sunshine_brand_without_slogan.png"
               alt="Sunshine Center"
               width={42}
               height={42}
             />
             <div className="leading-tight">
-              <div className="font-display text-lg font-bold text-ink">
-                Sunshine Center
+              <div className="font-display text-lg font-bold text-blue-900">
+                SUNSHINE CENTER
               </div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-sun">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-[] text-center">
                 Values Create Brand
               </div>
             </div>
@@ -113,7 +111,7 @@ export function SiteHeader() {
             ) : (
               <Link
                 href="/sign-in"
-                className="rounded-full bg-sun px-5 py-2 font-mono text-xs uppercase tracking-wider text-ink transition-colors hover:brightness-90"
+                className="rounded-full bg-[#fece01] px-5 py-2 font-mono text-xs uppercase tracking-wider text-black transition-colors hover:brightness-90"
               >
                 Đăng nhập
               </Link>
@@ -184,7 +182,7 @@ export function SiteHeader() {
           <Link
             href="/sign-in"
             onClick={() => setMenuOpen(false)}
-            className="rounded-full bg-sun px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-ink"
+            className="rounded-full bg-blue-900 px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-ink"
           >
             Đăng nhập
           </Link>

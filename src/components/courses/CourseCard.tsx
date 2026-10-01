@@ -1,66 +1,38 @@
 import Link from "next/link";
+import type { Course } from "@/types/course";
 
-type CourseSummary = {
-  slug: string;
-  title: string;
-  slogan?: string;
-  schedule?: string;
-  format?: string;
-  targetAudience?: string;
-};
-
-export function CourseCard({ course }: { course: CourseSummary }) {
+export default function CourseCard({ course }: { course: Course }) {
   return (
-    // <Link
-    //   href={`/courses/${course.slug}`}
-    //   className="group flex flex-col justify-between rounded-md border border-sage/25 bg-paper p-6 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5"
-    // >
-    //   <div>
-    //     {course.format && (
-    //       <span className="mb-4 inline-block rounded-full bg-sun-soft/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-ink">
-    //         {course.format}
-    //       </span>
-    //     )}
-    //     <h3 className="font-display text-xl font-bold text-ink transition-colors group-hover:text-sun">
-    //       {course.title}
-    //     </h3>
-    //     {course.slogan && (
-    //       <p className="mt-2 text-sm italic text-ink/60">{course.slogan}</p>
-    //     )}
-    //   </div>
-
-    //   <div className="mt-6 space-y-1.5 border-t border-sage/20 pt-4 text-sm text-ink/70">
-    //     {course.targetAudience && <p>👥 {course.targetAudience}</p>}
-    //     {course.schedule && <p>🗓️ {course.schedule}</p>}
-    //   </div>
-
-    //   <span className="mt-4 font-mono text-xs uppercase tracking-wider text-sun">
-    //     Xem chi tiết →
-    //   </span>
-    // </Link>
-    <a className="group flex flex-col justify-between rounded-md border border-sage/25 bg-paper p-6 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5">
-      <div>
-        {course.format && (
-          <span className="mb-4 inline-block rounded-full bg-sun-soft/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-ink">
-            {course.format}
-          </span>
-        )}
-        <h3 className="font-display text-xl font-bold text-ink transition-colors group-hover:text-sun">
-          {course.title}
-        </h3>
-        {course.slogan && (
-          <p className="mt-2 text-sm italic text-ink/60">{course.slogan}</p>
-        )}
-      </div>
-
-      <div className="mt-6 space-y-1.5 border-t border-sage/20 pt-4 text-sm text-ink/70">
-        {course.targetAudience && <p>👥 {course.targetAudience}</p>}
-        {course.schedule && <p>🗓️ {course.schedule}</p>}
-      </div>
-
-      <span className="mt-4 font-mono text-xs uppercase tracking-wider text-sun">
-        Xem chi tiết →
+    <div className="rounded-xl border border-amber-100 bg-amber-50/40 p-6">
+      <span className="mb-3 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+        {course.format}
       </span>
-    </a>
+
+      <h3 className="mb-4 text-lg font-bold text-slate-900">{course.title}</h3>
+
+      {course.slogan && (
+        <p className="mb-3 text-sm italic text-slate-500">{course.slogan}</p>
+      )}
+
+      <hr className="mb-3 border-amber-200" />
+
+      {course.targetAudience && (
+        <p className="mb-1 flex items-center gap-2 text-sm text-slate-600">
+          👥 {course.targetAudience}
+        </p>
+      )}
+      {course.schedule && (
+        <p className="mb-3 flex items-center gap-2 text-sm text-slate-600">
+          📅 {course.schedule}
+        </p>
+      )}
+
+      <Link
+        href={`/courses/${course.slug}`}
+        className="text-sm font-semibold text-amber-600 hover:underline"
+      >
+        XEM CHI TIẾT →
+      </Link>
+    </div>
   );
 }

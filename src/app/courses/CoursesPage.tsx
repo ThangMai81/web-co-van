@@ -1,16 +1,8 @@
-import { CourseCard } from "@/components/courses/CourseCard";
+import CourseCard from "@/components/courses/CourseCard";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import type { Course } from "@/types/course";
 
-type CourseSummary = {
-  _id: string;
-  slug: string;
-  title: string;
-  slogan?: string;
-  schedule?: string;
-  format?: string;
-  targetAudience?: string;
-};
-
-async function getCourses(): Promise<CourseSummary[]> {
+async function getCourses(): Promise<Course[]> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/courses`, {
     cache: "no-store",
   });
@@ -24,6 +16,9 @@ export async function CoursesPage() {
   return (
     <section className="min-h-svh bg-cream py-28">
       <div className="mx-auto max-w-[var(--page-w)] px-6">
+        <Breadcrumb
+          items={[{ label: "Trang chủ", href: "/" }, { label: "Chương trình" }]}
+        />
         <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-sun">
           <span className="block h-px w-6 bg-sun" />
           Khóa học

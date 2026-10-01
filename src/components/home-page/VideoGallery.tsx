@@ -23,28 +23,41 @@ const VIDEOS = [
 
 export function VideoGallery() {
   return (
-    <section id="videos" className="flex py-32 text-ink">
-      <div className="mx-auto w-full max-w-[var(--page-w)] px-6">
-        <h2 className="mb-16 font-display text-4xl font-bold">
+    <section id="videos" className="bg-cream py-28">
+      <div className="mx-auto max-w-[var(--page-w)] px-6">
+        <h2 className="mb-14 font-display text-4xl font-bold text-ink">
           Nhật ký bằng hình
         </h2>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {VIDEOS.map((v, i) => (
-            <Reveal key={v.title} direction="scale" delay={i * 80}>
-              <div
-                key={v.title}
-                className="flex aspect-[4/5] cursor-pointer flex-col justify-between rounded-sm bg-sage/15 border border-sage/30 p-4 text-ink shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-black/25"
-              >
-                <span className="self-start rounded-sm bg-black/40 px-2 py-1 font-mono text-xs">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {VIDEOS.map((v) => (
+            <button key={v.title} type="button" className="group text-left">
+              <div className="relative aspect-video overflow-hidden rounded-md bg-sage/15 border border-sage/25">
+                <span className="absolute left-2 top-2 rounded-sm bg-black/60 px-1.5 py-0.5 font-mono text-[10px] text-white">
                   {v.len}
                 </span>
-                <div>
-                  <div className="font-display font-semibold">{v.title}</div>
-                  <div className="mt-1 text-sm opacity-70">{v.place}</div>
-                </div>
+
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-ink shadow-md transition-all duration-200 group-hover:scale-110 group-hover:bg-sun">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </span>
+                </span>
               </div>
-            </Reveal>
+
+              <div className="mt-3">
+                <div className="font-display text-sm font-semibold text-ink transition-colors group-hover:text-sun">
+                  {v.title}
+                </div>
+                <div className="mt-0.5 text-xs text-ink/55">{v.place}</div>
+              </div>
+            </button>
           ))}
         </div>
       </div>

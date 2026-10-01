@@ -27,14 +27,15 @@ export function SignIn() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include", // để browser lưu cookie httpOnly server trả về
           body: JSON.stringify({ credential: response.credential }),
         },
       );
 
-      if (!res.ok) throw new Error("Đăng nhập Google thất bại");
-
       const data = await res.json();
-      saveSession(data.accessToken, data.user);
+      if (!res.ok) throw new Error(data.message || "Đăng nhập Google thất bại");
+
+      saveSession(data.user);
       setSuccess(true);
       setTimeout(() => router.push("/"), 1200);
     } catch (err) {
@@ -69,16 +70,15 @@ export function SignIn() {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ name, email, password }),
           },
         );
 
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.message || "Đăng ký thất bại");
-        }
+        if (!res.ok) throw new Error(data.message || "Đăng ký thất bại");
 
-        saveSession(data.accessToken, data.user);
+        saveSession(data.user);
         setSuccess(true);
         setTimeout(() => router.push("/"), 1200);
       } catch (err) {
@@ -96,17 +96,17 @@ export function SignIn() {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ email, password }),
           },
         );
 
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.message || "Đăng nhập thất bại");
-        }
+        if (!res.ok) throw new Error(data.message || "Đăng nhập thất bại");
 
-        saveSession(data.accessToken, data.user);
-        router.push("/");
+        saveSession(data.user);
+        setSuccess(true);
+        setTimeout(() => router.push("/"), 1200);
       } catch (err) {
         setFieldErrors({
           password: err instanceof Error ? err.message : "Đăng nhập thất bại",
@@ -143,7 +143,7 @@ export function SignIn() {
           <div className="absolute inset-x-0 bottom-0 p-10 lg:p-14">
             <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-sun">
               <span className="block h-px w-6 bg-sun" />
-              Sunshine Center
+              SUNSHINE CENTER
             </div>
             <h2 className="max-w-md font-display text-3xl font-bold leading-tight text-white lg:text-4xl">
               Đồng hành cùng hàng trăm học viên chinh phục những cột mốc mới.
@@ -161,16 +161,16 @@ export function SignIn() {
               className="mb-8 flex items-center justify-center gap-3"
             >
               <Image
-                src="/images/Sunshine_brand.png"
+                src="/images/Sunshine_brand_without_slogan.png"
                 alt="Sunshine Center"
                 width={44}
                 height={44}
               />
               <div className="text-left leading-tight">
-                <div className="font-display text-lg font-bold text-ink">
-                  Sunshine Center
+                <div className="font-display text-lg font-bold text-blue-900">
+                  SUNSHINE CENTER
                 </div>
-                <div className="font-mono text-[10px] uppercase tracking-widest text-sun">
+                <div className="font-mono text-[10px] uppercase tracking-widest text-[#fece01] text-center">
                   Values Create Brand
                 </div>
               </div>

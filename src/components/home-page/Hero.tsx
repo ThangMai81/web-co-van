@@ -21,8 +21,8 @@ export function Hero() {
 
         <Reveal direction="scale">
           <h1 className="max-w-[16ch] font-display text-[clamp(40px,6.6vw,92px)] font-bold leading-[0.98] text-ink">
-            Leo lên đỉnh núi. <em className="text-sun not-italic">Cúi xuống</em>{" "}
-            với một đứa trẻ.
+            Sunshine Center Khai tâm mở lối
+            <em className="text-sun not-italic">Cúi xuống</em> với một đứa trẻ.
           </h1>
         </Reveal>
         <Reveal direction="left" delay={100}>
