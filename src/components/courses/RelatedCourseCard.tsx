@@ -1,4 +1,4 @@
-// components/courses/RelatedCourseCard.tsx
+// RelatedCourseCard.tsx
 import Image from "next/image";
 import Link from "next/link";
 import type { RelatedCourse } from "@/types/course";
@@ -15,7 +15,7 @@ export default function RelatedCourseCard({
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-amber-100 bg-white transition hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-xl border border-blue/15 bg-blue/5 shadow-sm transition hover:shadow-md"
     >
       {course.thumbnail && (
         <div className="relative h-32 w-full">
@@ -28,18 +28,20 @@ export default function RelatedCourseCard({
         </div>
       )}
       <div className="flex flex-1 flex-col gap-1 p-4">
-        <h3 className="line-clamp-2 text-sm font-bold text-slate-900">
+        <h3 className="line-clamp-2 text-sm font-bold text-blue">
           {course.title}
         </h3>
         {course.instructor?.name && (
-          <p className="text-xs text-slate-500">{course.instructor.name}</p>
+          <p className="text-xs font-medium text-blue/60">
+            {course.instructor.name}
+          </p>
         )}
         {course.ratingCount > 0 && (
-          <span className="text-xs text-amber-500">
+          <span className="text-xs font-bold text-yellow">
             ★ {course.ratingAverage.toFixed(1)} ({course.ratingCount})
           </span>
         )}
-        <span className="mt-auto text-sm font-bold text-red-600">
+        <span className="mt-auto text-sm font-extrabold text-blue">
           {course.price > 0 ? `${formatVND(course.price)} VNĐ` : "Miễn phí"}
         </span>
       </div>

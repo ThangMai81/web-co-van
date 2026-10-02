@@ -16,13 +16,13 @@ export default function CourseDescription({
 
   return (
     <section>
-      <h2 className="mb-3 text-xl font-bold text-slate-900">Mô tả</h2>
+      <h2 className="mb-3 text-xl font-bold text-blue">Mô tả</h2>
 
-      <div className="rounded-xl bg-amber-50 p-5">
-        <p className="mb-3 text-slate-700">{course.description}</p>
+      <div className="rounded-xl border border-blue/10 bg-blue/5 p-5">
+        <p className="mb-3 font-medium text-blue/90">{course.description}</p>
 
         {bullets.length > 0 && (
-          <ul className="list-disc space-y-2 pl-5 text-slate-700">
+          <ul className="list-disc space-y-2 pl-5 font-medium text-blue/90">
             {visible.map((line, idx) => (
               <li key={idx}>{line}</li>
             ))}
@@ -33,7 +33,7 @@ export default function CourseDescription({
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="mt-3 text-sm font-semibold text-amber-600 hover:underline"
+            className="mt-3 text-sm font-bold text-blue underline decoration-yellow decoration-2 underline-offset-4 hover:text-yellow"
           >
             {expanded ? "Ẩn bớt" : "Xem thêm"}
           </button>
@@ -41,16 +41,16 @@ export default function CourseDescription({
       </div>
 
       {course.targetAudience && (
-        <div className="mt-4 rounded-xl border border-amber-200 p-5">
-          <h3 className="mb-2 font-bold text-amber-600">🧑‍🤝‍🧑 Đối tượng</h3>
-          <p className="text-slate-700">{course.targetAudience}</p>
+        <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
+          <h3 className="mb-2 font-bold text-blue">🧑‍🤝‍🧑 Đối tượng</h3>
+          <p className="font-medium text-blue/90">{course.targetAudience}</p>
         </div>
       )}
 
       {course.highlights.length > 0 && (
-        <div className="mt-4 rounded-xl border border-amber-200 p-5">
-          <h3 className="mb-3 font-bold text-amber-600">✨ Nội dung nổi bật</h3>
-          <ul className="list-disc space-y-1 pl-5 text-slate-700">
+        <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
+          <h3 className="mb-3 font-bold text-blue">✨ Nội dung nổi bật</h3>
+          <ul className="list-disc space-y-1 pl-5 font-medium text-blue/90">
             {course.highlights.map((item, idx) => (
               <li key={idx}>{item}</li>
             ))}
@@ -59,11 +59,9 @@ export default function CourseDescription({
       )}
 
       {detail && detail.benefits.length > 0 && (
-        <div className="mt-4 rounded-xl border border-amber-200 p-5">
-          <h3 className="mb-3 font-bold text-amber-600">
-            ✅ Lợi ích chương trình
-          </h3>
-          <ul className="list-disc space-y-1 pl-5 text-slate-700">
+        <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
+          <h3 className="mb-3 font-bold text-blue">✅ Lợi ích chương trình</h3>
+          <ul className="list-disc space-y-1 pl-5 font-medium text-blue/90">
             {detail.benefits.map((item, idx) => (
               <li key={idx}>{item}</li>
             ))}

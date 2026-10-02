@@ -23,6 +23,9 @@
   --color-blush: #e8b7a4;
 
   --color-navy-light: #24407a;
+
+  --color-yellow: #fece01; /* Vàng logo Sunshine Center */
+  --color-blue: #142850; /* Xanh dương chủ đạo - thay cho text-blue-900 mặc định */
 }
 :root {
   --page-w: 72rem;
