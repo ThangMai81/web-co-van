@@ -60,7 +60,7 @@ export function AboutSection() {
             Thông tin doanh nghiệp
           </div>
           <h2 className="font-display text-2xl font-bold text-blue md:text-3xl">
-            Công ty TNHH MẶT TRỜI TỎA SÁNG
+            Công ty TNHH MẶT TRỜI TỎA SÁNG The Sunshine
           </h2>
           <p className="mt-2 max-w-[60ch] text-sm font-medium text-blue/55">
             Thông tin đăng ký và hoạt động của doanh nghiệp.
@@ -84,7 +84,7 @@ export function AboutSection() {
             <div className="flex items-center gap-2">
               <Building2 size={18} className="text-yellow" />
               <h3 className="font-display text-lg font-bold text-white">
-                CÔNG TY TNHH MẶT TRỜI TỎA SÁNG
+                CÔNG TY TNHH MẶT TRỜI TỎA SÁNG THE SUNSHINE
               </h3>
             </div>
             <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-yellow">
