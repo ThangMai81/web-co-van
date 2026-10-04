@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { href: "/programs", label: "CHƯƠNG TRÌNH" },
   // { href: "/coaching", label: "Dịch vụ coaching 1:1" },
   { href: "/courses", label: "KHÓA HỌC" },
-  { href: "/library", label: "THƯ VIỆN" },
+  // { href: "/library", label: "THƯ VIỆN" },
   { href: "/mission", label: "SỨ MỆNH" },
 ];
 
@@ -75,7 +75,7 @@ export function SiteHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative py-1 transition-colors hover:text-sun after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-sun after:transition-all after:duration-300 hover:after:w-full"
+                className="relative py-1 transition-colors hover:text-yellow after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-yellow after:transition-all after:duration-300 hover:after:w-full"
               >
                 {link.label}
               </Link>

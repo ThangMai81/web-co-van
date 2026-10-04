@@ -1,4 +1,5 @@
 import { Reveal } from "../animation/Reveal";
+import { Quote } from "@/lib/icons";
 
 const VOICES = [
   {
@@ -20,9 +21,15 @@ const VOICES = [
 
 export function VoicesSection() {
   return (
-    <section id="voices" className="bg-sage/15 border border-sage/30 py-32">
-      <div className="mx-auto max-w-[var(--page-w)] px-6">
-        <h2 className="mb-16 font-display text-4xl font-bold text-ink">
+    <section id="voices" className="relative overflow-hidden bg-blue py-28">
+      <div className="pointer-events-none absolute right-0 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-yellow/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-[var(--page-w)] px-6">
+        <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+          <span className="block h-px w-6 bg-yellow" />
+          Những câu chuyện thật
+        </div>
+        <h2 className="mb-16 font-display text-4xl font-bold text-white">
           Từ những người đã đi cùng
         </h2>
 
@@ -33,12 +40,12 @@ export function VoicesSection() {
               direction={i % 2 === 0 ? "left" : "right"}
               delay={i * 100}
             >
-              <div
-                key={v.who}
-                className="rounded-sm border border-paper/15 p-7"
-              >
-                <p className="font-body italic text-ink/80">{v.quote}</p>
-                <div className="mt-5 font-mono text-xs text-sage">{v.who}</div>
+              <div className="h-full rounded-xl border border-white/15 bg-white/5 p-7">
+                <Quote size={24} className="mb-3 text-yellow" />
+                <p className="font-medium italic text-white/90">{v.quote}</p>
+                <div className="mt-5 font-mono text-xs font-bold text-yellow">
+                  {v.who}
+                </div>
               </div>
             </Reveal>
           ))}

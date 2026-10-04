@@ -7,7 +7,7 @@ import { Mission } from "@/components/mission/Mission";
 import { CultureAndValues } from "@/components/mission/CultureAndValues";
 import { Founder } from "@/components/mission/Founder";
 
-export function StoriesPage() {
+export function MissionPage() {
   return (
     <main className="min-h-screen">
       <SiteHeader />

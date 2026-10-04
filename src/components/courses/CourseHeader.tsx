@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import StarRating from "@/components/ui/StarRating";
 import type { Course, CourseDetail } from "@/types/course";
 
 export default function CourseHeader({
@@ -11,13 +12,12 @@ export default function CourseHeader({
 }) {
   return (
     <div>
-      <nav className="mb-2 text-sm font-medium text-blue/60">
-        <Link href="/courses" className="hover:text-yellow hover:underline">
-          Khóa học
-        </Link>
-        <span className="mx-2">›</span>
-        <span className="text-blue">{course.title}</span>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: "Khóa học", href: "/courses" },
+          { label: course.title },
+        ]}
+      />
 
       <h1 className="text-3xl font-bold text-blue">{course.title}</h1>
       {course.slogan && (
@@ -46,9 +46,12 @@ export default function CourseHeader({
             </p>
           </div>
           {detail.ratingCount > 0 && (
-            <span className="ml-2 text-sm font-bold text-yellow">
-              ★ {detail.ratingAverage.toFixed(1)} ({detail.ratingCount})
-            </span>
+            <div className="ml-2 flex items-center gap-1.5">
+              <StarRating value={detail.ratingAverage} />
+              <span className="text-sm font-bold text-blue/70">
+                ({detail.ratingCount})
+              </span>
+            </div>
           )}
         </div>
       )}

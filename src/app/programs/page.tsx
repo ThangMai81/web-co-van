@@ -1,20 +1,20 @@
 import { SiteHeader } from "@/components/navigation/SiteHeader";
-import CoursesPage from "./CoursesPage";
+import ProgramsPage from "./ProgramsPage";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; sort?: string; search?: string }>;
+  searchParams: Promise<{ category?: string; status?: string; sort?: string }>;
 }) {
   const params = await searchParams;
   return (
     <main className="min-h-screen">
       <SiteHeader />
-      <CoursesPage
+      <ProgramsPage
         category={params.category}
+        status={params.status}
         sort={params.sort}
-        search={params.search}
       />
       <SiteFooter />
     </main>

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { StatusBanner } from "@/components/ui/StatusBanner";
+import { Send } from "@/lib/icons";
 
 const CONCERNS = [
   { value: "tim_lai_chinh_minh", label: "Tìm lại chính mình" },
@@ -64,7 +65,7 @@ export function InquiryForm() {
   }
 
   return (
-    <section id="lien-he" className="bg-cream py-28">
+    <section id="lien-he" className="bg-blue/5 py-28">
       <StatusBanner
         show={status === "success" || status === "error"}
         variant={status === "success" ? "success" : "error"}
@@ -78,15 +79,15 @@ export function InquiryForm() {
 
       <div className="mx-auto max-w-[var(--page-w)] px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-4 flex items-center justify-center gap-3 font-mono text-xs uppercase tracking-widest text-sun">
-            <span className="block h-px w-6 bg-sun" />
+          <div className="mb-4 flex items-center justify-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+            <span className="block h-px w-6 bg-yellow" />
             Bắt đầu hành trình của bạn
-            <span className="block h-px w-6 bg-sun" />
+            <span className="block h-px w-6 bg-yellow" />
           </div>
-          <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">
+          <h2 className="font-display text-3xl font-bold text-blue sm:text-4xl">
             Hãy để chúng tôi hiểu bạn hơn
           </h2>
-          <p className="mt-4 text-ink/70">
+          <p className="mt-4 font-medium text-blue/70">
             Chỉ vài dòng ngắn — chúng tôi sẽ liên hệ để cùng bạn tìm hướng phù
             hợp nhất.
           </p>
@@ -94,7 +95,7 @@ export function InquiryForm() {
 
         <form
           onSubmit={handleSubmit}
-          className="mx-auto mt-12 max-w-2xl rounded-md border border-sage/25 bg-paper p-8 shadow-sm sm:p-10"
+          className="mx-auto mt-12 max-w-2xl rounded-2xl border-2 border-blue/15 bg-white p-8 shadow-md shadow-blue/5 sm:p-10"
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field
@@ -127,10 +128,10 @@ export function InquiryForm() {
             />
           </div>
 
-          <div className="my-8 border-t border-sage/20" />
+          <div className="my-8 border-t border-blue/10" />
 
           <div>
-            <span className="mb-3 block font-mono text-xs uppercase tracking-wider text-sage">
+            <span className="mb-3 block font-mono text-xs font-bold uppercase tracking-wider text-blue">
               Điều bạn đang quan tâm hoặc vướng bận nhất lúc này
             </span>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -139,10 +140,10 @@ export function InquiryForm() {
                   key={c.value}
                   type="button"
                   onClick={() => setConcern(c.value)}
-                  className={`rounded-md border px-4 py-3 text-left text-sm transition-all ${
+                  className={`rounded-xl border-2 px-4 py-3 text-left text-sm font-bold transition ${
                     concern === c.value
-                      ? "border-sun bg-sun-soft/60 text-ink"
-                      : "border-sage/25 text-ink/70 hover:border-sun/50"
+                      ? "border-yellow bg-yellow/15 text-blue"
+                      : "border-blue/15 text-blue/70 hover:border-yellow/50"
                   }`}
                 >
                   {c.label}
@@ -160,7 +161,7 @@ export function InquiryForm() {
                 onChange={(e) => setConcernDetail(e.target.value)}
                 placeholder="Bạn có thể chia sẻ cụ thể hơn ở đây..."
                 rows={3}
-                className="w-full rounded-sm border border-sage/40 bg-cream px-4 py-3 text-sm text-ink outline-none focus:border-sun"
+                className="w-full rounded-xl border-2 border-blue/15 bg-blue/5 px-4 py-3 text-sm font-medium text-blue outline-none focus:border-blue"
               />
             </div>
           </div>
@@ -168,7 +169,7 @@ export function InquiryForm() {
           <button
             type="submit"
             disabled={status === "loading" || !canSubmit}
-            className="mt-8 flex w-full items-center justify-center gap-2 rounded-sm bg-sun py-3.5 font-mono text-xs uppercase tracking-wider text-ink transition-colors hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-yellow py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-blue transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {status === "loading" ? (
               <>
@@ -194,7 +195,10 @@ export function InquiryForm() {
                 Đang gửi...
               </>
             ) : (
-              "Gửi lời quan tâm"
+              <>
+                <Send size={14} />
+                Gửi lời quan tâm
+              </>
             )}
           </button>
         </form>
@@ -218,7 +222,7 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="font-mono text-[10px] uppercase tracking-wider text-sage">
+      <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-blue">
         {label}
       </span>
       <input
@@ -226,7 +230,7 @@ function Field({
         type={type}
         placeholder={placeholder}
         required={required}
-        className="rounded-sm border border-sage/40 bg-cream px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-sun"
+        className="rounded-xl border-2 border-blue/15 bg-blue/5 px-4 py-3 text-sm font-medium text-blue outline-none transition-colors focus:border-blue"
       />
     </label>
   );

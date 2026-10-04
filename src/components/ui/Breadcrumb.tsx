@@ -2,7 +2,15 @@ import Link from "next/link";
 
 type Crumb = { label: string; href?: string };
 
-export function Breadcrumb({ items }: { items: Crumb[] }) {
+export function Breadcrumb({
+  items,
+  variant = "default",
+}: {
+  items: Crumb[];
+  variant?: "default" | "light"; // "light" dùng khi đặt trên nền tối (vd ảnh hero)
+}) {
+  const isLight = variant === "light";
+
   return (
     <nav
       aria-label="Breadcrumb"
@@ -15,16 +23,28 @@ export function Breadcrumb({ items }: { items: Crumb[] }) {
             {item.href && !isLast ? (
               <Link
                 href={item.href}
-                className="text-ink/60 transition-colors hover:text-sun"
+                className={`font-medium transition-colors hover:text-yellow ${
+                  isLight ? "text-white/70" : "text-blue/60"
+                }`}
               >
                 {item.label}
               </Link>
             ) : (
-              <span className={isLast ? "font-medium text-ink" : "text-ink/60"}>
+              <span
+                className={
+                  isLast
+                    ? `font-bold ${isLight ? "text-white" : "text-blue"}`
+                    : `font-medium ${isLight ? "text-white/70" : "text-blue/60"}`
+                }
+              >
                 {item.label}
               </span>
             )}
-            {!isLast && <span className="text-ink/30">/</span>}
+            {!isLast && (
+              <span className={isLight ? "text-white/30" : "text-blue/30"}>
+                /
+              </span>
+            )}
           </span>
         );
       })}

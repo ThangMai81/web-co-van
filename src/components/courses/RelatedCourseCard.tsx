@@ -1,6 +1,6 @@
-// RelatedCourseCard.tsx
 import Image from "next/image";
 import Link from "next/link";
+import StarRating from "@/components/ui/StarRating";
 import type { RelatedCourse } from "@/types/course";
 
 function formatVND(value: number) {
@@ -37,9 +37,12 @@ export default function RelatedCourseCard({
           </p>
         )}
         {course.ratingCount > 0 && (
-          <span className="text-xs font-bold text-yellow">
-            ★ {course.ratingAverage.toFixed(1)} ({course.ratingCount})
-          </span>
+          <div className="flex items-center gap-1">
+            <StarRating value={course.ratingAverage} size={13} />
+            <span className="text-xs font-bold text-blue/60">
+              ({course.ratingCount})
+            </span>
+          </div>
         )}
         <span className="mt-auto text-sm font-extrabold text-blue">
           {course.price > 0 ? `${formatVND(course.price)} VNĐ` : "Miễn phí"}

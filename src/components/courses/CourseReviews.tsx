@@ -4,6 +4,7 @@ import { useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { getStoredUser } from "@/lib/auth";
 import type { RatingBreakdownItem, Review } from "@/types/course";
+import StarRating from "../ui/StarRating";
 
 export default function CourseReviews({
   courseId,
@@ -57,7 +58,7 @@ export default function CourseReviews({
         <div className="flex flex-wrap items-center gap-6">
           <div className="text-center">
             <div className="text-4xl font-extrabold text-blue">
-              {ratingAverage.toFixed(1)}
+              <StarRating value={ratingAverage} size={14} />
             </div>
             <div className="text-sm font-medium text-blue/60">/5</div>
           </div>
@@ -134,7 +135,7 @@ export default function CourseReviews({
                 </span>
               </div>
               <div className="mt-1 text-yellow">
-                {"★".repeat(review.rating)}
+                <StarRating value={review.rating} size={14} />
               </div>
               {review.comment && (
                 <p className="mt-2 font-medium text-blue/90">

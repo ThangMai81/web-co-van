@@ -71,3 +71,20 @@ export interface CourseDetailResponse {
   ratingBreakdown: RatingBreakdownItem[];
   relatedCourses: RelatedCourse[];
 }
+
+// Thêm vào cuối file, giữ nguyên toàn bộ phần đã có trước đó
+export interface CourseListItem {
+  _id: string;
+  title: string;
+  slug: string;
+  slogan?: string;
+  schedule: string;
+  format: string;
+  targetAudience?: string;
+  thumbnail?: string;
+  category?: string;
+  price: number;
+  instructor?: { name: string; avatar?: string };
+  ratingAverage: number;
+  ratingCount: number;
+}
