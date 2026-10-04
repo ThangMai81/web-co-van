@@ -169,7 +169,7 @@ export function SignIn() {
                 height={34}
               />
               <div className="text-left leading-tight">
-                <div className="font-display text-base font-bold text-blue">
+                <div className="font-display text-base font-bold text-blue-900">
                   SUNSHINE CENTER
                 </div>
                 <div className="font-mono text-[9px] uppercase tracking-widest text-yellow text-center">

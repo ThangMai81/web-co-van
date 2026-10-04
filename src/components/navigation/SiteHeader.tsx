@@ -182,7 +182,7 @@ export function SiteHeader() {
           <Link
             href="/sign-in"
             onClick={() => setMenuOpen(false)}
-            className="rounded-full border border-sun/40 bg-sun-soft/50 px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-ink"
+            className="rounded-full border border-sun/40 bg-sun px-5 py-3 text-center font-display text-lg font-semibold text-ink"
           >
             Đăng nhập
           </Link>
