@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/lib/programLabels";
 import CategoryIcon from "./CategoryIcon";
@@ -31,37 +30,20 @@ export default function ProgramFilterBar({
       <div className="flex flex-wrap items-center gap-3">
         {/* Nhóm: Loại chương trình - tông vàng */}
         <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border-2 border-yellow bg-yellow/10 p-1.5">
-          {[{ key: "all", label: "Tất cả", icon: null }]
-            .concat(
-              categories.map((cat) => ({
-                key: cat,
-                label: CATEGORY_LABELS[cat],
-                icon: cat,
-              })),
-            )
-            .map((item) =>
-              item.key === "all" ? (
-                <CategoryPill
-                  key="all"
-                  href={buildHref(undefined, activeStatus, activeSort)}
-                  active={!activeCategory}
-                  label="Tất cả"
-                />
-              ) : (
-                <CategoryPill
-                  key={item.key}
-                  href={buildHref(item.key, activeStatus, activeSort)}
-                  active={activeCategory === item.key}
-                  icon={
-                    <CategoryIcon
-                      category={item.icon as ProgramCategory}
-                      size={14}
-                    />
-                  }
-                  label={item.label}
-                />
-              ),
-            )}
+          <CategoryPill
+            href={buildHref(undefined, activeStatus, activeSort)}
+            active={!activeCategory}
+            label="Tất cả"
+          />
+          {categories.map((cat) => (
+            <CategoryPill
+              key={cat}
+              href={buildHref(cat, activeStatus, activeSort)}
+              active={activeCategory === cat}
+              icon={<CategoryIcon category={cat} size={14} />}
+              label={CATEGORY_LABELS[cat]}
+            />
+          ))}
         </div>
 
         {/* Nhóm: Thời gian - tông xanh dương, tách biệt hẳn với nhóm trên */}
