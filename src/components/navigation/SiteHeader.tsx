@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getStoredUser, clearSession, type StoredUser } from "@/lib/auth";
+import {
+  getStoredUser,
+  clearSession,
+  hydrateSession,
+  type StoredUser,
+} from "@/lib/auth";
 
 const NAV_LINKS = [
   { href: "/programs", label: "CHƯƠNG TRÌNH" },
@@ -27,7 +32,11 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
+    // Hiện ngay user từ localStorage nếu có (tránh nháy UI "chưa đăng nhập" khi tải trang)
     setUser(getStoredUser());
+
+    // Rồi xác nhận lại với backend qua cookie -> tự động đăng nhập / tự động đăng xuất đúng trạng thái thật
+    hydrateSession().then(setUser);
 
     const onAuthChange = () => setUser(getStoredUser());
     window.addEventListener("authchange", onAuthChange);

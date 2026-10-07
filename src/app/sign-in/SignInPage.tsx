@@ -294,12 +294,12 @@ export function SignIn() {
 
                 {mode === "login" && (
                   <div className="text-right">
-                    <a
-                      href="#"
+                    <Link
+                      href="/forgot-password"
                       className="font-mono text-xs text-blue/50 hover:text-yellow"
                     >
                       Quên mật khẩu?
-                    </a>
+                    </Link>
                   </div>
                 )}
 
