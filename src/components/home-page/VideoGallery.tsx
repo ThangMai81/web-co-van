@@ -1,25 +1,23 @@
-const VIDEOS = [
-  { title: "Ba ngày trên Tà Xùa", place: "Sơn La · Núi", len: "04:12" },
-  { title: "Buổi học đọc đầu tiên", place: "Lai Châu · Lớp học", len: "07:48" },
-  { title: "Sương mù ở Fansipan", place: "Lào Cai · Núi", len: "02:55" },
-  {
-    title: "Trò chơi dân gian trên bản",
-    place: "Yên Bái · Trại hè",
-    len: "11:20",
-  },
-  {
-    title: "Dựng tủ sách cho bản Lìm Mông",
-    place: "Yên Bái · Trại hè",
-    len: "05:33",
-  },
-  {
-    title: "Học trò cũ dẫn đường leo núi",
-    place: "Sơn La · Núi",
-    len: "08:02",
-  },
-];
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import VideoModal from "./VideoModal";
+import type { Video } from "@/types/video";
 
 export function VideoGallery() {
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [activeVideo, setActiveVideo] = useState<Video | null>(null);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/videos`)
+      .then((res) => res.json())
+      .then((json) => setVideos(json.data ?? []))
+      .catch(() => setVideos([]));
+  }, []);
+
+  if (videos.length === 0) return null;
+
   return (
     <section id="videos" className="bg-blue/5 py-28">
       <div className="mx-auto max-w-[var(--page-w)] px-6">
@@ -31,14 +29,28 @@ export function VideoGallery() {
           Nhật ký bằng hình
         </h2>
 
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {VIDEOS.map((v) => (
-            <button key={v.title} type="button" className="group text-left">
+        <div className="grid grid-cols-1 items-start gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {videos.map((v) => (
+            <button
+              key={v._id}
+              type="button"
+              onClick={() => setActiveVideo(v)}
+              className="group text-left"
+            >
               <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue/15 bg-blue/10">
-                <span className="absolute left-2 top-2 rounded-full bg-blue px-2 py-0.5 font-mono text-[10px] font-bold text-white">
-                  {v.len}
-                </span>
-                <span className="absolute inset-0 flex items-center justify-center">
+                {/* Ảnh thumbnail YouTube có sẵn miễn phí theo đúng video ID, không cần tự upload riêng */}
+                <Image
+                  src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                  alt={v.title}
+                  fill
+                  className="object-cover"
+                />
+                {v.durationLabel && (
+                  <span className="absolute left-2 top-2 rounded-full bg-blue px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+                    {v.durationLabel}
+                  </span>
+                )}
+                <span className="absolute inset-0 flex items-center justify-center bg-blue/10 transition group-hover:bg-blue/20">
                   <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-blue shadow-md transition-all duration-200 group-hover:scale-110 group-hover:bg-yellow">
                     <svg
                       width="16"
@@ -55,14 +67,20 @@ export function VideoGallery() {
                 <div className="font-display text-sm font-bold text-blue transition-colors group-hover:text-yellow">
                   {v.title}
                 </div>
-                <div className="mt-0.5 text-xs font-medium text-blue/55">
-                  {v.place}
-                </div>
+                {v.place && (
+                  <div className="mt-0.5 text-xs font-medium text-blue/55">
+                    {v.place}
+                  </div>
+                )}
               </div>
             </button>
           ))}
         </div>
       </div>
+
+      {activeVideo && (
+        <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />
+      )}
     </section>
   );
 }

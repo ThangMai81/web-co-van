@@ -20,4 +20,5 @@ export {
   Play,
   Building2,
   Send,
+  X,
 } from "lucide-react";
