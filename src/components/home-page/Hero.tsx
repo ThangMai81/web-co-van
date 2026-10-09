@@ -11,7 +11,7 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-[var(--page-w)] px-6">
         <div className="relative mb-10 aspect-[16/5] w-full overflow-hidden rounded-2xl border-2 border-yellow shadow-xl shadow-black/20">
           <Image
-            src="/images/Sunshine_banner.png"
+            src="/images/Sunshine_banner.jpg"
             alt="Sunshine Center"
             fill
             priority

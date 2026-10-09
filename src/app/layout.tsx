@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   title: "Sunshine Center — Giá trị tạo nên thương hiệu",
   description:
     "Sunshine Center - nơi tạo nên những giá trị bền vững cho cộng đồng.",
+  icons: {
+    icon: [
+      { url: "/images/Sunshine_brand_without_slogan.png", type: "image/png" },
+    ],
+    apple: "/images/Sunshine_brand_without_slogan.png",
+  },
 };
 
 export default function RootLayout({

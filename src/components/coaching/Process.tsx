@@ -18,7 +18,7 @@ const PROCESS = [
     step: "03",
     title: "Đồng hành & điều chỉnh liên tục",
     body: "Các buổi coaching định kỳ, theo sát tiến độ, điều chỉnh phương pháp linh hoạt theo từng giai đoạn thay đổi của bạn.",
-    image: "/images/Sunshine_banner.png",
+    image: "/images/Sunshine_banner.jpg",
   },
 ];
 
