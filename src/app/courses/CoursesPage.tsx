@@ -1,5 +1,6 @@
 import CourseGrid from "@/components/courses/CourseGrid";
 import CourseFilterBar from "@/components/courses/CourseFilterBar";
+import HeroSection from "@/components/ui/HeroSection";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import type { CourseListItem } from "@/types/course";
 
@@ -54,42 +55,46 @@ export default async function CoursesPage({
       />
 
       {/* === VÙNG 1: GIỚI THIỆU === */}
-      <header className="relative overflow-hidden bg-blue pb-16 pt-32">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-yellow/20 blur-3xl" />
-        <div className="relative mx-auto max-w-[var(--page-w)] px-6">
-          <Breadcrumb
-            variant="light"
-            items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
-          />
+      <HeroSection
+        portrait={{
+          src: "/images/khoa-hoc-co-yen.jpg",
+          alt: "Cô giáo của Sunshine Center",
+          // name: "Tên của cô",     // bỏ comment nếu muốn hiện thẻ tên cạnh ảnh
+          // role: "Chức danh",
+        }}
+      >
+        <Breadcrumb
+          variant="light"
+          items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
+        />
 
-          <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
-            <span className="block h-px w-6 bg-yellow" />
-            Khóa học
+        <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+          <span className="block h-px w-6 bg-yellow" />
+          Khóa học
+        </div>
+        <h1 className="max-w-[20ch] font-display text-4xl font-bold text-white sm:text-5xl">
+          Đồng hành cùng bạn, từng bước một
+        </h1>
+        <p className="mt-4 max-w-[60ch] text-white/80">
+          Mỗi khóa học được thiết kế riêng cho một hành trình khác nhau — chọn
+          điều phù hợp với bạn hoặc con bạn ngay bây giờ.
+        </p>
+
+        <div className="mt-8 flex gap-8 border-t border-white/15 pt-6">
+          <div>
+            <div className="text-2xl font-extrabold text-yellow">
+              {courses.length}
+            </div>
+            <div className="text-xs font-medium text-white/60">Khóa học</div>
           </div>
-          <h1 className="max-w-[20ch] font-display text-4xl font-bold text-white sm:text-5xl">
-            Đồng hành cùng bạn, từng bước một
-          </h1>
-          <p className="mt-4 max-w-[60ch] text-white/80">
-            Mỗi khóa học được thiết kế riêng cho một hành trình khác nhau — chọn
-            điều phù hợp với bạn hoặc con bạn ngay bây giờ.
-          </p>
-
-          <div className="mt-8 flex gap-8 border-t border-white/15 pt-6">
-            <div>
-              <div className="text-2xl font-extrabold text-yellow">
-                {courses.length}
-              </div>
-              <div className="text-xs font-medium text-white/60">Khóa học</div>
+          <div>
+            <div className="text-2xl font-extrabold text-yellow">
+              {freeCourses}
             </div>
-            <div>
-              <div className="text-2xl font-extrabold text-yellow">
-                {freeCourses}
-              </div>
-              <div className="text-xs font-medium text-white/60">Miễn phí</div>
-            </div>
+            <div className="text-xs font-medium text-white/60">Miễn phí</div>
           </div>
         </div>
-      </header>
+      </HeroSection>
 
       {/* === VÙNG 2: BỘ LỌC === */}
       <nav

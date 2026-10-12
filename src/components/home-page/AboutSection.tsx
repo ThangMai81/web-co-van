@@ -9,7 +9,7 @@ const COMPANY_INFO = [
   {
     label: "Địa chỉ thuế",
     value:
-      "Số 21 đường số 04, Khu đô thị quốc tế Đa Phước, Phường Hải Châu, TP Đà Nẵng, Việt Nam",
+      "Số 21 đường số 04, Khu đô thị quốc tế Đa Phước, Phường Hải Châu, Thành phố Đà Nẵng, Việt Nam",
   },
   {
     label: "Địa chỉ",
@@ -60,7 +60,7 @@ export function AboutSection() {
             Thông tin doanh nghiệp
           </div>
           <h2 className="font-display text-2xl font-bold text-blue md:text-3xl">
-            Công ty TNHH MẶT TRỜI TỎA SÁNG The Sunshine
+            CÔNG TY TNHH MẶT TRỜI TỎA SÁNG THE SUNSHINE
           </h2>
           <p className="mt-2 max-w-[60ch] text-sm font-medium text-blue/55">
             Thông tin đăng ký và hoạt động của doanh nghiệp.
@@ -88,7 +88,7 @@ export function AboutSection() {
               </h3>
             </div>
             <p className="mt-1 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-yellow">
-              Sunshine Center
+              Giá trị tạo nên thương hiệu
             </p>
           </div>
 

@@ -19,24 +19,27 @@ export function Hero() {
           />
         </div>
 
-        <div className="mb-5 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+        <div className="mb-5 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-white">
           <span className="block h-px w-6 bg-yellow" />
-          Cố vấn hành trình · Người bạn đường của trẻ em vùng cao
+          Coach Yến Lê - Chạm vào tỉnh thức - Khơi nguồn trí tuệ - Lan tỏa yêu
+          thương
+          <span className="block h-px w-6 bg-yellow" />
         </div>
 
         <Reveal direction="scale">
           <h1 className="max-w-[18ch] font-display text-[clamp(36px,5.6vw,78px)] font-bold leading-[1.03] text-white">
-            Sunshine Center Khai tâm mở lối,{" "}
-            <em className="text-yellow not-italic">cúi xuống</em> với một đứa
-            trẻ.
+            <em className="text-yellow not-italic">SUNSHINE CENTER</em> "Đánh
+            thức ánh sáng bên trong – Kiến tạo cuộc đời bạn mong muốn"
           </h1>
         </Reveal>
 
         <Reveal direction="left" delay={100}>
           <p className="mt-6 max-w-[52ch] text-lg italic text-white/80">
-            Mười hai năm đi giữa hai việc tưởng như chẳng liên quan — chinh phục
-            những đỉnh núi khó nhất Việt Nam, và ngồi xuống dạy con chữ cho
-            những đứa trẻ chưa từng thấy biển.
+            Chúng tôi tin rằng mỗi người đều mang trong mình những tiềm năng và
+            giá trị riêng biệt. Sunshine Center đồng hành cùng bạn trên hành
+            trình thấu hiểu bản thân, khai mở nội lực, vượt qua giới hạn và từng
+            bước kiến tạo một cuộc sống hạnh phúc, tự tin, thành công và ý nghĩa
+            hơn. Yes Yes Yes
           </p>
         </Reveal>
 

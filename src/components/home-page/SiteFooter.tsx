@@ -17,11 +17,11 @@ export function SiteFooter() {
         <div className="flex flex-col justify-between gap-10 pb-11 md:flex-row">
           <div className="max-w-xs">
             <div className="mb-3 font-display text-lg font-bold">
-              Sunshine-center
+              Sunshine Center
             </div>
             <p className="text-sm text-ink/60">
-              Ghi lại hành trình giữa những đỉnh núi và những lớp học vùng cao,
-              từ 2014 đến nay.
+              Đánh thức con người phi thường bên trong bạn, giúp bạn tìm thấy
+              chính mình, sống cuộc đời rực rỡ nhất!
             </p>
           </div>
 

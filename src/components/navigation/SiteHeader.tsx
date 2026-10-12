@@ -73,7 +73,7 @@ export function SiteHeader() {
               <div className="font-display text-lg font-bold text-blue-900">
                 SUNSHINE CENTER
               </div>
-              <div className="font-mono text-[10px] uppercase tracking-widest text-yellow text-center">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-yellow-400 text-center">
                 Values Create Brand
               </div>
             </div>

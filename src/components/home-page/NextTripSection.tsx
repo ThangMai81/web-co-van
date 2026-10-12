@@ -14,11 +14,11 @@ export function NextTripSection() {
                 Chuyến đi tiếp theo
               </div>
               <h3 className="font-display text-3xl font-bold text-white">
-                Trại hè #8 — Bản Séo Mý Tỷ, Lào Cai
+                Leo núi #3 - Chinh phục nóc nhà Đông Dương Tháng 12
               </h3>
               <p className="mt-4 max-w-[48ch] font-medium text-white/80">
-                Ba tuần dạy học kết hợp một chuyến leo ngắn lên đỉnh Ngũ Chỉ Sơn
-                cùng các em lớn.
+                Chinh phục Fansipan - chinh phục chính mình. Một chuyến đi khép
+                lại một cuộc đời mới mở ra
               </p>
             </div>
           </Reveal>
@@ -26,7 +26,7 @@ export function NextTripSection() {
           <Reveal direction="right">
             <div className="relative rounded-xl border-2 border-yellow/40 bg-white/5 p-6">
               <div className="font-mono text-xs font-bold text-white/70">
-                15 Th8 — 5 Th9, 2026
+                3 Th12 - 8 Th12, 2026
               </div>
               <div className="my-3 font-display text-xl font-bold text-white">
                 Đăng ký đồng hành
@@ -35,7 +35,7 @@ export function NextTripSection() {
                 href="#lien-he"
                 className="block rounded-full bg-yellow py-3 text-center font-mono text-xs font-bold uppercase tracking-wider text-blue hover:brightness-95"
               >
-                Gửi lời quan tâm
+                Đăng ký ngay
               </a>
             </div>
           </Reveal>
