@@ -20,10 +20,20 @@ export function Hero() {
         </div>
 
         <div className="mb-5 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-white">
-          <span className="block h-px w-6 bg-yellow" />
-          Coach Yến Lê - Chạm vào tỉnh thức - Khơi nguồn trí tuệ - Lan tỏa yêu
-          thương
-          <span className="block h-px w-6 bg-yellow" />
+          <span className="hidden h-px w-6 shrink-0 bg-yellow sm:block" />
+
+          {/* Điện thoại và máy tính bảng: bản rút gọn, luôn nằm trên 1 hàng */}
+          <span className="min-w-0 truncate tracking-wide lg:hidden">
+            Tỉnh thức · Trí tuệ · Yêu thương
+          </span>
+
+          {/* Màn hình rộng (từ 1024px): giữ nguyên câu đầy đủ */}
+          <span className="hidden lg:inline">
+            Coach Yến Lê - Chạm vào tỉnh thức - Khơi nguồn trí tuệ - Lan tỏa yêu
+            thương
+          </span>
+
+          <span className="hidden h-px w-6 shrink-0 bg-yellow sm:block" />
         </div>
 
         <Reveal direction="scale">
