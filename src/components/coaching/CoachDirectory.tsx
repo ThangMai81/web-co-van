@@ -11,14 +11,49 @@ const FILTERS = ["Tất cả", "Bình an nội tâm", "Sự nghiệp", "Gia đì
 
 export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
   const [activeFilter, setActiveFilter] = useState("Tất cả");
+  const [searchQuery, setSearchQuery] = useState("");
   const visibleCoaches = useMemo(
-    () => activeFilter === "Tất cả" ? coaches : coaches.filter((coach) => coach.focusAreas.includes(activeFilter)),
-    [activeFilter, coaches],
+    () => {
+      const normalizeSearchText = (value: string) =>
+        value.toLocaleLowerCase("vi").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+      const normalizedQuery = normalizeSearchText(searchQuery.trim());
+      return coaches.filter((coach) => {
+        const matchesFilter = activeFilter === "Tất cả" || coach.focusAreas.includes(activeFilter);
+        const searchableText = [coach.name, coach.title, coach.quote, coach.bio, ...coach.focusAreas]
+          .join(" ");
+        const normalizedSearchableText = normalizeSearchText(searchableText);
+        return matchesFilter && (!normalizedQuery || normalizedSearchableText.includes(normalizedQuery));
+      });
+    },
+    [activeFilter, coaches, searchQuery],
   );
 
   return (
     <>
-      <div className="mb-10 flex flex-wrap gap-3" aria-label="Lọc theo lĩnh vực đồng hành">
+      <div className="mb-6 max-w-xl">
+        <label htmlFor="coach-directory-search" className="sr-only">Tìm người đồng hành theo tên hoặc lĩnh vực</label>
+        <div className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white px-4 py-3 text-blue shadow-sm transition focus-within:border-yellow focus-within:ring-2 focus-within:ring-yellow/40">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-blue/50" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <circle cx="10.8" cy="10.8" r="6.8" />
+            <path d="m16 16 4.5 4.5" />
+          </svg>
+          <input
+            id="coach-directory-search"
+            type="search"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="Tìm theo tên, lĩnh vực hoặc điều bạn đang quan tâm"
+            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-blue/45"
+          />
+          {searchQuery && (
+            <button type="button" onClick={() => setSearchQuery("")} className="shrink-0 rounded-full px-2 py-1 text-xs font-semibold text-blue/65 transition hover:bg-blue/5 hover:text-blue">
+              Xóa
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-5 flex flex-wrap gap-3" aria-label="Lọc theo lĩnh vực đồng hành">
         {FILTERS.map((filter) => (
           <button key={filter} type="button" onClick={() => setActiveFilter(filter)} aria-pressed={activeFilter === filter}
             className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition ${activeFilter === filter ? "border-yellow bg-yellow text-blue" : "border-white/30 text-white hover:border-yellow hover:text-yellow"}`}>
@@ -26,6 +61,11 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
           </button>
         ))}
       </div>
+      <p className="mb-5 text-sm text-white/65" aria-live="polite">
+        {visibleCoaches.length} hồ sơ phù hợp
+        {activeFilter !== "Tất cả" ? ` · ${activeFilter}` : ""}
+        {searchQuery.trim() ? ` · “${searchQuery.trim()}”` : ""}
+      </p>
       {visibleCoaches.length ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {visibleCoaches.map((coach, index) => (
@@ -52,7 +92,18 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
             </Reveal>
           ))}
         </div>
-      ) : <p className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center text-white/75">Chưa có người đồng hành trong lĩnh vực này.</p>}
+      ) : (
+        <div className="rounded-2xl border border-white/20 bg-white/5 p-8 text-center text-white/75">
+          <p>Chưa tìm thấy hồ sơ phù hợp. Thử từ khóa khác hoặc xem tất cả lĩnh vực.</p>
+          <button
+            type="button"
+            onClick={() => { setSearchQuery(""); setActiveFilter("Tất cả"); }}
+            className="mt-4 rounded-full border border-yellow/70 px-5 py-2 text-sm font-semibold text-yellow transition hover:bg-yellow hover:text-blue"
+          >
+            Xóa bộ lọc
+          </button>
+        </div>
+      )}
     </>
   );
 }
