@@ -12,10 +12,10 @@ const STEPS = [
 
 function PhoneFrame({ step, coach, active, compact = false }: { step: number; coach: Coach; active: boolean; compact?: boolean }) {
   const tilt = step === 0 ? "-rotate-[7deg]" : step === 1 ? "rotate-0" : "rotate-[7deg]";
-  const dimensions = compact ? "h-[260px] w-[164px] max-w-none" : "h-[min(48svh,460px)] w-full max-w-[260px]";
+  const dimensions = compact ? "h-[260px] w-[164px] max-w-none" : "h-[min(44svh,400px)] w-full max-w-[250px]";
 
   return (
-    <div className={`relative ${dimensions} shrink-0 rounded-[2rem] border-[8px] border-[#20251f] bg-[#20251f] p-1 shadow-[0_25px_45px_-20px_rgba(24,37,68,.45)] transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${tilt} ${active ? "z-30 scale-110 opacity-100" : "z-10 scale-[.88] opacity-60"}`}>
+    <div className={`relative ${dimensions} shrink-0 rounded-[2rem] border-[8px] border-[#20251f] bg-[#20251f] p-1 shadow-[0_25px_45px_-20px_rgba(24,37,68,.45)] transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${tilt} ${active ? "z-30 scale-[1.06] opacity-100" : "z-10 scale-[.88] opacity-60"}`}>
       <div className="relative h-full w-full overflow-hidden rounded-[1.45rem] bg-white">
         {step === 0 && (coach.image ? <Image src={coach.image} alt={coach.name} fill sizes="220px" className="object-cover" /> : <div className="flex h-full items-center justify-center bg-[linear-gradient(145deg,#6ca7dc,#172d55)]"><span className="font-display text-5xl font-bold text-white">{coach.initials}</span></div>)}
         {step === 1 && <Image src="/images/collaborate_team.jpg" alt="Những người đồng hành trong hoạt động của Sunshine Center" fill sizes="220px" className="object-cover" />}
@@ -45,7 +45,7 @@ function PhotoStage({ coach, activeStep }: { coach: Coach; activeStep: number })
       {STEPS.map((step, index) => (
         <div key={step.number} className={`absolute ${positions[index]} flex h-full w-[30%] max-w-[290px] flex-col items-center transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${index === activeStep ? "-translate-y-3" : "translate-y-2"}`}>
           <PhoneFrame step={index} coach={coach} active={index === activeStep} />
-          <span className={`mt-3 whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-wider ${index === activeStep ? "text-blue" : "text-blue/40"}`}>{step.number} · {labels[index]}</span>
+          <span className={`relative z-40 mt-4 whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-wider ${index === activeStep ? "text-blue" : "text-blue/55"}`}>{step.number} · {labels[index]}</span>
         </div>
       ))}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-blue/10 bg-white/85 px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[.14em] text-blue/60 backdrop-blur">
@@ -144,7 +144,7 @@ export function CoachingJourney({ coach }: { coach: Coach }) {
       <div className="pointer-events-none absolute -right-28 top-20 h-96 w-96 rounded-full bg-yellow/10 blur-3xl" />
       <div className="relative mx-auto grid w-full max-w-[var(--page-w)] items-center gap-8 xl:grid-cols-[.8fr_1.2fr] xl:gap-10">
         <div className="relative z-10">
-          <p className="font-mono text-xs font-bold uppercase tracking-[.17em] text-yellow">Phiên coaching 1:1 cùng {coach.name}</p>
+          <p className="font-mono text-sm font-bold uppercase tracking-[.17em] text-yellow">Phiên coaching 1:1 cùng {coach.name}</p>
           <h2 className="mt-3 max-w-xl font-display text-3xl font-bold leading-tight text-blue md:text-4xl xl:text-4xl">Một không gian riêng dành cho bạn</h2>
           <p className="mt-3 max-w-xl leading-6 text-blue/70 md:leading-7 line-clamp-3 xl:mt-2 xl:line-clamp-2">{coach.bio}</p>
           <p className="mt-2 max-w-xl text-sm leading-6 text-blue/65 line-clamp-2 md:text-base xl:mt-1 xl:line-clamp-1">{coach.approach}</p>

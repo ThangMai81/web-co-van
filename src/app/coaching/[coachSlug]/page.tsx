@@ -21,9 +21,9 @@ export default async function CoachProfilePage({
   return (
     <main className="min-h-screen bg-white">
       <SiteHeader />
-      <section className="relative overflow-hidden bg-blue px-6 pb-24 pt-36 text-white md:pt-44">
+      <section className="relative overflow-hidden bg-blue pb-24 pt-[88px] text-white">
         <div className="pointer-events-none absolute -right-28 -top-24 h-96 w-96 rounded-full bg-yellow/20 blur-3xl" />
-        <div className="relative mx-auto max-w-[var(--page-w)]">
+        <div className="relative mx-auto max-w-[var(--page-w)] px-6">
           <Breadcrumb
             variant="light"
             items={[
@@ -32,7 +32,7 @@ export default async function CoachProfilePage({
               { label: coach.name },
             ]}
           />
-          <div className="grid items-center gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="mx-auto grid w-full max-w-[var(--page-w)] items-center gap-12 px-6 lg:grid-cols-[0.85fr_1.15fr]">
             {coach.image ? (
               <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border-4 border-yellow/70 shadow-2xl shadow-black/20">
                 <Image
@@ -55,7 +55,7 @@ export default async function CoachProfilePage({
               </div>
             )}
             <div>
-              <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.2em] text-yellow">
+              <p className="mb-4 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">
                 {coach.title}
               </p>
               <h1 className="font-display text-5xl font-bold leading-tight text-white md:text-7xl">
@@ -91,7 +91,7 @@ export default async function CoachProfilePage({
       <section id="story" className="bg-white px-6 py-20 md:py-28">
         <div className="mx-auto grid max-w-[var(--page-w)] gap-10 lg:grid-cols-[.75fr_1.25fr] lg:gap-16">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[.18em] text-yellow">Hành trình của người đồng hành</p>
+            <p className="font-mono text-sm font-bold uppercase tracking-[.18em] text-yellow">Hành trình của người đồng hành</p>
             <h2 className="mt-4 font-display text-3xl font-bold leading-tight text-blue md:text-5xl">
               <span className="mr-1 inline-block align-[-.08em] font-serif text-7xl italic text-yellow md:text-8xl">C</span>
               âu chuyện của {coach.name.split(" ").slice(-1)[0]}
@@ -124,7 +124,7 @@ export default async function CoachProfilePage({
       <section id="session-details" className="bg-[#f4f6fa] px-6 py-20 md:py-28">
         <div className="mx-auto max-w-[var(--page-w)]">
           <div className="mb-10 max-w-3xl">
-            <p className="font-mono text-xs font-bold uppercase tracking-[.18em] text-yellow">Thông tin phiên khai vấn</p>
+            <p className="font-mono text-sm font-bold uppercase tracking-[.18em] text-yellow">Thông tin phiên khai vấn</p>
             <h2 className="mt-3 font-display text-3xl font-bold text-blue md:text-5xl">Một phiên cùng {coach.name.split(" ").slice(-1)[0]}</h2>
             <p className="mt-4 leading-7 text-blue/70">Phí và thời gian được hiển thị trước để bạn chủ động sắp xếp. Các hồ sơ minh hoạ cần được Sunshine Center xác nhận trước khi nhận đăng ký thật.</p>
           </div>

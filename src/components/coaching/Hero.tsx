@@ -15,13 +15,13 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid max-w-[var(--page-w)] items-center gap-12 lg:grid-cols-2">
         <Reveal direction="left">
           <div>
-            <div className="mb-5 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-yellow">
+            <div className="mb-5 flex items-center gap-3 font-mono text-sm uppercase tracking-widest text-yellow">
               <span className="block h-px w-6 bg-yellow" />
               Dịch vụ coaching 1:1
             </div>
             <h1 className="max-w-2xl font-display text-4xl font-bold leading-[1.08] text-white sm:text-5xl md:text-6xl xl:text-7xl">
               <span className="block"><span className="mr-2 inline-block align-[-0.08em] text-[1.2em] leading-none text-yellow">C</span>ùng bạn</span>
-              <span className="mt-2 block font-serif font-medium italic text-yellow">gỡ rối, mở lối</span>
+              <span className="mt-2 block font-display font-semibold tracking-tight text-yellow">gỡ rối, mở lối</span>
               <span className="mt-2 block">cho hành trình riêng.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg text-white/80">

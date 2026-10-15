@@ -68,7 +68,7 @@ export default async function CoursesPage({
           items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
         />
 
-        <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+        <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
           <span className="block h-px w-6 bg-yellow" />
           Khóa học
         </div>

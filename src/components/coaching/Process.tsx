@@ -118,10 +118,10 @@ export function Process() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="process" className="relative flex min-h-[calc(100svh-5rem)] scroll-mt-20 items-center bg-white px-6 py-14 before:absolute before:-top-10 before:left-0 before:h-16 before:w-full before:rounded-[50%] before:bg-blue md:py-16 xl:px-8">
+    <section ref={sectionRef} id="process" className="relative flex min-h-[calc(100svh-5rem)] scroll-mt-20 items-center bg-white px-6 py-14 md:py-16 xl:px-8">
       <div className="mx-auto w-full max-w-[var(--page-w)]">
         <div className="mb-8 max-w-2xl md:mb-10">
-          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[.18em] text-yellow">Từng bước rõ ràng</p>
+          <p className="mb-3 font-mono text-sm font-bold uppercase tracking-[.18em] text-yellow">Từng bước rõ ràng</p>
           <h2 className="font-display text-3xl font-bold text-blue md:text-5xl">Quy trình đồng hành</h2>
           <p className="mt-4 max-w-xl leading-7 text-blue/70">Bạn đã chọn người muốn gặp? Gửi lời nhắn từ hồ sơ của họ, rồi Sunshine Center sẽ hỗ trợ thống nhất lịch cho phiên đầu tiên.</p>
         </div>

@@ -94,7 +94,7 @@ export function InquiryForm({ coachName, availability, bookingNoticeHours }: { c
 
       <div className="mx-auto max-w-[var(--page-w)] px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-4 flex items-center justify-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+          <div className="mb-4 flex items-center justify-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
             <span className="block h-px w-6 bg-yellow" />
             Bắt đầu hành trình của bạn
             <span className="block h-px w-6 bg-yellow" />

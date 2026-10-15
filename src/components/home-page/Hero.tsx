@@ -19,7 +19,7 @@ export function Hero() {
           />
         </div>
 
-        <div className="mb-5 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-white">
+        <div className="mb-5 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-white">
           <span className="hidden h-px w-6 shrink-0 bg-yellow sm:block" />
 
           {/* Điện thoại và máy tính bảng: bản rút gọn, luôn nằm trên 1 hàng */}

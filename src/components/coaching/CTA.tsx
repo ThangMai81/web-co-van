@@ -2,7 +2,7 @@ import { Reveal } from "@/components/animation/Reveal";
 
 export function CTA() {
   return (
-    <section id="booking" className="relative overflow-hidden bg-blue px-6 py-24 text-center text-white after:absolute after:-bottom-12 after:left-0 after:h-20 after:w-full after:rounded-[50%] after:bg-white">
+    <section id="booking" className="relative overflow-hidden bg-blue px-6 py-24 text-center text-white">
       <Reveal direction="scale">
         <h2 className="mx-auto max-w-2xl font-display text-3xl font-bold md:text-4xl">
           Tìm người đồng hành phù hợp với bạn

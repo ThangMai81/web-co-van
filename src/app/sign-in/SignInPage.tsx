@@ -142,7 +142,7 @@ export function SignIn() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-blue via-blue/55 to-blue/10" />
           <div className="absolute inset-x-0 bottom-0 p-10 lg:p-14">
-            <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-yellow">
+            <div className="mb-4 flex items-center gap-3 font-mono text-sm uppercase tracking-widest text-yellow">
               <span className="block h-px w-6 bg-yellow" />
               Sunshine Center
             </div>

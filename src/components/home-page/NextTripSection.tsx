@@ -9,7 +9,7 @@ export function NextTripSection() {
 
           <Reveal direction="left">
             <div className="relative">
-              <div className="mb-3 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+              <div className="mb-3 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
                 <span className="block h-px w-6 bg-yellow" />
                 Chuyến đi tiếp theo
               </div>

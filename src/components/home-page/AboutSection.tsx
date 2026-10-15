@@ -55,7 +55,7 @@ export function AboutSection() {
             visible ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
           }`}
         >
-          <div className="mb-3 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-yellow">
+          <div className="mb-3 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">
             <span className="h-px w-5 bg-yellow" />
             Thông tin doanh nghiệp
           </div>

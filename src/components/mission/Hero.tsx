@@ -17,7 +17,7 @@ export function Hero() {
 
       <div className="relative mx-auto max-w-3xl text-center">
         <Reveal direction="up">
-          <div className="mb-5 flex items-center justify-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+          <div className="mb-5 flex items-center justify-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
             <span className="block h-px w-6 bg-yellow" />
             Câu chuyện Sunshine Center
             <span className="block h-px w-6 bg-yellow" />

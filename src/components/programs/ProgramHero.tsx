@@ -19,7 +19,7 @@ export default function ProgramHero({ program }: { program: Program }) {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-blue via-blue/70 to-blue/20" />
 
-      <div className="relative mx-auto w-full max-w-4xl px-6 pb-10">
+      <div className="absolute inset-x-0 top-[88px] z-10 mx-auto w-full max-w-[var(--page-w)] px-6">
         <Breadcrumb
           variant="light"
           items={[
@@ -31,9 +31,11 @@ export default function ProgramHero({ program }: { program: Program }) {
             { label: program.title },
           ]}
         />
+      </div>
 
+      <div className="relative mx-auto w-full max-w-4xl px-6 pb-10">
         <div className="mb-3 flex flex-wrap gap-2">
-          <span className="flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">
+          <span className="flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-sm font-bold text-blue">
             <CategoryIcon category={program.category} size={14} />
             {CATEGORY_LABELS[program.category]}
           </span>

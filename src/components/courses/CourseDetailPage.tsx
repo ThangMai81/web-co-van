@@ -36,7 +36,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
   return (
     <div className="min-h-svh bg-white">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-6 pb-10 pt-32">
+      <div className="mx-auto max-w-[var(--page-w)] px-6 pb-10 pt-[88px]">
         <CourseHeader course={course} detail={detail} />
 
         <div className="mt-6 w-full">
