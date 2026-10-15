@@ -18,24 +18,24 @@ export default function HeroSection({
 }) {
   return (
     <header
-      className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${portrait ? "min-h-[620px] pt-[88px] lg:min-h-[800px]" : "pt-32"}`}
+      className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${portrait ? "min-h-[600px] pt-[88px] lg:min-h-[720px]" : "pt-32"}`}
     >
       {/* Nền xanh; ảnh chân dung kéo kín từ mép đầu tới chân hero ở desktop. */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue via-blue to-navy-light" />
 
       {portrait && (
         <>
-          <div className="absolute inset-y-0 right-0 hidden w-[48%] lg:block">
+          <div className="absolute inset-y-10 right-0 hidden w-[42%] lg:block">
             <Image
               src={portrait.src}
               alt={portrait.alt}
               fill
               priority
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              className="object-cover object-top"
+              sizes="(min-width: 1024px) 42vw, 100vw"
+              className="object-cover object-[center_30%]"
             />
           </div>
-          <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[58%] bg-gradient-to-r from-blue via-blue/45 to-transparent lg:block" />
+          <div aria-hidden="true" className="absolute inset-y-10 right-0 hidden w-[54%] bg-gradient-to-r from-blue via-blue/50 to-transparent lg:block" />
         </>
       )}
 
@@ -52,8 +52,8 @@ export default function HeroSection({
         }}
       />
 
-      <div className={`relative mx-auto max-w-[var(--page-w)] px-6 ${portrait ? "flex min-h-[532px] flex-col items-start lg:min-h-[712px]" : ""}`}>
-          <div className={portrait ? "w-full pb-14 lg:max-w-[58%] lg:pb-20" : "w-full pb-16"}>
+      <div className={`relative mx-auto max-w-[var(--page-w)] px-6 ${portrait ? "flex min-h-[512px] flex-col items-start lg:min-h-[632px]" : ""}`}>
+          <div className={portrait ? "w-full pb-14 lg:max-w-[56%] lg:pb-12" : "w-full pb-16"}>
             {children}
           </div>
 

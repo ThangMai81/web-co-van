@@ -58,10 +58,13 @@ export function Hero() {
           </div>
         </Reveal>
       </div>
-      <svg aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full md:h-32" viewBox="0 0 1440 180" preserveAspectRatio="none">
-        <path d="M0 94 C180 57 332 118 510 96 C690 74 826 130 1000 104 C1174 78 1302 82 1440 96 L1440 180 L0 180 Z" className="fill-white" />
-        <path d="M0 72 C180 105 332 60 510 78 C690 96 826 120 1000 91 C1174 62 1302 58 1440 78" fill="none" className="stroke-yellow" strokeWidth="17" strokeLinecap="round" />
-        <path d="M0 105 C180 77 332 133 510 113 C690 92 826 148 1000 122 C1174 96 1302 102 1440 116" fill="none" className="stroke-blue" strokeWidth="5" strokeLinecap="round" />
+      <svg aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 z-0 h-20 w-full md:h-24" viewBox="0 0 1440 180" preserveAspectRatio="none">
+        <path d="M0 100 C180 131 332 87 510 101 C690 115 826 145 1000 119 C1174 93 1302 91 1440 106 L1440 180 L0 180 Z" className="fill-white" />
+        <path d="M0 76 C180 108 332 63 510 80 C690 97 826 124 1000 96 C1174 68 1302 63 1440 82" fill="none" className="stroke-yellow" strokeWidth="10" strokeLinecap="round" opacity=".72" />
+        <path d="M0 88 C180 119 332 76 510 92 C690 108 826 135 1000 108 C1174 81 1302 78 1440 94" fill="none" className="stroke-white" strokeWidth="5" strokeLinecap="round" opacity=".95" />
+        <path d="M0 99 C180 128 332 89 510 103 C690 117 826 143 1000 117 C1174 91 1302 88 1440 104" fill="none" className="stroke-blue" strokeWidth="6" strokeLinecap="round" opacity=".95" />
+        <path d="M0 112 C180 139 332 100 510 114 C690 128 826 153 1000 128 C1174 103 1302 101 1440 116" fill="none" className="stroke-yellow" strokeWidth="3" strokeLinecap="round" opacity=".58" />
+        <path d="M0 124 C180 148 332 111 510 125 C690 139 826 162 1000 138 C1174 114 1302 114 1440 128" fill="none" className="stroke-blue" strokeWidth="2" strokeLinecap="round" opacity=".82" />
       </svg>
     </section>
   );
