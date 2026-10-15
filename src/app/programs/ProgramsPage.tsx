@@ -54,7 +54,7 @@ export default async function ProgramsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="relative overflow-hidden bg-blue pb-16 pt-32">
+      <header className="relative overflow-hidden bg-blue pb-16 pt-[88px]">
         <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-yellow/20 blur-3xl" />
         <div className="relative mx-auto max-w-[var(--page-w)] px-6">
           <Breadcrumb

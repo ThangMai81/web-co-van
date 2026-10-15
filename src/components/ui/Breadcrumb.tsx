@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BackButton } from "@/components/navigation/BackButton";
 
 type Crumb = { label: string; href?: string };
 
@@ -12,10 +13,10 @@ export function Breadcrumb({
   const isLight = variant === "light";
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className="mb-8 flex flex-wrap items-center gap-2 text-sm"
-    >
+    <div className={`mb-8 flex flex-wrap items-center justify-between gap-3 rounded-full border px-3 py-2 ${
+      isLight ? "border-white/25 bg-blue/35" : "border-blue/10 bg-blue/5"
+    }`}>
+      <nav aria-label="Breadcrumb" className="flex min-w-0 flex-wrap items-center gap-2 text-xs sm:text-sm">
       {items.map((item, i) => {
         const isLast = i === items.length - 1;
         return (
@@ -33,7 +34,7 @@ export function Breadcrumb({
               <span
                 className={
                   isLast
-                    ? `font-bold ${isLight ? "text-white" : "text-blue"}`
+                    ? `rounded-full px-3 py-1.5 font-bold ${isLight ? "bg-yellow text-blue" : "bg-yellow text-blue"}`
                     : `font-medium ${isLight ? "text-white/70" : "text-blue/60"}`
                 }
               >
@@ -48,6 +49,8 @@ export function Breadcrumb({
           </span>
         );
       })}
-    </nav>
+      </nav>
+      <BackButton variant={isLight ? "light" : "default"} />
+    </div>
   );
 }

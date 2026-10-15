@@ -7,6 +7,8 @@ import CourseCurriculum from "./CourseCurriculum";
 import CourseReviews from "./CourseReviews";
 import RelatedCourses from "./RelatedCourses";
 import type { CourseDetailResponse } from "@/types/course";
+import { SiteHeader } from "@/components/navigation/SiteHeader";
+import { SiteFooter } from "@/components/home-page/SiteFooter";
 
 async function getCourseDetail(
   slug: string,
@@ -33,37 +35,39 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-svh bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-10">
+      <SiteHeader />
+      <div className="mx-auto max-w-6xl px-6 pb-10 pt-32">
         <CourseHeader course={course} detail={detail} />
 
-        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <CourseMedia detail={detail} title={course.title} />
-          </div>
-          <CourseSidebar courseId={course._id} detail={detail} />
+        <div className="mt-6 w-full">
+          <CourseMedia detail={detail} title={course.title} />
         </div>
 
-        <div className="mt-10 space-y-8">
-          <CourseDescription course={course} detail={detail} />
-          {detail && detail.curriculum.length > 0 && (
-            <CourseCurriculum
-              curriculum={detail.curriculum}
-              totalDurationLabel={detail.totalDurationLabel}
+        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="space-y-8 lg:col-span-2">
+            <CourseDescription course={course} detail={detail} />
+            {detail && detail.curriculum.length > 0 && (
+              <CourseCurriculum
+                curriculum={detail.curriculum}
+                totalDurationLabel={detail.totalDurationLabel}
+              />
+            )}
+            <CourseReviews
+              courseId={course._id}
+              ratingAverage={detail?.ratingAverage ?? 0}
+              ratingCount={detail?.ratingCount ?? 0}
+              breakdown={ratingBreakdown}
+              reviews={reviews}
             />
-          )}
-          <CourseReviews
-            courseId={course._id}
-            ratingAverage={detail?.ratingAverage ?? 0}
-            ratingCount={detail?.ratingCount ?? 0}
-            breakdown={ratingBreakdown}
-            reviews={reviews}
-          />
+          </div>
+          <CourseSidebar courseId={course._id} detail={detail} />
         </div>
 
         {relatedCourses.length > 0 && (
           <RelatedCourses courses={relatedCourses} />
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }

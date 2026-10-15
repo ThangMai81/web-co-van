@@ -2,11 +2,16 @@
 
 import { formatVND } from "@/lib/programLabels";
 import type { ProgramRegistration as Registration } from "@/types/program";
+import Image from "next/image";
 
 export default function ProgramRegistration({
   registration,
+  image,
+  title,
 }: {
   registration: Registration;
+  image: string;
+  title: string;
 }) {
   const seatsLeft =
     registration.seatsTotal != null
@@ -14,8 +19,12 @@ export default function ProgramRegistration({
       : null;
 
   return (
-    <div className="mt-8 rounded-xl border-2 border-yellow bg-blue p-6 text-white">
-      <h2 className="mb-3 text-lg font-bold">Đăng ký tham gia</h2>
+    <div className="mt-8 overflow-hidden rounded-2xl border-2 border-yellow bg-blue text-white shadow-xl shadow-blue/15">
+      <div className="relative aspect-[2/1] w-full">
+        <Image src={image} alt={title} fill sizes="100vw" className="object-cover" />
+      </div>
+      <div className="p-6 sm:p-8">
+        <h2 className="mb-3 text-2xl font-bold">Đăng ký tham gia</h2>
 
       <div className="flex flex-wrap items-center gap-4">
         <span className="text-2xl font-extrabold text-yellow">
@@ -38,19 +47,25 @@ export default function ProgramRegistration({
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={() => alert("Chuyển sang form đăng ký (demo)")}
-        className="mt-4 w-full rounded-lg bg-yellow py-3 font-bold text-blue transition hover:brightness-95 sm:w-auto sm:px-10"
-      >
-        Đăng ký ngay
-      </button>
+      {registration.contactPhone ? (
+        <a
+          href={`tel:${registration.contactPhone}`}
+          className="mt-4 inline-block rounded-full bg-yellow px-8 py-3 font-bold text-blue transition hover:brightness-95"
+        >
+          Gọi để đăng ký
+        </a>
+      ) : (
+        <p className="mt-4 text-sm font-medium text-white/70">
+          Vui lòng liên hệ Sunshine Center để nhận hướng dẫn đăng ký.
+        </p>
+      )}
 
       {registration.contactPhone && (
         <p className="mt-3 text-sm font-medium text-white/70">
           Hoặc liên hệ hotline: {registration.contactPhone}
         </p>
       )}
+      </div>
     </div>
   );
 }

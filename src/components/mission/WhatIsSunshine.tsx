@@ -4,9 +4,9 @@ import { Reveal } from "@/components/animation/Reveal";
 export function WhatIsSunshine() {
   return (
     <section className="bg-white px-6 py-24">
-      <div className="mx-auto grid max-w-[var(--page-w)] items-center gap-12 lg:grid-cols-2">
+      <div className="mx-auto max-w-[var(--page-w)]">
         <Reveal direction="left">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-yellow shadow-lg shadow-blue/10">
+          <div className="relative left-1/2 aspect-[2/1] w-screen -translate-x-1/2 overflow-hidden shadow-lg shadow-blue/10 md:aspect-[21/8]">
             <Image
               src="/images/collaborate_team.jpg"
               alt="Sunshine Center"
@@ -18,14 +18,14 @@ export function WhatIsSunshine() {
         </Reveal>
 
         <Reveal direction="right">
-          <div>
-            <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
-              <span className="block h-px w-6 bg-yellow" />
+          <div className="mx-auto mt-14 max-w-3xl text-center">
+            <div className="mb-5 flex items-center gap-3 font-mono text-lg font-bold uppercase tracking-widest text-yellow md:text-xl">
+              <span className="block h-px w-8 bg-yellow" />
               Sunshine Center là gì?
             </div>
-            <p className="mb-4 text-xl font-bold text-blue">
-              Là một nơi giúp bạn nhìn thấy ánh sáng bên trong mình và tự mình
-              tỏa sáng theo cách riêng của bạn.
+            <p className="mb-4 text-2xl font-bold text-blue md:text-3xl">
+              Sunshine Center là không gian đồng hành để bạn hiểu mình hơn, tìm
+              lại nguồn lực bên trong và bước tiếp theo cách riêng.
             </p>
             <p className="mb-4 font-medium text-blue/70">
               Nhắc đến Sunshine là nhắc đến ánh sáng ấm áp, nơi khi bạn đặt chân

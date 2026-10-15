@@ -4,11 +4,11 @@ import { Reveal } from "@/components/animation/Reveal";
 export function JourneyInside() {
   return (
     <section className="bg-blue/5 px-6 py-24">
-      <div className="mx-auto grid max-w-[var(--page-w)] items-center gap-12 lg:grid-cols-2">
+      <div className="mx-auto max-w-[var(--page-w)]">
         <Reveal direction="left">
-          <div>
-            <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
-              <span className="block h-px w-6 bg-yellow" />
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-4 flex items-center justify-center gap-3 font-mono text-lg font-bold uppercase tracking-widest text-yellow md:text-xl">
+              <span className="block h-px w-8 bg-yellow" />
               Hành trình bên trong
             </div>
             <p className="mb-4 font-medium text-blue/70">
@@ -16,7 +16,7 @@ export function JourneyInside() {
               giúp bạn từng bước đi qua bóng tối bên trong để chạm vào vùng sáng
               vốn có sẵn bên trong bạn.
             </p>
-            <p className="mb-4 text-xl font-bold text-blue">
+            <p className="mb-4 text-2xl font-bold text-blue md:text-3xl">
               Giúp bạn tìm thấy phiên bản xuất sắc nhất bên trong mình, bạn trở
               về với phiên bản vốn là của bạn, bạn sống cuộc đời rực rỡ nhất của
               chính bạn.
@@ -30,7 +30,7 @@ export function JourneyInside() {
         </Reveal>
 
         <Reveal direction="right">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-blue/20 shadow-lg shadow-blue/10">
+          <div className="relative left-1/2 mt-12 aspect-[2/1] w-screen -translate-x-1/2 overflow-hidden shadow-lg shadow-blue/10 md:aspect-[21/8]">
             <Image
               src="/images/first_banner.jpg"
               alt="Hành trình bên trong"

@@ -9,7 +9,7 @@ export function Hero() {
       <div className="pointer-events-none absolute -bottom-40 -left-20 h-80 w-80 rounded-full bg-yellow/10 blur-3xl" />
 
       <div className="relative mx-auto w-full max-w-[var(--page-w)] px-6">
-        <div className="relative mb-10 aspect-[16/5] w-full overflow-hidden rounded-2xl border-2 border-yellow shadow-xl shadow-black/20">
+        <div className="relative mb-10 left-1/2 aspect-[16/8] w-screen max-w-none -translate-x-1/2 overflow-hidden border-y-2 border-yellow shadow-xl shadow-black/20 sm:aspect-[16/6] lg:aspect-[16/5]">
           <Image
             src="/images/Sunshine_banner.jpg"
             alt="Sunshine Center"

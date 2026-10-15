@@ -9,10 +9,13 @@ export default function CourseMedia({
   title: string;
 }) {
   if (!detail?.thumbnail) return null;
+  const thumbnail = detail.thumbnail.includes("res.cloudinary.com/demo")
+    ? "/images/collaborate_team.jpg"
+    : detail.thumbnail;
 
   return (
     <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-blue/10 bg-blue/5">
-      <Image src={detail.thumbnail} alt={title} fill className="object-cover" />
+      <Image src={thumbnail} alt={title} fill sizes="100vw" className="object-cover" />
       {detail.videoUrl && (
         <a
           href={detail.videoUrl}

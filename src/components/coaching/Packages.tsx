@@ -23,10 +23,10 @@ const PACKAGES = [
 
 export function Packages() {
   return (
-    <section className="bg-paper px-6 py-24">
+    <section className="bg-white px-6 py-24">
       <div className="mx-auto max-w-[var(--page-w)]">
         <Reveal direction="up">
-          <h2 className="mb-14 text-center font-display text-3xl font-bold text-ink md:text-4xl">
+          <h2 className="mb-14 text-center font-display text-3xl font-bold text-blue md:text-4xl">
             Gói đồng hành
           </h2>
         </Reveal>
@@ -37,12 +37,12 @@ export function Packages() {
               <div
                 className={`flex h-full flex-col rounded-md border p-8 ${
                   pkg.featured
-                    ? "border-sun bg-ink text-chalk"
-                    : "border-sage/30 bg-cream text-ink"
+                    ? "border-yellow bg-blue text-white"
+                    : "border-blue/15 bg-white text-blue shadow-lg shadow-blue/5"
                 }`}
               >
                 {pkg.featured && (
-                  <span className="mb-4 w-fit rounded-full bg-sun px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-ink">
+                  <span className="mb-4 w-fit rounded-full bg-yellow px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-blue">
                     Phổ biến nhất
                   </span>
                 )}
@@ -51,14 +51,14 @@ export function Packages() {
                 </h3>
                 <div
                   className={`mb-4 font-mono text-sm ${
-                    pkg.featured ? "text-sun" : "text-sage"
+                    pkg.featured ? "text-yellow" : "text-blue/60"
                   }`}
                 >
                   {pkg.sessions}
                 </div>
                 <p
                   className={`mb-8 flex-1 text-sm leading-6 ${
-                    pkg.featured ? "text-chalk/70" : "text-ink/65"
+                    pkg.featured ? "text-white/75" : "text-blue/70"
                   }`}
                 >
                   {pkg.desc}
@@ -67,8 +67,8 @@ export function Packages() {
                   href="#booking"
                   className={`rounded-sm py-3 text-center font-mono text-xs uppercase tracking-wider transition-colors ${
                     pkg.featured
-                      ? "bg-sun text-ink hover:brightness-90"
-                      : "border border-ink/25 hover:border-ink"
+                      ? "bg-yellow text-blue hover:brightness-90"
+                      : "border border-blue/25 text-blue hover:border-yellow hover:bg-yellow/10"
                   }`}
                 >
                   Liên hệ tư vấn

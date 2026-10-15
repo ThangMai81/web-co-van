@@ -15,10 +15,12 @@ export function Reveal({
   children,
   direction = "up",
   delay = 0,
+  repeat = false,
 }: {
   children: ReactNode;
   direction?: Direction;
   delay?: number;
+  repeat?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -29,17 +31,15 @@ export function Reveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(el);
-        }
+        setVisible(entry.isIntersecting);
+        if (entry.isIntersecting && !repeat) observer.unobserve(el);
       },
       { threshold: 0.15 },
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [repeat]);
 
   return (
     <div

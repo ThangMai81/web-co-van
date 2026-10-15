@@ -5,7 +5,6 @@ import { Audience } from "@/components/coaching/Audience";
 import { VideoDemo } from "@/components/coaching/VideoDemo";
 import { Process } from "@/components/coaching/Process";
 import { About } from "@/components/coaching/About";
-import { Packages } from "@/components/coaching/Packages";
 import { CTA } from "@/components/coaching/CTA";
 
 export function CoachingPage() {
@@ -17,7 +16,6 @@ export function CoachingPage() {
       <VideoDemo />
       <Process />
       <About />
-      <Packages />
       <CTA />
       <SiteFooter />
     </main>

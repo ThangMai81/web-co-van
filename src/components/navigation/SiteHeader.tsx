@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   getStoredUser,
   clearSession,
@@ -13,7 +13,7 @@ import {
 
 const NAV_LINKS = [
   { href: "/programs", label: "CHƯƠNG TRÌNH" },
-  // { href: "/coaching", label: "Dịch vụ coaching 1:1" },
+  { href: "/coaching", label: "DỊCH VỤ COACHING 1:1" },
   { href: "/courses", label: "KHÓA HỌC" },
   // { href: "/library", label: "THƯ VIỆN" },
   { href: "/mission", label: "SỨ MỆNH" },
@@ -23,6 +23,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<StoredUser | null>(null);
+  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
@@ -80,15 +81,23 @@ export function SiteHeader() {
           </Link>
 
           <nav className="hidden items-center gap-10 text-sm font-medium text-ink md:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="relative py-1 transition-colors hover:text-yellow after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-yellow after:transition-all after:duration-300 hover:after:w-full"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) =>
+              (() => {
+                const isActive =
+                  pathname === link.href ||
+                  pathname.startsWith(`${link.href}/`);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`relative py-1 transition-colors hover:text-yellow after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${isActive ? "text-blue after:w-full" : "after:w-0"}`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })(),
+            )}
 
             {user ? (
               <div className="flex items-center gap-3">
@@ -169,16 +178,23 @@ export function SiteHeader() {
           </div>
         )}
 
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            onClick={() => setMenuOpen(false)}
-            className="rounded-full border border-sun/40 bg-sun-soft/50 px-5 py-3 text-center font-display text-lg font-semibold text-ink"
-          >
-            {link.label}
-          </Link>
-        ))}
+        {NAV_LINKS.map((link) =>
+          (() => {
+            const isActive =
+              pathname === link.href || pathname.startsWith(`${link.href}/`);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                aria-current={isActive ? "page" : undefined}
+                className={`rounded-full border px-5 py-3 text-center font-display text-lg font-semibold transition-colors hover:border-yellow hover:text-blue ${isActive ? "border-yellow bg-yellow text-blue" : "border-sun/40 bg-sun-soft/50 text-ink"}`}
+              >
+                {link.label}
+              </Link>
+            );
+          })(),
+        )}
 
         {user ? (
           <button

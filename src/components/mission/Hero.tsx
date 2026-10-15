@@ -1,11 +1,19 @@
 import { Reveal } from "@/components/animation/Reveal";
 import { Quote } from "@/lib/icons";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-blue px-6 pb-24 pt-40 md:pt-48">
+    <section className="relative overflow-hidden bg-blue px-6 pb-24 pt-[88px]">
       <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-yellow/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-yellow/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-[var(--page-w)] px-6">
+        <Breadcrumb
+          items={[{ label: "Trang chủ", href: "/" }, { label: "Sứ mệnh" }]}
+          variant="light"
+        />
+      </div>
 
       <div className="relative mx-auto max-w-3xl text-center">
         <Reveal direction="up">

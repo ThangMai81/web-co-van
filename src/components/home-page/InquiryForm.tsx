@@ -16,15 +16,21 @@ const CONCERNS = [
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export function InquiryForm() {
+export function InquiryForm({ coachName, availability, bookingNoticeHours }: { coachName?: string; availability?: string[]; bookingNoticeHours?: number | null } = {}) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [concern, setConcern] = useState("");
   const [concernDetail, setConcernDetail] = useState("");
+  const [preferredSlot, setPreferredSlot] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
 
   const needsDetail = concern === "khac";
+  const needsPreferredSlot = Boolean(coachName && availability?.length);
+  const earliestDate = new Date(Date.now() + (bookingNoticeHours ?? 0) * 60 * 60 * 1000);
+  earliestDate.setMinutes(earliestDate.getMinutes() - earliestDate.getTimezoneOffset());
+  const minDate = earliestDate.toISOString().slice(0, 10);
   const canSubmit =
-    concern && (!needsDetail || concernDetail.trim().length > 0);
+    concern && (!needsDetail || concernDetail.trim().length > 0) && (!needsPreferredSlot || (preferredSlot && preferredDate));
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,7 +50,12 @@ export function InquiryForm() {
             age: Number(data.get("age")),
             email: data.get("email"),
             concern,
-            concernDetail: needsDetail ? concernDetail : "",
+            concernDetail: [
+              needsDetail ? concernDetail : "",
+              preferredDate ? `Ngày mong muốn: ${preferredDate}` : "",
+              preferredSlot ? `Khung giờ mong muốn: ${preferredSlot}` : "",
+            ].filter(Boolean).join("\n"),
+            coachName: coachName ?? "",
           }),
         },
       );
@@ -58,6 +69,8 @@ export function InquiryForm() {
       form.reset();
       setConcern("");
       setConcernDetail("");
+      setPreferredSlot("");
+      setPreferredDate("");
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Có lỗi xảy ra");
       setStatus("error");
@@ -65,13 +78,15 @@ export function InquiryForm() {
   }
 
   return (
-    <section id="lien-he" className="bg-blue/5 py-28">
+    <section id={coachName ? "booking" : "lien-he"} className={`bg-blue/5 py-28 ${coachName ? "scroll-mt-24" : ""}`}>
       <StatusBanner
         show={status === "success" || status === "error"}
         variant={status === "success" ? "success" : "error"}
         message={
           status === "success"
-            ? "Đã gửi thành công! Chúng tôi sẽ liên hệ với bạn sớm."
+            ? coachName
+              ? `Đã gửi yêu cầu phiên với ${coachName}. Chúng tôi sẽ liên hệ xác nhận lịch với bạn.`
+              : "Đã gửi thành công! Chúng tôi sẽ liên hệ với bạn sớm."
             : errorMsg
         }
         onClose={() => setStatus("idle")}
@@ -85,11 +100,12 @@ export function InquiryForm() {
             <span className="block h-px w-6 bg-yellow" />
           </div>
           <h2 className="font-display text-3xl font-bold text-blue sm:text-4xl">
-            Hãy để chúng tôi hiểu bạn hơn
+            {coachName ? `Đặt phiên coaching với ${coachName}` : "Hãy để chúng tôi hiểu bạn hơn"}
           </h2>
           <p className="mt-4 font-medium text-blue/70">
-            Chỉ vài dòng ngắn — chúng tôi sẽ liên hệ để cùng bạn tìm hướng phù
-            hợp nhất.
+            {coachName
+              ? "Chia sẻ điều bạn đang cần. Sunshine Center sẽ liên hệ để trao đổi và xác nhận thời gian phù hợp cho phiên riêng với người đồng hành bạn đã chọn."
+              : "Chỉ vài dòng ngắn — chúng tôi sẽ liên hệ để cùng bạn tìm hướng phù hợp nhất."}
           </p>
         </div>
 
@@ -129,6 +145,36 @@ export function InquiryForm() {
           </div>
 
           <div className="my-8 border-t border-blue/10" />
+
+          {needsPreferredSlot && (
+            <div className="mb-8 grid gap-5 sm:grid-cols-2">
+              <label className="block">
+                <span className="mb-3 block font-mono text-xs font-bold uppercase tracking-wider text-blue">Ngày bạn muốn đặt</span>
+                <input
+                  required
+                  type="date"
+                  min={minDate}
+                  value={preferredDate}
+                  onChange={(event) => setPreferredDate(event.target.value)}
+                  className="w-full rounded-xl border-2 border-blue/15 bg-blue/5 px-4 py-3 text-sm font-medium text-blue outline-none transition-colors focus:border-blue"
+                />
+                <span className="mt-2 block text-xs leading-5 text-blue/55">Đặt trước tối thiểu {bookingNoticeHours ?? 0} giờ.</span>
+              </label>
+              <label className="block">
+                <span className="mb-3 block font-mono text-xs font-bold uppercase tracking-wider text-blue">Khung giờ bạn muốn đăng ký</span>
+                <select
+                  required
+                  value={preferredSlot}
+                  onChange={(event) => setPreferredSlot(event.target.value)}
+                  className="w-full rounded-xl border-2 border-blue/15 bg-blue/5 px-4 py-3 text-sm font-medium text-blue outline-none transition-colors focus:border-blue"
+                >
+                  <option value="">Chọn một khung giờ phù hợp</option>
+                  {availability?.map((slot) => <option key={slot} value={slot}>{slot}</option>)}
+                </select>
+                <span className="mt-2 block text-xs leading-5 text-blue/55">Thời gian chỉ được xác nhận sau khi coach phản hồi.</span>
+              </label>
+            </div>
+          )}
 
           <div>
             <span className="mb-3 block font-mono text-xs font-bold uppercase tracking-wider text-blue">
@@ -197,7 +243,7 @@ export function InquiryForm() {
             ) : (
               <>
                 <Send size={14} />
-                Gửi lời quan tâm
+                {coachName ? "Gửi yêu cầu đặt phiên" : "Gửi lời quan tâm"}
               </>
             )}
           </button>
