@@ -20,22 +20,22 @@ export default function HeroSection({
     <header
       className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${portrait ? "min-h-[600px] pt-[88px] lg:min-h-[720px]" : "pt-32"}`}
     >
-      {/* Nền xanh; ảnh chân dung kéo kín từ mép đầu tới chân hero ở desktop. */}
+      {/* Nền xanh liền mạch phía sau ảnh chân dung trên desktop. */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue via-blue to-navy-light" />
 
       {portrait && (
         <>
-          <div className="absolute inset-y-10 right-0 hidden w-[42%] lg:block">
+          <div className="absolute inset-y-0 right-0 hidden aspect-[1122/1402] w-auto max-w-[42vw] bg-blue lg:block">
             <Image
               src={portrait.src}
               alt={portrait.alt}
               fill
               priority
               sizes="(min-width: 1024px) 42vw, 100vw"
-              className="object-cover object-[center_30%]"
+              className="object-contain object-right"
             />
           </div>
-          <div aria-hidden="true" className="absolute inset-y-10 right-0 hidden w-[54%] bg-gradient-to-r from-blue via-blue/50 to-transparent lg:block" />
+          <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[54%] bg-gradient-to-r from-blue via-blue/50 to-transparent lg:block" />
         </>
       )}
 
