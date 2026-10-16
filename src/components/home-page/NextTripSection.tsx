@@ -1,4 +1,5 @@
 import { Reveal } from "../animation/Reveal";
+import { TripRegistrationDialog } from "./TripRegistrationDialog";
 
 export function NextTripSection() {
   return (
@@ -31,12 +32,7 @@ export function NextTripSection() {
               <div className="my-3 font-display text-xl font-bold text-white">
                 Đăng ký đồng hành
               </div>
-              <a
-                href="#lien-he"
-                className="block rounded-full bg-yellow py-3 text-center font-mono text-xs font-bold uppercase tracking-wider text-blue hover:brightness-95"
-              >
-                Đăng ký ngay
-              </a>
+              <TripRegistrationDialog />
             </div>
           </Reveal>
         </div>
