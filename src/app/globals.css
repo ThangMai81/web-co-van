@@ -28,7 +28,7 @@
   --color-blue: #142850; /* Xanh dương chủ đạo - thay cho text-blue-900 mặc định */
 }
 :root {
-  --page-w: 72rem;
+  --page-w: 90rem;
 }
 
 html {
