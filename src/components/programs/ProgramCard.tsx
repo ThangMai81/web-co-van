@@ -60,14 +60,6 @@ export default function ProgramCard({ program }: { program: Program }) {
           <Calendar size={15} className="shrink-0" /> {program.schedule}
         </p>
 
-        {program.registration?.isOpen && (
-          <span className="mt-1 w-fit rounded-full border border-blue/20 bg-white px-3 py-1 text-xs font-bold text-blue">
-            {program.registration.price && program.registration.price > 0
-              ? `${program.registration.price.toLocaleString("vi-VN")} VNĐ`
-              : "Miễn phí"}
-          </span>
-        )}
-
         {/* mt-auto ép luôn dính đáy card, bất kể phía trên dài hay ngắn */}
         <div className="mt-auto pt-2">
           <ViewDetailLabel />

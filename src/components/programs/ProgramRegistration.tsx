@@ -1,6 +1,5 @@
 "use client";
 
-import { formatVND } from "@/lib/programLabels";
 import type { ProgramRegistration as Registration } from "@/types/program";
 import Image from "next/image";
 
@@ -27,12 +26,6 @@ export default function ProgramRegistration({
         <h2 className="mb-3 text-2xl font-bold">Đăng ký tham gia</h2>
 
       <div className="flex flex-wrap items-center gap-4">
-        <span className="text-2xl font-extrabold text-yellow">
-          {registration.price && registration.price > 0
-            ? `${formatVND(registration.price)} VNĐ`
-            : "Miễn phí"}
-        </span>
-
         {seatsLeft !== null && (
           <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold">
             Còn {seatsLeft}/{registration.seatsTotal} chỗ
