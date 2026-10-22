@@ -1,28 +1,33 @@
-import Image from "next/image";
 import Link from "next/link";
 import StarRating from "@/components/ui/StarRating";
 import type { RelatedCourse } from "@/types/course";
-
-function formatVND(value: number) {
-  return value.toLocaleString("vi-VN");
-}
+import CourseThumbnailImage from "./CourseThumbnailImage";
+import { getCourseThumbnailFallback } from "./courseThumbnails";
 
 export default function RelatedCourseCard({
   course,
 }: {
   course: RelatedCourse;
 }) {
+  const fallbackThumbnail = getCourseThumbnailFallback(course);
+  const thumbnailSrc =
+    course.thumbnail?.includes("res.cloudinary.com/demo/") && fallbackThumbnail
+      ? fallbackThumbnail
+      : course.thumbnail;
+
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-blue/15 bg-blue/5 shadow-sm transition hover:shadow-md"
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-blue/15 bg-blue/5 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
     >
-      {course.thumbnail && (
+      {thumbnailSrc && (
         <div className="relative h-32 w-full">
-          <Image
-            src={course.thumbnail}
+          <CourseThumbnailImage
+            key={`${course._id}:${thumbnailSrc}`}
+            src={thumbnailSrc}
+            fallbackSrc={fallbackThumbnail}
             alt={course.title}
-            fill
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 84vw"
             className="object-cover"
           />
         </div>
@@ -44,9 +49,6 @@ export default function RelatedCourseCard({
             </span>
           </div>
         )}
-        <span className="mt-auto text-sm font-extrabold text-blue">
-          {course.price > 0 ? `${formatVND(course.price)} VNĐ` : "Miễn phí"}
-        </span>
       </div>
     </Link>
   );

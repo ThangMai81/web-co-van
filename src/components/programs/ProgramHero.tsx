@@ -7,13 +7,14 @@ import type { Program } from "@/types/program";
 
 export default function ProgramHero({ program }: { program: Program }) {
   return (
-    <div className="relative flex h-[60vh] min-h-[420px] w-full items-end bg-blue">
+    <div className="relative flex h-[60vh] min-h-[520px] w-full items-end bg-blue sm:min-h-[420px]">
       {program.coverImage && (
         <Image
           src={program.coverImage}
           alt={program.title}
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
       )}

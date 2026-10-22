@@ -24,7 +24,7 @@ export default function CourseGrid({ items }: { items: CourseListItem[] }) {
           <button
             type="button"
             onClick={() => setVisible((v) => v + PAGE_SIZE)}
-            className="rounded-full border-2 border-blue bg-white px-8 py-2.5 text-sm font-bold text-blue transition hover:bg-blue hover:text-white"
+            className="min-h-11 rounded-full border-2 border-blue bg-white px-8 py-2.5 text-sm font-bold text-blue transition hover:bg-blue hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Xem thêm ({items.length - visible} khóa học)
           </button>

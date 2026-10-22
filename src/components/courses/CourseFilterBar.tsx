@@ -30,7 +30,7 @@ export default function CourseFilterBar({
         <Link
           href={buildHref(undefined, activeSort, activeSearch)}
           scroll={false}
-          className={`rounded-full px-3.5 py-2 text-sm transition ${
+          className={`inline-flex min-h-11 items-center rounded-full px-3.5 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
             !activeCategory
               ? "bg-yellow font-extrabold text-blue shadow-sm"
               : "font-bold text-blue/80 hover:bg-yellow/25"
@@ -43,7 +43,7 @@ export default function CourseFilterBar({
             key={cat}
             href={buildHref(cat, activeSort, activeSearch)}
             scroll={false}
-            className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition ${
+            className={`flex min-h-11 items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
               activeCategory === cat
                 ? "bg-yellow font-extrabold text-blue shadow-sm"
                 : "font-bold text-blue/80 hover:bg-yellow/25"

@@ -11,12 +11,13 @@ export default function ProgramGallery({ images }: { images: string[] }) {
             href={src}
             target="_blank"
             rel="noreferrer"
-            className="relative block aspect-square overflow-hidden rounded-lg border border-blue/15"
+            className="relative block aspect-square overflow-hidden rounded-lg border border-blue/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             <Image
               src={src}
               alt={`Ảnh ${idx + 1}`}
               fill
+              sizes="(min-width: 896px) 275px, (min-width: 640px) 30vw, 40vw"
               className="object-cover transition hover:scale-105"
             />
           </a>

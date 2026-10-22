@@ -20,7 +20,13 @@ export default function ProgramRegistration({
   return (
     <div className="mt-8 overflow-hidden rounded-2xl border-2 border-yellow bg-blue text-white shadow-xl shadow-blue/15">
       <div className="relative aspect-[2/1] w-full">
-        <Image src={image} alt={title} fill sizes="100vw" className="object-cover" />
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(min-width: 896px) 848px, calc(100vw - 4rem)"
+          className="object-cover"
+        />
       </div>
       <div className="p-6 sm:p-8">
         <h2 className="mb-3 text-2xl font-bold">Đăng ký tham gia</h2>
@@ -43,7 +49,7 @@ export default function ProgramRegistration({
       {registration.contactPhone ? (
         <a
           href={`tel:${registration.contactPhone}`}
-          className="mt-4 inline-block rounded-full bg-yellow px-8 py-3 font-bold text-blue transition hover:brightness-95"
+          className="mt-4 inline-flex min-h-11 items-center rounded-full bg-yellow px-8 py-3 font-bold text-blue transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
         >
           Gọi để đăng ký
         </a>

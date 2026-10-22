@@ -34,7 +34,6 @@ export default async function CoursesPage({
   search?: string;
 }) {
   const courses = await getCourses(category, sort, search);
-  const freeCourses = courses.filter((c) => c.price === 0).length;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -56,6 +55,7 @@ export default async function CoursesPage({
 
       {/* === VÙNG 1: GIỚI THIỆU === */}
       <HeroSection
+        portraitAfterHeading
         portrait={{
           src: "/images/khoa-hoc-co-yen.jpg",
           alt: "Cô giáo của Sunshine Center",
@@ -86,12 +86,6 @@ export default async function CoursesPage({
               {courses.length}
             </div>
             <div className="text-xs font-medium text-white/60">Khóa học</div>
-          </div>
-          <div>
-            <div className="text-2xl font-extrabold text-yellow">
-              {freeCourses}
-            </div>
-            <div className="text-xs font-medium text-white/60">Miễn phí</div>
           </div>
         </div>
       </HeroSection>

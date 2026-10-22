@@ -2,10 +2,6 @@
 
 import type { CourseDetail } from "@/types/course";
 
-function formatVND(value: number) {
-  return value.toLocaleString("vi-VN");
-}
-
 export default function CourseSidebar({
   courseId,
   detail,
@@ -20,25 +16,13 @@ export default function CourseSidebar({
       {detail.durationLabel && (
         <div className="mb-4 rounded-lg bg-blue px-4 py-2 text-center text-sm font-bold text-white">
           {detail.durationLabel}
-          {detail.price > 0 && ` / ${formatVND(detail.price)} VNĐ`}
         </div>
       )}
-
-      <div className="mb-4 flex items-baseline gap-2">
-        <span className="text-2xl font-extrabold text-blue">
-          {detail.price > 0 ? `${formatVND(detail.price)} VNĐ` : "Miễn phí"}
-        </span>
-        {detail.originalPrice && detail.originalPrice > detail.price && (
-          <span className="text-sm font-medium text-blue/40 line-through">
-            {formatVND(detail.originalPrice)} VNĐ
-          </span>
-        )}
-      </div>
 
       <button
         type="button"
         onClick={() => alert(`Đăng ký khóa học ${courseId} (demo)`)}
-        className="w-full rounded-lg bg-yellow py-2.5 font-bold text-blue transition hover:brightness-95"
+        className="min-h-11 w-full rounded-lg bg-yellow py-2.5 font-bold text-blue transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       >
         Đăng ký ngay
       </button>

@@ -14,14 +14,20 @@ export default function CourseMedia({
     : detail.thumbnail;
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-blue/10 bg-blue/5">
-      <Image src={thumbnail} alt={title} fill sizes="100vw" className="object-cover" />
+    <div className="relative mx-auto aspect-[4/3] w-full max-w-4xl overflow-hidden rounded-xl border border-blue/10 bg-blue">
+      <Image
+        src={thumbnail}
+        alt={title}
+        fill
+        sizes="(min-width: 944px) 896px, calc(100vw - 4rem)"
+        className="object-contain"
+      />
       {detail.videoUrl && (
         <a
           href={detail.videoUrl}
           target="_blank"
           rel="noreferrer"
-          className="absolute inset-0 flex items-center justify-center bg-blue/30 transition hover:bg-blue/40"
+          className="absolute inset-0 flex items-center justify-center bg-blue/30 transition hover:bg-blue/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
         >
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow text-2xl text-blue shadow">
             ▶

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Children, isValidElement, type ReactNode } from "react";
 
 type Portrait = {
   src: string;
@@ -11,31 +12,65 @@ const fadeLeft = "linear-gradient(to right, black, transparent 55%)";
 
 export default function HeroSection({
   portrait,
+  portraitAfterHeading = false,
   children,
 }: {
   portrait?: Portrait;
-  children: React.ReactNode;
+  portraitAfterHeading?: boolean;
+  children: ReactNode;
 }) {
+  const mobilePortrait: ReactNode | null = portrait ? (
+    <div key="mobile-portrait" className="relative mx-auto mb-8 aspect-[1122/1402] w-full max-w-[220px] overflow-hidden rounded-2xl border border-white/20 bg-blue/20 lg:hidden">
+      <Image
+        src={portrait.src}
+        alt={portrait.alt}
+        fill
+        priority
+        sizes="220px"
+        className="object-contain object-center"
+      />
+    </div>
+  ) : null;
+  const contentChildren = Children.toArray(children);
+  const arrangedChildren: ReactNode[] = [];
+  let insertedPortrait = false;
+
+  for (const child of contentChildren) {
+    arrangedChildren.push(child);
+    if (
+      portrait &&
+      portraitAfterHeading &&
+      !insertedPortrait &&
+      isValidElement(child) &&
+      child.type === "h1"
+    ) {
+      arrangedChildren.push(mobilePortrait);
+      insertedPortrait = true;
+    }
+  }
+
+  if (portrait && !insertedPortrait) arrangedChildren.push(mobilePortrait);
+
   return (
     <header
-      className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${portrait ? "min-h-[600px] pt-[88px] lg:min-h-[720px]" : "pt-32"}`}
+      className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${portrait ? "min-h-[560px] pt-[88px] md:pt-[128px] lg:min-h-[620px] lg:pt-[88px]" : "pt-32"}`}
     >
       {/* Nền xanh liền mạch phía sau ảnh chân dung trên desktop. */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue via-blue to-navy-light" />
 
       {portrait && (
         <>
-          <div className="absolute inset-y-0 right-0 hidden aspect-[1122/1402] w-auto max-w-[42vw] bg-blue lg:block">
+          <div className="absolute right-[3%] top-[calc(50%+36px)] hidden aspect-[1122/1402] w-[30vw] max-w-[360px] -translate-y-1/2 bg-blue lg:block">
             <Image
               src={portrait.src}
               alt={portrait.alt}
               fill
               priority
-              sizes="(min-width: 1024px) 42vw, 100vw"
+              sizes="(min-width: 1280px) 360px, (min-width: 1024px) 30vw, 220px"
               className="object-contain object-right"
             />
           </div>
-          <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[54%] bg-gradient-to-r from-blue via-blue/50 to-transparent lg:block" />
+          <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[45%] bg-gradient-to-r from-blue via-blue/35 to-transparent lg:block" />
         </>
       )}
 
@@ -52,23 +87,10 @@ export default function HeroSection({
         }}
       />
 
-      <div className={`relative mx-auto max-w-[var(--page-w)] px-6 ${portrait ? "flex min-h-[512px] flex-col items-start lg:min-h-[632px]" : ""}`}>
+      <div className={`relative mx-auto max-w-[var(--page-w)] px-6 ${portrait ? "flex min-h-[472px] flex-col items-start lg:min-h-[532px]" : ""}`}>
           <div className={portrait ? "w-full pb-14 lg:max-w-[56%] lg:pb-12" : "w-full pb-16"}>
-            {children}
+            {arrangedChildren}
           </div>
-
-          {portrait && (
-            <div className="relative mx-auto mb-8 aspect-[4/5] w-[260px] overflow-hidden rounded-2xl border border-white/20 bg-blue/20 sm:w-[320px] lg:hidden">
-              <Image
-                src={portrait.src}
-                alt={portrait.alt}
-                fill
-                priority
-                sizes="(min-width: 1024px) 400px, 320px"
-                className="object-cover object-top"
-              />
-            </div>
-          )}
       </div>
     </header>
   );

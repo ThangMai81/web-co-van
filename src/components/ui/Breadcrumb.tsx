@@ -24,8 +24,10 @@ export function Breadcrumb({
             {item.href && !isLast ? (
               <Link
                 href={item.href}
-                className={`font-medium transition-colors hover:text-yellow ${
-                  isLight ? "text-white/70" : "text-blue/60"
+                className={`inline-flex min-h-11 items-center rounded-full font-medium transition-colors hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                  isLight
+                    ? "text-white/70 focus-visible:ring-yellow focus-visible:ring-offset-blue"
+                    : "text-blue/60 focus-visible:ring-blue focus-visible:ring-offset-white"
                 }`}
               >
                 {item.label}
