@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Children, isValidElement, type ReactNode } from "react";
+import styles from "./HeroSection.module.css";
 
 type Portrait = {
   src: string;
@@ -13,16 +14,29 @@ const fadeLeft = "linear-gradient(to right, black, transparent 55%)";
 export default function HeroSection({
   portrait,
   portraitAfterHeading = false,
+  portraitPresentation = "default",
   leadingContent,
   children,
 }: {
   portrait?: Portrait;
   portraitAfterHeading?: boolean;
+  portraitPresentation?: "default" | "courseEditorial";
   leadingContent?: ReactNode;
   children: ReactNode;
 }) {
+  const isCourseEditorial = portraitPresentation === "courseEditorial";
+  const desktopPortraitSizes = isCourseEditorial
+    ? "(min-width: 1280px) 460px, (min-width: 1024px) 40vw, 300px"
+    : "(min-width: 1280px) 420px, (min-width: 1024px) 36vw, 300px";
   const mobilePortrait: ReactNode | null = portrait ? (
-    <div key="mobile-portrait" className="relative mx-auto mb-8 aspect-[1122/1402] w-full max-w-[240px] overflow-hidden rounded-2xl border border-white/20 bg-blue/20 md:max-w-[300px] lg:hidden">
+    <div
+      key="mobile-portrait"
+      className={`relative mx-auto mb-8 aspect-[1122/1402] w-full max-w-[240px] overflow-hidden rounded-2xl md:max-w-[300px] lg:hidden ${
+        isCourseEditorial
+          ? styles.courseEditorialPortrait
+          : "border border-white/20 bg-blue/20"
+      }`}
+    >
       <Image
         src={portrait.src}
         alt={portrait.alt}
@@ -89,13 +103,19 @@ export default function HeroSection({
           {arrangedChildren}
         </div>
         {portrait && (
-          <div className="relative mx-auto hidden aspect-[1122/1402] w-full max-w-[420px] lg:block">
+          <div
+            className={`relative hidden aspect-[1122/1402] w-full lg:block ${
+              isCourseEditorial
+                ? `max-w-[460px] lg:ml-auto lg:mr-0 ${styles.courseEditorialPortrait}`
+                : "mx-auto max-w-[420px]"
+            }`}
+          >
             <Image
               src={portrait.src}
               alt={portrait.alt}
               fill
               priority
-              sizes="(min-width: 1280px) 420px, (min-width: 1024px) 36vw, 300px"
+              sizes={desktopPortraitSizes}
               className="object-contain object-center"
             />
           </div>

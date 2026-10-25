@@ -8,6 +8,7 @@ const VIDEO_SOURCE = "/videos/home-fansipan-0147-loop.mp4";
 const POSTER_SOURCE = "/images/home-fansipan-0147-poster.jpg";
 
 type HomeHeroBackdropProps = {
+  variant?: "home" | "coaching";
   onEntryMotionAllowedChange?: (allowed: boolean) => void;
   onMotionActiveChange?: (active: boolean) => void;
   onMotionPause?: () => void;
@@ -42,6 +43,7 @@ function subscribeToPreference(
 }
 
 export function HomeHeroBackdrop({
+  variant = "home",
   onEntryMotionAllowedChange,
   onMotionActiveChange,
   onMotionPause,
@@ -314,7 +316,7 @@ export function HomeHeroBackdrop({
     <>
       <div
         ref={stageRef}
-        className={styles.backdrop}
+        className={`${styles.backdrop} ${variant === "coaching" ? styles.coachingBackdrop : ""}`}
         data-video-visible={videoStarted && !mediaFailed}
         aria-hidden="true"
       >
@@ -373,13 +375,17 @@ export function HomeHeroBackdrop({
             usePosterFallback();
           }}
         />
-        <div className={styles.scrim} />
+        <div
+          className={`${styles.scrim} ${variant === "coaching" ? styles.coachingScrim : ""}`}
+        />
       </div>
 
-      {motionAllowed && !mediaFailed && (
+      {motionAllowed &&
+        !mediaFailed &&
+        (variant !== "coaching" || stageInView) && (
         <button
           type="button"
-          className={styles.motionControl}
+          className={`${styles.motionControl} ${variant === "coaching" ? styles.coachingMotionControl : ""}`}
           aria-label={userPaused ? "Bật chuyển động" : "Tạm dừng chuyển động"}
           onClick={toggleMotion}
           onFocus={onMotionPause}

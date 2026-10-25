@@ -315,7 +315,7 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    let resizeTimer: ReturnType<typeof window.setTimeout> | null = null;
+    let resizeTimer: number | null = null;
     const handleResize = () => {
       stage.dataset.carouselResizing = "true";
       if (resizeTimer !== null) window.clearTimeout(resizeTimer);

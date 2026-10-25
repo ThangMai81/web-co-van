@@ -56,6 +56,7 @@ export default async function CoursesPage({
       {/* === VÙNG 1: GIỚI THIỆU === */}
       <HeroSection
         portraitAfterHeading
+        portraitPresentation="courseEditorial"
         leadingContent={
           <Breadcrumb
             variant="light"

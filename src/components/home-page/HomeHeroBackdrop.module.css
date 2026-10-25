@@ -6,6 +6,10 @@
   background-color: var(--color-white);
 }
 
+.coachingBackdrop {
+  background-color: var(--color-blue);
+}
+
 .posterFallback,
 .posterFallbackSecondary {
   position: absolute;
@@ -75,6 +79,21 @@
       rgba(9, 27, 57, 0.24) 50%,
       rgba(9, 27, 57, 0.04) 72%,
       transparent 84%
+    );
+}
+
+.coachingScrim {
+  background:
+    radial-gradient(
+      ellipse 70% 78% at 82% 16%,
+      rgba(246, 194, 65, 0.16) 0%,
+      transparent 70%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(7, 24, 52, 0.9) 0%,
+      rgba(7, 24, 52, 0.78) 48%,
+      rgba(7, 24, 52, 0.72) 100%
     );
 }
 
@@ -153,6 +172,12 @@
   transition: background-color 160ms ease, border-color 160ms ease;
 }
 
+.coachingMotionControl {
+  position: fixed;
+  top: calc(74px + 1rem);
+  right: 1rem;
+}
+
 .motionControl:hover {
   border-color: var(--color-blue);
   background: var(--color-white);
@@ -160,6 +185,11 @@
 
 .motionControl:focus-visible {
   outline: 2px solid var(--color-blue);
+  outline-offset: 4px;
+}
+
+.motionControl.coachingMotionControl:focus-visible {
+  outline: 3px solid var(--color-yellow);
   outline-offset: 4px;
 }
 
@@ -207,6 +237,25 @@
         rgba(9, 27, 57, 0.22) 68%,
         rgba(9, 27, 57, 0.14) 100%
       );
+  }
+
+  .coachingScrim {
+    background:
+      radial-gradient(
+        ellipse 70% 54% at 76% 12%,
+        rgba(246, 194, 65, 0.12) 0%,
+        transparent 72%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(7, 24, 52, 0.84) 0%,
+        rgba(7, 24, 52, 0.76) 45%,
+        rgba(7, 24, 52, 0.84) 100%
+      );
+  }
+
+  .coachingMotionControl {
+    top: 7rem;
   }
 
   .video {

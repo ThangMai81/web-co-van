@@ -1,12 +1,14 @@
 import { CoachDirectory } from "@/components/coaching/CoachDirectory";
+import { HomeHeroBackdrop } from "@/components/home-page/HomeHeroBackdrop";
 import { getCoaches } from "@/data/coaches";
 
 export async function About() {
   const coaches = await getCoaches();
 
   return (
-    <section id="companions" className="relative overflow-hidden bg-blue px-6 py-24 text-white">
-      <div className="relative mx-auto max-w-[var(--page-w)]">
+    <section id="companions" className="relative isolate scroll-mt-24 overflow-hidden bg-blue px-6 py-24 text-white">
+      <HomeHeroBackdrop variant="coaching" />
+      <div className="relative z-10 mx-auto max-w-[var(--page-w)]">
         <div className="mb-12 max-w-3xl">
           <div className="mb-4 font-mono text-sm uppercase tracking-widest text-yellow">Đội ngũ đồng hành</div>
           <h2 className="font-display text-4xl font-bold text-white md:text-6xl">Chọn người đồng hành <span className="text-yellow">của bạn</span></h2>

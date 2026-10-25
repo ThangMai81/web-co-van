@@ -1,43 +1,58 @@
-import { Reveal } from "@/components/animation/Reveal";
+import Image from "next/image";
 import { Quote } from "@/lib/icons";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import styles from "./Hero.module.css";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-blue px-6 pb-24 pt-[88px]">
-      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-yellow/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-yellow/10 blur-3xl" />
+    <section className={styles.hero}>
+      <div className={styles.glowTop} aria-hidden="true" />
+      <div className={styles.glowBottom} aria-hidden="true" />
 
-      <div className="relative mx-auto max-w-[var(--page-w)] px-6">
+      <div className={styles.breadcrumb}>
         <Breadcrumb
           items={[{ label: "Trang chủ", href: "/" }, { label: "Sứ mệnh" }]}
           variant="light"
         />
       </div>
 
-      <div className="relative mx-auto max-w-3xl text-center">
-        <Reveal direction="up">
-          <div className="mb-5 flex items-center justify-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
-            <span className="block h-px w-6 bg-yellow" />
+      <div className={styles.layout}>
+        <div className={styles.copy}>
+          <div className={styles.kicker}>
+            <span aria-hidden="true" />
             Câu chuyện Sunshine Center
-            <span className="block h-px w-6 bg-yellow" />
           </div>
           <h1 className="font-display text-3xl font-bold leading-tight text-white md:text-5xl">
             Khai tâm mở lối, tìm lại chính mình, chạm đỉnh vinh quang, sống đời
             xuất chúng.
           </h1>
 
-          <div className="mx-auto mt-10 max-w-xl rounded-2xl border-2 border-yellow/40 bg-white/5 p-6">
-            <Quote size={28} className="mx-auto mb-3 text-yellow" />
-            <p className="text-lg italic text-white/90">
+          <div className={styles.quote}>
+            <Quote size={28} className="mb-3 text-yellow" aria-hidden="true" />
+            <p className="text-lg italic leading-relaxed text-white/90">
               "Bạn đến với cuộc đời này bạn là một mặt trời, và cuộc đời cần bạn
               và nguồn ánh sáng chỉ riêng bạn mới có mà thôi."
             </p>
-            <p className="mt-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
+            <p className="mt-4 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
               — Shining Coach Yến Lê
             </p>
           </div>
-        </Reveal>
+        </div>
+
+        <figure className={styles.portrait}>
+          <Image
+            src="/images/Yến.jpg"
+            alt="Shining Coach Yến Lê tại Sunshine Center"
+            fill
+            priority
+            sizes="(max-width: 767px) 86vw, 40vw"
+            className={styles.portraitImage}
+          />
+          <figcaption className={styles.caption}>
+            <span>Shining Coach</span>
+            <strong>Yến Lê</strong>
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
