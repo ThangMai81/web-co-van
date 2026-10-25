@@ -6,40 +6,54 @@ import CourseCategoryIcon from "./CourseCategoryIcon";
 import StarRating from "@/components/ui/StarRating";
 import ViewDetailLabel from "@/components/ui/ViewDetailLabel";
 import type { CourseListItem } from "@/types/course";
-import { getCourseThumbnail } from "./courseThumbnails";
+import type { CSSProperties } from "react";
+import {
+  getCourseThumbnail,
+  getCourseThumbnailAspectRatio,
+} from "./courseThumbnails";
 
 export default function CourseCard({ course }: { course: CourseListItem }) {
   const thumbnail = getCourseThumbnail(course);
+  const thumbnailAspectRatio = getCourseThumbnailAspectRatio(course);
 
   return (
     <Link
       href={`/courses/${course.slug}`}
-      scroll={false}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border-2 border-yellow bg-blue/5 shadow-sm shadow-blue/5 transition hover:shadow-md hover:shadow-blue/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      className="flex h-full scroll-mt-[22rem] flex-col overflow-hidden rounded-2xl border border-blue/10 bg-white shadow-sm shadow-blue/5 transition-[border-color,box-shadow] duration-200 hover:border-blue/25 hover:shadow-md hover:shadow-blue/10 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white md:scroll-mt-[16rem] lg:scroll-mt-[11rem]"
     >
-      <div className="relative h-44 w-full shrink-0 bg-blue/10">
-        {thumbnail && (
+      {thumbnail && (
+        <div
+          className="relative aspect-[var(--thumbnail-aspect-ratio)] w-full shrink-0 overflow-hidden bg-blue/5 sm:aspect-[3/4]"
+          style={
+            {
+              "--thumbnail-aspect-ratio": thumbnailAspectRatio,
+            } as CSSProperties
+          }
+        >
           <Image
             src={thumbnail}
             alt={course.title}
             fill
             sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 84vw"
-            className="object-cover"
+            className="object-contain object-center"
           />
-        )}
-        <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">
-          {course.format}
-        </span>
-        {course.category && (
-          <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-blue px-3 py-1 text-xs font-bold text-white">
-            <CourseCategoryIcon category={course.category} size={13} />
-            {COURSE_CATEGORY_LABELS[course.category] || course.category}
-          </span>
-        )}
-      </div>
+        </div>
+      )}
 
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        <h3 className="line-clamp-2 min-h-[3.5rem] text-lg font-bold text-blue">
+      <div className="flex flex-1 flex-col gap-2 p-5 md:p-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">
+            {course.format}
+          </span>
+          {course.category && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue px-3 py-1 text-xs font-bold text-white">
+              <CourseCategoryIcon category={course.category} size={13} />
+              {COURSE_CATEGORY_LABELS[course.category] || course.category}
+            </span>
+          )}
+        </div>
+
+        <h3 className="min-h-[3.5rem] text-lg font-bold text-blue">
           {course.title}
         </h3>
 

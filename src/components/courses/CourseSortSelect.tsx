@@ -10,6 +10,9 @@ const SORT_OPTIONS = [
   { value: "price-asc", label: "Giá thấp → cao" },
   { value: "price-desc", label: "Giá cao → thấp" },
 ];
+const SELECTABLE_SORT_OPTIONS = SORT_OPTIONS.filter(
+  (option) => option.value !== "price-asc" && option.value !== "price-desc",
+);
 
 export default function CourseSortSelect({
   category,
@@ -51,14 +54,11 @@ export default function CourseSortSelect({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="course-sort-options"
-        className="flex min-h-11 items-center gap-2 rounded-full border-2 border-blue bg-blue px-4 py-2.5 text-sm font-bold text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className="flex min-h-11 w-full items-center justify-between gap-2 rounded-full border-2 border-blue bg-blue px-4 py-2.5 text-sm font-bold text-white transition-colors duration-150 hover:bg-blue/90 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:w-auto sm:justify-start"
       >
         <ArrowUpDown size={15} />
         {current.label}
-        <ChevronDown
-          size={15}
-          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
+        <ChevronDown size={15} />
       </button>
 
       {open && (
@@ -66,7 +66,7 @@ export default function CourseSortSelect({
           id="course-sort-options"
           className="absolute left-0 top-full z-40 mt-2 w-56 overflow-hidden rounded-xl border border-blue/15 bg-white py-1 shadow-lg shadow-blue/15 sm:left-auto sm:right-0"
         >
-          {SORT_OPTIONS.map((opt) => (
+          {SELECTABLE_SORT_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"
@@ -74,7 +74,7 @@ export default function CourseSortSelect({
                 setOpen(false);
                 router.push(buildHref(opt.value), { scroll: false });
               }}
-              className={`flex min-h-11 w-full items-center px-4 py-2.5 text-left text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-inset ${
+              className={`flex min-h-11 w-full items-center px-4 py-2.5 text-left text-sm font-bold transition-colors duration-150 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-inset ${
                 current.value === opt.value
                   ? "bg-yellow text-blue"
                   : "text-blue/80 hover:bg-blue/5"

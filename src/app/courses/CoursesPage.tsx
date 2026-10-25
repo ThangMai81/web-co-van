@@ -56,6 +56,12 @@ export default async function CoursesPage({
       {/* === VÙNG 1: GIỚI THIỆU === */}
       <HeroSection
         portraitAfterHeading
+        leadingContent={
+          <Breadcrumb
+            variant="light"
+            items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
+          />
+        }
         portrait={{
           src: "/images/khoa-hoc-co-yen.jpg",
           alt: "Cô giáo của Sunshine Center",
@@ -63,11 +69,6 @@ export default async function CoursesPage({
           // role: "Chức danh",
         }}
       >
-        <Breadcrumb
-          variant="light"
-          items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
-        />
-
         <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
           <span className="block h-px w-6 bg-yellow" />
           Khóa học
@@ -93,7 +94,7 @@ export default async function CoursesPage({
       {/* === VÙNG 2: BỘ LỌC === */}
       <nav
         aria-label="Lọc khóa học"
-        className="sticky top-[73px] z-30 border-b border-blue/10 bg-white/95 py-4 backdrop-blur-sm"
+        className="sticky top-[73px] z-30 border-b border-blue/10 bg-white/95 py-4 shadow-sm shadow-blue/5 backdrop-blur-sm"
       >
         <div className="mx-auto max-w-[var(--page-w)] px-6">
           <CourseFilterBar
@@ -105,10 +106,13 @@ export default async function CoursesPage({
       </nav>
 
       {/* === VÙNG 3: DANH SÁCH === */}
-      <section aria-label="Danh sách khóa học" className="bg-white py-14">
+      <section
+        aria-label="Danh sách khóa học"
+        className="bg-blue/[0.025] py-10 md:py-14"
+      >
         <div className="mx-auto max-w-[var(--page-w)] px-6">
           {courses.length === 0 ? (
-            <p className="font-medium text-blue/50">
+            <p className="font-medium text-blue">
               Không tìm thấy khóa học phù hợp.
             </p>
           ) : (

@@ -100,7 +100,7 @@ export default async function ProgramsPage({
 
       <nav
         aria-label="Lọc chương trình"
-        className="sticky top-[73px] z-30 border-b border-blue/10 bg-white/95 py-4 backdrop-blur-sm"
+        className="z-30 border-b border-blue/10 bg-white/95 py-4 backdrop-blur-sm"
       >
         <div className="mx-auto max-w-[var(--page-w)] px-6">
           <ProgramFilterBar

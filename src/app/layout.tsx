@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { RouteEntryFade } from "@/components/navigation/RouteEntryFade";
 import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -27,12 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={beVietnamPro.variable}>
+    <html lang="vi" className={beVietnamPro.variable} data-scroll-behavior="smooth">
       <body>
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
         >
-          {children}
+          <RouteEntryFade>{children}</RouteEntryFade>
         </GoogleOAuthProvider>
       </body>
     </html>

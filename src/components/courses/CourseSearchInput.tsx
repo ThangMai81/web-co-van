@@ -26,7 +26,7 @@ export default function CourseSearchInput({
   }
 
   return (
-    <div className="flex min-h-11 items-center gap-2 rounded-full border-2 border-blue/20 bg-white px-4 py-2 focus-within:border-blue focus-within:ring-2 focus-within:ring-yellow focus-within:ring-offset-2 focus-within:ring-offset-white">
+    <div className="flex min-h-11 min-w-0 w-full items-center gap-2 rounded-full border-2 border-blue/20 bg-white px-4 py-2 focus-within:border-blue focus-within:ring-2 focus-within:ring-yellow focus-within:ring-offset-2 focus-within:ring-offset-white lg:w-auto">
       <Search size={16} className="shrink-0 text-blue/50" />
       <input
         type="text"
@@ -34,7 +34,7 @@ export default function CourseSearchInput({
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         placeholder="Tìm khóa học..."
-        className="min-w-0 w-40 bg-transparent text-sm font-medium text-blue outline-none placeholder:text-blue/40 sm:w-52"
+        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-blue outline-none placeholder:text-blue/40 sm:w-auto sm:flex-1 lg:w-52 lg:flex-none"
       />
     </div>
   );

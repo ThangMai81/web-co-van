@@ -10,15 +10,15 @@ const STEPS = [
   { number: "03", title: "Bắt đầu phiên coaching 1:1", body: "Bạn và coach thống nhất nội dung, mục tiêu và lịch cho phiên đầu tiên." },
 ];
 
-function PhoneFrame({ step, coach, active, compact = false }: { step: number; coach: Coach; active: boolean; compact?: boolean }) {
+function PhoneFrame({ step, coach, active, compact = false, screenImage }: { step: number; coach: Coach; active: boolean; compact?: boolean; screenImage?: { src: string; alt: string } }) {
   const tilt = step === 0 ? "-rotate-[7deg]" : step === 1 ? "rotate-0" : "rotate-[7deg]";
   const dimensions = compact ? "h-[260px] w-[164px] max-w-none" : "h-[min(44svh,400px)] w-full max-w-[250px]";
 
   return (
     <div className={`relative ${dimensions} shrink-0 rounded-[2rem] border-[8px] border-[#20251f] bg-[#20251f] p-1 shadow-[0_25px_45px_-20px_rgba(24,37,68,.45)] transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${tilt} ${active ? "z-30 scale-[1.06] opacity-100" : "z-10 scale-[.88] opacity-60"}`}>
       <div className="relative h-full w-full overflow-hidden rounded-[1.45rem] bg-white">
-        {step === 0 && (coach.image ? <Image src={coach.image} alt={coach.name} fill sizes="220px" className="object-cover" /> : <div className="flex h-full items-center justify-center bg-[linear-gradient(145deg,#6ca7dc,#172d55)]"><span className="font-display text-5xl font-bold text-white">{coach.initials}</span></div>)}
-        {step === 1 && <Image src="/images/collaborate_team.jpg" alt="Những người đồng hành trong hoạt động của Sunshine Center" fill sizes="220px" className="object-cover" />}
+        {step === 0 && (screenImage ? <Image src={screenImage.src} alt={screenImage.alt} fill sizes="220px" className="object-cover" /> : coach.image ? <Image src={coach.image} alt={coach.name} fill sizes="220px" className="object-cover" /> : <div className="flex h-full items-center justify-center bg-[linear-gradient(145deg,#6ca7dc,#172d55)]"><span className="font-display text-5xl font-bold text-white">{coach.initials}</span></div>)}
+        {step === 1 && <Image src={screenImage?.src ?? "/images/collaborate_team.jpg"} alt={screenImage?.alt ?? "Những người đồng hành trong hoạt động của Sunshine Center"} fill sizes="220px" className="object-cover" />}
         {step === 2 && (
           <div className="flex h-full flex-col items-center justify-center bg-[#fbfaf6] px-3 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-yellow text-blue shadow-lg shadow-yellow/30">
@@ -38,13 +38,17 @@ function PhoneFrame({ step, coach, active, compact = false }: { step: number; co
 function PhotoStage({ coach, activeStep }: { coach: Coach; activeStep: number }) {
   const positions = ["left-[1%] top-[6%]", "left-[35%] top-[1%]", "right-[1%] top-[9%]"];
   const labels = ["Gửi yêu cầu", "Xác nhận lịch", "Phiên 1:1"];
+  const screenImages = [
+    { src: "/images/coaching-request-screen.png", alt: "Giao diện gửi yêu cầu coaching" },
+    { src: "/images/coaching-schedule-screen.png", alt: "Giao diện chọn lịch coaching" },
+  ];
 
   return (
     <div className="relative mx-auto h-[min(58svh,560px)] min-h-[400px] w-full max-w-[940px] rounded-[2rem] bg-[radial-gradient(ellipse_at_50%_75%,rgba(255,204,0,.22),transparent_60%)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-8 left-[1%] w-[30%] rounded-[3rem] bg-yellow/20 shadow-[0_20px_80px_rgba(255,204,0,.2)] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]" style={{ transform: `translateX(${activeStep * 115}%)` }} />
       {STEPS.map((step, index) => (
         <div key={step.number} className={`absolute ${positions[index]} flex h-full w-[30%] max-w-[290px] flex-col items-center transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${index === activeStep ? "-translate-y-3" : "translate-y-2"}`}>
-          <PhoneFrame step={index} coach={coach} active={index === activeStep} />
+          <PhoneFrame step={index} coach={coach} active={index === activeStep} screenImage={screenImages[index]} />
           <span className={`relative z-40 mt-4 whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-wider ${index === activeStep ? "text-blue" : "text-blue/55"}`}>{step.number} · {labels[index]}</span>
         </div>
       ))}

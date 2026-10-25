@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/lib/programLabels";
 import { Calendar, MapPin } from "@/lib/icons";
 import CategoryIcon from "./CategoryIcon";
+import ProgramCardThumbnail from "./ProgramCardThumbnail";
 import ViewDetailLabel from "@/components/ui/ViewDetailLabel";
 import type { Program } from "@/types/program";
 
@@ -12,7 +12,6 @@ export default function ProgramCard({ program }: { program: Program }) {
   return (
     <Link
       href={`/programs/${program.slug}`}
-      scroll={false}
       className={`group flex h-full flex-col overflow-hidden rounded-xl border shadow-sm transition hover:shadow-md ${
         isPast
           ? "border-blue/10 bg-white shadow-blue/5 hover:shadow-blue/10"
@@ -21,11 +20,11 @@ export default function ProgramCard({ program }: { program: Program }) {
     >
       <div className="relative h-44 w-full shrink-0 bg-blue/10">
         {program.coverImage && (
-          <Image
+          <ProgramCardThumbnail
             src={program.coverImage}
             alt={program.title}
-            fill
-            className={`object-cover ${isPast ? "grayscale-[35%]" : ""}`}
+            category={program.category}
+            isPast={isPast}
           />
         )}
         <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">

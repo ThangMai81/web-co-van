@@ -1,0 +1,243 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background-color: var(--color-white);
+}
+
+.posterFallback,
+.posterFallbackSecondary {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background-color: var(--color-white);
+  object-fit: cover;
+  object-position: 70% 50%;
+}
+
+.posterFallback {
+  z-index: 0;
+}
+
+.posterFallbackSecondary {
+  display: block;
+}
+
+.posterFallbackEmpty {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-white);
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  object-fit: cover;
+  object-position: 70% 50%;
+  transition: opacity 240ms ease;
+}
+
+.backdrop[data-video-visible="true"] .video {
+  opacity: 1;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 24% 42% at 78% 23%,
+      rgba(255, 255, 246, 0.92) 0%,
+      rgba(255, 246, 204, 0.66) 18%,
+      rgba(255, 205, 56, 0.3) 42%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 54% 82% at 76% 25%,
+      rgba(255, 197, 43, 0.3) 0%,
+      rgba(255, 221, 118, 0.15) 42%,
+      transparent 76%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(9, 27, 57, 0.72) 0%,
+      rgba(9, 27, 57, 0.56) 28%,
+      rgba(9, 27, 57, 0.24) 50%,
+      rgba(9, 27, 57, 0.04) 72%,
+      transparent 84%
+    );
+}
+
+.heroEntry {
+  animation: none;
+}
+
+.heroContent[data-entry-active="true"] .heroEntry {
+  animation: hero-entry-settle 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.heroKicker {
+  animation-delay: 0ms;
+}
+
+.heroHeading {
+  position: relative;
+  animation-delay: 40ms;
+}
+
+.heroLineDetail {
+  position: absolute;
+  top: 0.08em;
+  left: -16px;
+  width: 8px;
+  height: 64px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.heroLineDetailPath {
+  stroke: var(--color-white);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 64;
+  stroke-dashoffset: 0;
+  opacity: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.heroContent[data-entry-active="true"] .heroLineDetailPath {
+  animation: hero-line-draw 580ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+}
+
+.heroActions {
+  animation-delay: 80ms;
+}
+
+.heroContent:focus-within .heroEntry {
+  animation: none;
+  transform: none;
+  opacity: 1;
+}
+
+.heroContent:focus-within .heroLineDetailPath {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+
+.motionControl {
+  position: absolute;
+  z-index: 30;
+  top: calc(74px + 1rem);
+  right: 1.5rem;
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(20, 40, 80, 0.76);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-blue);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.motionControl:hover {
+  border-color: var(--color-blue);
+  background: var(--color-white);
+}
+
+.motionControl:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 4px;
+}
+
+@keyframes hero-entry-settle {
+  from {
+    transform: translate3d(0, 12px, 0);
+    opacity: 0.92;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes hero-line-draw {
+  from {
+    stroke-dashoffset: 64;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .scrim {
+    background:
+      radial-gradient(
+        ellipse 36% 38% at 76% 20%,
+        rgba(255, 255, 246, 0.9) 0%,
+        rgba(255, 241, 190, 0.56) 22%,
+        rgba(255, 202, 54, 0.26) 48%,
+        transparent 80%
+      ),
+      radial-gradient(
+        ellipse 82% 70% at 74% 22%,
+        rgba(255, 204, 62, 0.26) 0%,
+        transparent 74%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(9, 27, 57, 0.66) 0%,
+        rgba(9, 27, 57, 0.5) 32%,
+        rgba(9, 27, 57, 0.22) 68%,
+        rgba(9, 27, 57, 0.14) 100%
+      );
+  }
+
+  .video {
+    object-position: 80% 45%;
+  }
+
+  .posterFallback,
+  .posterFallbackSecondary {
+    object-position: 80% 45%;
+  }
+
+  .heroLineDetail {
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motionControl,
+  .video,
+  .heroLineDetailPath,
+  .heroContent[data-entry-active="true"] .heroEntry {
+    animation: none;
+    transition: none;
+  }
+
+  .heroContent[data-entry-active="true"] .heroLineDetailPath {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .heroContent[data-entry-active="true"] .heroEntry {
+    transform: none;
+  }
+}

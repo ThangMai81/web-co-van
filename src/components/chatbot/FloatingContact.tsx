@@ -1,6 +1,6 @@
-export function FloatingContact() {
+export function FloatingContact({ motionActive }: { motionActive: boolean }) {
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-center gap-4">
+    <div className="absolute left-6 top-[88px] z-40 flex flex-col items-center gap-4 md:top-[132px] lg:fixed lg:bottom-6 lg:left-auto lg:right-6 lg:top-auto">
       <a
         href="https://zalo.me/0935626186"
         target="_blank"
@@ -8,8 +8,8 @@ export function FloatingContact() {
         aria-label="Nhắn tin qua Zalo"
         className="group relative flex h-14 w-14 items-center justify-center"
       >
-        <span className="absolute inset-0 rounded-full bg-blue-600/60 [animation:ping_2.5s_ease-out_infinite]" />
-        <span className="absolute inset-0 rounded-full bg-blue-600/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" />
+        <span className="absolute inset-0 rounded-full bg-blue-600/60 [animation:ping_2.5s_ease-out_infinite]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
+        <span className="absolute inset-0 rounded-full bg-blue-600/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
         <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-110">
           <ZaloIcon className="h-full w-full p-1.5 text-white" />
         </span>
@@ -22,8 +22,8 @@ export function FloatingContact() {
         aria-label="Nhắn tin qua Messenger"
         className="group relative flex h-14 w-14 items-center justify-center"
       >
-        <span className="absolute inset-0 rounded-full bg-blue-400/60 [animation:ping_2.5s_ease-out_infinite]" />
-        <span className="absolute inset-0 rounded-full bg-blue-400/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" />
+        <span className="absolute inset-0 rounded-full bg-blue-400/60 [animation:ping_2.5s_ease-out_infinite]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
+        <span className="absolute inset-0 rounded-full bg-blue-400/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
         <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00B2FF] via-[#2E5EFF] to-[#B026FF] shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-110">
           <MessengerIcon className="h-7 w-7 text-white" />
         </span>

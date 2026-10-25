@@ -47,7 +47,18 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+
+html:has(.route-detail-enter) {
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(:target),
+  html:has(.route-detail-enter):has(:target) {
+    scroll-behavior: smooth !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,6 +76,62 @@ body {
   background: var(--color-cream);
   color: var(--color-ink);
 }
+
+@keyframes route-detail-fade {
+  from {
+    opacity: 0.88;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.route-detail-enter {
+  animation: route-detail-fade 220ms ease-out both;
+}
+
+.route-page-fade {
+  opacity: 1;
+}
+
+.route-page-fade .route-detail-enter {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-detail-enter {
+    animation: none;
+  }
+}
+
+@keyframes home-opening-reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.home-opening-reveal {
+  animation: home-opening-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-opening-reveal--delayed {
+  animation-delay: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-opening-reveal,
+  .home-opening-reveal--delayed {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @theme {
   /* ... */
   --font-display: var(--font-display-raw), sans-serif;

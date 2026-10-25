@@ -5,7 +5,6 @@ import { AboutSection } from "@/components/home-page/AboutSection";
 import { VoicesSection } from "@/components/home-page/VoiceSection";
 import { NextTripSection } from "@/components/home-page/NextTripSection";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
-import { FloatingContact } from "@/components/chatbot/FloatingContact";
 import { TestimonialsCollage } from "./home-page/TestimonialsCollage";
 import { InquiryForm } from "./home-page/InquiryForm";
 
@@ -21,7 +20,6 @@ export function HomePage() {
       <InquiryForm />
       <NextTripSection />
       <SiteFooter />
-      <FloatingContact />
     </main>
   );
 }

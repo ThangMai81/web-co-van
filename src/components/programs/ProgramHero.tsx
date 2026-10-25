@@ -6,23 +6,12 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import type { Program } from "@/types/program";
 
 export default function ProgramHero({ program }: { program: Program }) {
-  return (
-    <div className="relative flex h-[60vh] min-h-[520px] w-full items-end bg-blue sm:min-h-[420px]">
-      {program.coverImage && (
-        <Image
-          src={program.coverImage}
-          alt={program.title}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-blue via-blue/70 to-blue/20" />
+  const coverImage = program.coverImage;
 
-      <div className="absolute inset-x-0 top-[88px] z-10 mx-auto w-full max-w-[var(--page-w)] px-6">
+  return (
+    <section className="bg-white">
+      <div className="mx-auto max-w-[var(--page-w)] px-6 pt-[88px] md:pt-[128px] lg:pt-[88px]">
         <Breadcrumb
-          variant="light"
           items={[
             { label: "Chương trình", href: "/programs" },
             {
@@ -32,39 +21,58 @@ export default function ProgramHero({ program }: { program: Program }) {
             { label: program.title },
           ]}
         />
-      </div>
 
-      <div className="relative mx-auto w-full max-w-4xl px-6 pb-10">
-        <div className="mb-3 flex flex-wrap gap-2">
-          <span className="flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-sm font-bold text-blue">
-            <CategoryIcon category={program.category} size={14} />
-            {CATEGORY_LABELS[program.category]}
-          </span>
-          <span className="rounded-full border border-white/40 px-3 py-1 text-xs font-bold text-white">
-            {STATUS_LABELS[program.status]}
-          </span>
-        </div>
-
-        <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
-          {program.theme || program.title}
-        </h1>
-        {program.theme && (
-          <p className="mt-2 text-lg font-semibold text-white/90">
-            {program.title}
-          </p>
+        {coverImage && (
+          <div
+            className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-2xl border border-blue/10 bg-white"
+          >
+            <Image
+              src={coverImage}
+              alt={program.title}
+              fill
+              priority
+              sizes="(max-width: 90rem) calc(100vw - 3rem), 87rem"
+              className="object-cover object-center"
+            />
+          </div>
         )}
 
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm font-bold text-yellow">
-          {program.location && (
-            <span className="flex items-center gap-1.5">
-              <MapPin size={15} /> {program.location}
+        <div className="mt-6 rounded-2xl bg-blue p-6 text-white shadow-md shadow-blue/10 sm:p-8">
+          <div className="mb-3 flex flex-wrap gap-2">
+            <span className="flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-sm font-bold text-blue">
+              <CategoryIcon category={program.category} size={14} />
+              {CATEGORY_LABELS[program.category]}
             </span>
-          )}
-          <span className="flex items-center gap-1.5">
-            <Calendar size={15} /> {program.schedule}
-          </span>
+            <span className="rounded-full border border-white/40 px-3 py-1 text-xs font-bold text-white">
+              {STATUS_LABELS[program.status]}
+            </span>
+          </div>
+
+          <div className="lg:grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-end lg:gap-8">
+            <div>
+              <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+                {program.theme || program.title}
+              </h1>
+              {program.theme && (
+                <p className="mt-2 text-lg font-semibold text-white/90">
+                  {program.title}
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm font-bold text-yellow lg:mt-0">
+              {program.location && (
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={15} /> {program.location}
+                </span>
+              )}
+              <span className="flex items-center gap-1.5">
+                <Calendar size={15} /> {program.schedule}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

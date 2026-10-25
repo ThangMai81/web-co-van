@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -23,8 +23,22 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<StoredUser | null>(null);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
+  const menuCloseRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  const closeMenu = useCallback((restoreFocus = true) => {
+    setMenuOpen(false);
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => {
+        if (window.matchMedia("(max-width: 1023px)").matches) {
+          menuTriggerRef.current?.focus();
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -49,9 +63,62 @@ export function SiteHeader() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    document.body.style.overflow = "hidden";
+    menuCloseRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeMenu();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const panel = menuPanelRef.current;
+      if (!panel) return;
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.getAttribute("aria-hidden") !== "true");
+      if (focusable.length === 0) {
+        event.preventDefault();
+        menuCloseRef.current?.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !panel.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !panel.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    const closeAtDesktop = () => {
+      if (desktopQuery.matches) closeMenu(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    desktopQuery.addEventListener("change", closeAtDesktop);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+      desktopQuery.removeEventListener("change", closeAtDesktop);
+    };
+  }, [closeMenu, menuOpen]);
+
   async function handleLogout() {
     await clearSession();
-    setMenuOpen(false);
+    closeMenu(false);
     router.push("/");
   }
 
@@ -80,7 +147,7 @@ export function SiteHeader() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-10 text-sm font-medium text-ink md:flex">
+          <nav className="hidden items-center gap-10 text-sm font-medium text-ink lg:flex">
             {NAV_LINKS.map((link) =>
               (() => {
                 const isActive =
@@ -138,8 +205,11 @@ export function SiteHeader() {
 
           <button
             aria-label="Mở menu"
+            aria-controls="mobile-navigation"
+            aria-expanded={menuOpen}
+            ref={menuTriggerRef}
             onClick={() => setMenuOpen(true)}
-            className="text-2xl text-ink md:hidden"
+            className="flex h-11 w-11 items-center justify-center text-2xl text-ink lg:hidden"
           >
             ☰
           </button>
@@ -147,71 +217,93 @@ export function SiteHeader() {
       </header>
 
       <div
-        className={`fixed inset-0 z-[60] flex flex-col gap-5 bg-cream p-6 transition-transform duration-300 md:hidden ${
-          menuOpen ? "translate-y-0" : "-translate-y-full"
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) closeMenu();
+        }}
+        className={`fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto overscroll-contain bg-black/30 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] transition-opacity duration-200 motion-reduce:transition-none lg:hidden ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <button
-          aria-label="Đóng menu"
-          onClick={() => setMenuOpen(false)}
-          className="self-end text-2xl text-ink"
+        <nav
+          ref={menuPanelRef}
+          id="mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Điều hướng chính"
+          className={`flex self-start w-[min(22rem,calc(100vw_-_2rem))] max-h-[calc(100dvh_-_2rem_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))] flex-col gap-2 overflow-y-auto overscroll-contain rounded-2xl border border-blue/10 bg-white p-4 text-blue shadow-xl shadow-black/15 transition-transform duration-200 motion-reduce:transition-none ${
+            menuOpen ? "translate-y-0" : "-translate-y-3"
+          }`}
         >
-          ✕
-        </button>
-
-        {user && (
-          <div className="flex items-center gap-3 rounded-full bg-sage/15 px-4 py-3">
-            {user.avatarUrl ? (
-              <Image
-                src={user.avatarUrl}
-                alt={user.name}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sun font-mono text-xs font-bold text-ink">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <span className="font-medium text-ink">{user.name}</span>
-          </div>
-        )}
-
-        {NAV_LINKS.map((link) =>
-          (() => {
-            const isActive =
-              pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                aria-current={isActive ? "page" : undefined}
-                className={`rounded-full border px-5 py-3 text-center font-display text-lg font-semibold transition-colors hover:border-yellow hover:text-blue ${isActive ? "border-yellow bg-yellow text-blue" : "border-sun/40 bg-sun-soft/50 text-ink"}`}
-              >
-                {link.label}
-              </Link>
-            );
-          })(),
-        )}
-
-        {user ? (
           <button
-            onClick={handleLogout}
-            className="rounded-full border border-crimson/40 px-5 py-3 text-center font-mono text-xs uppercase tracking-wider text-crimson"
+            ref={menuCloseRef}
+            type="button"
+            aria-label="Đóng menu"
+            onClick={() => closeMenu()}
+            className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-2xl text-ink transition-colors hover:bg-blue/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
           >
-            Đăng xuất
+            ✕
           </button>
-        ) : (
-          <Link
-            href="/sign-in"
-            onClick={() => setMenuOpen(false)}
-            className="rounded-full border border-sun/40 bg-sun px-5 py-3 text-center font-display text-lg font-semibold text-ink"
-          >
-            Đăng nhập
-          </Link>
-        )}
+
+          {user && (
+            <div className="flex items-center gap-3 border-b border-blue/10 px-3 pb-3">
+              {user.avatarUrl ? (
+                <Image
+                  src={user.avatarUrl}
+                  alt={user.name}
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sun font-mono text-xs font-bold text-ink">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <span className="font-medium text-ink">{user.name}</span>
+            </div>
+          )}
+
+          <nav aria-label="Điều hướng trang" className="flex flex-col gap-2">
+            {NAV_LINKS.map((link) =>
+              (() => {
+                const isActive =
+                  pathname === link.href || pathname.startsWith(`${link.href}/`);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => closeMenu(false)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`flex min-h-12 w-full items-center rounded-xl border px-3 py-2 text-left font-display text-lg font-semibold leading-snug transition-colors hover:border-yellow hover:text-blue ${isActive ? "border-yellow bg-yellow text-blue" : "border-blue/10 bg-white text-ink"}`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })(),
+            )}
+          </nav>
+
+          <div className="mt-1 border-t border-blue/10 pt-3">
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="min-h-12 w-full rounded-xl border border-crimson/40 px-3 py-2 text-left font-mono text-xs uppercase tracking-wider text-crimson"
+              >
+                Đăng xuất
+              </button>
+            ) : (
+              <Link
+                href="/sign-in"
+                onClick={() => closeMenu(false)}
+                className="flex min-h-12 w-full items-center rounded-xl border border-sun/40 bg-sun px-3 py-2 text-left font-display text-lg font-semibold text-ink"
+              >
+                Đăng nhập
+              </Link>
+            )}
+          </div>
+        </nav>
       </div>
     </>
   );

@@ -19,13 +19,13 @@ export default function ProgramRegistration({
 
   return (
     <div className="mt-8 overflow-hidden rounded-2xl border-2 border-yellow bg-blue text-white shadow-xl shadow-blue/15">
-      <div className="relative aspect-[2/1] w-full">
+      <div className="relative aspect-[3/1] w-full bg-blue/5">
         <Image
           src={image}
           alt={title}
           fill
-          sizes="(min-width: 896px) 848px, calc(100vw - 4rem)"
-          className="object-cover"
+          sizes="(min-width: 896px) 848px, calc(100vw - 3rem)"
+          className="object-contain object-center"
         />
       </div>
       <div className="p-6 sm:p-8">
