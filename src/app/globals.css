@@ -103,6 +103,57 @@ body {
   opacity: 1;
 }
 
+.route-progress {
+  position: fixed;
+  z-index: 10000;
+  inset: 0 0 auto;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 140ms ease, visibility 0s linear 180ms;
+}
+
+.route-progress.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 140ms ease;
+}
+
+.route-progress__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--color-yellow), #ffe878 55%, var(--color-yellow));
+  box-shadow: 0 0 12px rgb(254 206 1 / 72%);
+  transition: transform 180ms ease-out;
+}
+
+.route-progress__spinner {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid rgb(20 40 80 / 24%);
+  border-top-color: var(--color-yellow);
+  border-right-color: var(--color-yellow);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 2px 10px rgb(20 40 80 / 16%);
+  opacity: 0;
+}
+
+.route-progress.is-active .route-progress__spinner {
+  opacity: 1;
+  animation: route-progress-spin 720ms linear infinite;
+}
+
+@keyframes route-progress-spin {
+  to { transform: rotate(360deg); }
+}
+
 .route-page-fade .route-detail-enter {
   animation: none;
 }
@@ -110,6 +161,15 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .route-detail-enter {
     animation: none;
+  }
+
+  .route-progress,
+  .route-progress__bar {
+    transition: none;
+  }
+
+  .route-progress.is-active .route-progress__spinner {
+    animation-duration: 1.8s;
   }
 }
 

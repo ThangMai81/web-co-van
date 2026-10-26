@@ -511,7 +511,7 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
                       <div className={`${styles.portraitFrame} relative aspect-[4/4.5] overflow-hidden bg-blue/10`}>
                         {coach.image ? <Image src={coach.image} alt="" fill sizes="(min-width: 1024px) 14rem, 34vw" className={styles.portraitImage} /> : <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,.85),transparent_40%),linear-gradient(145deg,var(--coach-accent),#172d55)]" style={{ "--coach-accent": coach.accent } as CSSProperties}><span className="font-display text-7xl font-bold text-white drop-shadow-lg">{coach.initials}</span></div>}
                       </div>
-                      <span className={`${styles.portraitName} font-display text-2xl font-bold text-blue`}>{coach.name}</span>
+                      <span className={`${styles.portraitName} font-sans text-2xl font-bold text-blue`}>{coach.name}</span>
                       <span className={`${styles.portraitDetail} text-[10px] font-bold uppercase tracking-[0.16em] text-blue/55`}>
                         {coach.focusAreas.length > 1
                           ? coach.focusAreas.slice(0, 2).join(" · ")
@@ -531,7 +531,7 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
             </div>
           ) : (
             <ul className={styles.fallbackList} aria-label="Danh sách người đồng hành">
-              {visibleCoaches.map((coach) => <li key={coach.slug} className={styles.fallbackItem}><Link href={`/coaching/${coach.slug}`} className={styles.card + " " + styles.cardLink}><div className={`${styles.portraitFrame} relative aspect-[4/4.5] overflow-hidden bg-blue/10`}>{coach.image ? <Image src={coach.image} alt={coach.name} fill sizes="(min-width: 1024px) 12rem, 84vw" className={styles.portraitImage} /> : <div className="flex h-full items-center justify-center"><span className="font-display text-7xl font-bold text-blue">{coach.initials}</span></div>}</div><span className={`${styles.portraitName} font-display text-2xl font-bold text-blue`}>{coach.name}</span></Link></li>)}
+              {visibleCoaches.map((coach) => <li key={coach.slug} className={styles.fallbackItem}><Link href={`/coaching/${coach.slug}`} className={styles.card + " " + styles.cardLink}><div className={`${styles.portraitFrame} relative aspect-[4/4.5] overflow-hidden bg-blue/10`}>{coach.image ? <Image src={coach.image} alt={coach.name} fill sizes="(min-width: 1024px) 12rem, 84vw" className={styles.portraitImage} /> : <div className="flex h-full items-center justify-center"><span className="font-display text-7xl font-bold text-blue">{coach.initials}</span></div>}</div><span className={`${styles.portraitName} font-sans text-2xl font-bold text-blue`}>{coach.name}</span></Link></li>)}
             </ul>
           )}
           {currentCoach && <article className={styles.details} aria-label={`Thông tin về ${currentCoach.name}`} aria-live="off">

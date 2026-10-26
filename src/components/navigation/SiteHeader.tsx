@@ -157,6 +157,7 @@ export function SiteHeader() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch
                     aria-current={isActive ? "page" : undefined}
                     className={`relative py-1 transition-colors hover:text-yellow after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:bg-yellow after:transition-all after:duration-300 hover:after:w-full ${isActive ? "text-blue after:w-full" : "after:w-0"}`}
                   >
@@ -274,6 +275,7 @@ export function SiteHeader() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch
                     onClick={() => closeMenu(false)}
                     aria-current={isActive ? "page" : undefined}
                     className={`flex min-h-12 w-full items-center rounded-xl border px-3 py-2 text-left font-display text-lg font-semibold leading-snug transition-colors hover:border-yellow hover:text-blue ${isActive ? "border-yellow bg-yellow text-blue" : "border-blue/10 bg-white text-ink"}`}
