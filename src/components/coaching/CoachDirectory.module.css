@@ -75,7 +75,7 @@
   grid-column: 2;
   display: block;
   width: 100%;
-  height: 27rem;
+  height: 29rem;
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -105,7 +105,7 @@
   left: 50%;
   display: grid;
   justify-items: center;
-  width: clamp(11rem, 14vw, 12.5rem);
+  width: clamp(12.5rem, 18vw, 17rem);
   transform-origin: top center;
   will-change: transform, opacity;
   pointer-events: none;
@@ -116,12 +116,13 @@
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: calc(100% + var(--arc-card-growth, 0%));
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 34%);
-  border-radius: 1.35rem;
+  border-radius: 1.5rem;
   background: var(--color-white);
   border-color: color-mix(
     in srgb,
@@ -132,7 +133,10 @@
     0 14px 30px rgb(0 0 0 / 18%),
     0 0 0 1px color-mix(in srgb, var(--color-yellow) var(--arc-emphasis-pct, 0%), transparent),
     0 0 15px color-mix(in srgb, rgb(247 190 51 / 22%) var(--arc-emphasis-pct, 0%), transparent);
-  transition: border-color 120ms linear, box-shadow 120ms linear;
+  transition:
+    border-color 240ms ease,
+    box-shadow 300ms ease,
+    background-color 300ms ease;
 }
 
 .cardLink {
@@ -190,6 +194,22 @@
     min-height 420ms ease-in-out,
     padding 420ms ease-in-out,
     opacity 120ms linear;
+}
+
+.item[data-arc-disclosure="name"] .portraitName {
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  min-height: 4.5rem;
+  max-height: none;
+  align-items: flex-end;
+  padding: 2.25rem 0.9rem 0.85rem;
+  border: 0;
+  background: linear-gradient(180deg, transparent 0%, rgb(18 42 82 / 82%) 100%);
+  color: var(--color-white);
+  text-shadow: 0 1px 12px rgb(0 0 0 / 30%);
 }
 
 .portraitDetail {
@@ -382,7 +402,7 @@
 
 @media (min-width: 640px) {
   .rail {
-    height: 29.5rem;
+    height: 34rem;
   }
 
   .details {
@@ -435,6 +455,7 @@
 
   .item[data-arc-slot="-1"] .portraitName,
   .item[data-arc-slot="1"] .portraitName {
+    position: static;
     min-height: 0;
     max-height: 0;
     padding: 0 0.7rem;

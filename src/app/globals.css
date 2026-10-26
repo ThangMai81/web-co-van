@@ -51,8 +51,11 @@ html {
 }
 
 @media (min-width: 768px) {
-  html {
-    zoom: 90%;
+  :root {
+    /* Preserve the desired 90%-zoom appearance at the browser's normal 100%.
+       Scaling the rem-based design system keeps layout and typography in step
+       without changing browser zoom or shrinking the viewport itself. */
+    font-size: 90%;
   }
 }
 
