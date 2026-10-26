@@ -449,7 +449,8 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
     }
   };
   const handleBlurCapture = (event: ReactFocusEvent<HTMLDivElement>) => {
-    if (event.target === profileLinkRef.current || event.target === featuredCoachLinkRef.current) {
+    const target = event.target as Node;
+    if (profileLinkRef.current?.contains(target) || featuredCoachLinkRef.current?.contains(target)) {
       profileLinkLockSlugRef.current = null;
       setProfileLinkLockSlug(null);
       const pending = pendingProfileCommitRef.current;
