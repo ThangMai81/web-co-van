@@ -50,6 +50,12 @@ html {
   scroll-behavior: auto;
 }
 
+@media (min-width: 768px) {
+  html {
+    zoom: 90%;
+  }
+}
+
 html:has(.route-detail-enter) {
   scroll-behavior: auto !important;
 }
