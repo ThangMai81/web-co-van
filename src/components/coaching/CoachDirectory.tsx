@@ -521,7 +521,7 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
                         {coach.approach}
                       </span>
                       <span className={styles.portraitAction} aria-hidden="true">
-                        Xem hồ sơ <span>↗</span>
+                        Xem hồ sơ <span>→</span>
                       </span>
                     </>;
                   const featured = slot === 0;

@@ -391,12 +391,12 @@
   display: none;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1440px) {
   .item[data-arc-slot="0"] .featuredCardLink {
     display: grid;
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
     grid-template-rows: auto auto minmax(0, 1fr) auto;
-    height: 18rem;
+    height: 24rem;
     border-radius: 1.5rem;
     background: var(--color-white);
     box-shadow:
@@ -461,7 +461,7 @@
   .item[data-arc-slot="0"] .portraitSummary {
     grid-column: 2;
     grid-row: 3;
-    align-self: start;
+    align-self: center;
     height: auto;
     min-height: 0;
     max-height: 5.25rem;
@@ -511,7 +511,7 @@
   }
 }
 
-@media (min-width: 640px) and (max-width: 1099px) {
+@media (min-width: 640px) and (max-width: 1439px) {
   .item {
     width: clamp(15rem, 28vw, 18rem);
   }
