@@ -520,6 +520,9 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
                       <span className={styles.portraitSummary}>
                         {coach.approach}
                       </span>
+                      <span className={styles.portraitAction} aria-hidden="true">
+                        Xem hồ sơ <span>↗</span>
+                      </span>
                     </>;
                   const featured = slot === 0;
                   return <li key={sequenceIndex} className={styles.item} data-arc-slot={slot} data-arc-disclosure={featured ? "featured" : "name"} aria-hidden={featured ? undefined : true} inert={!featured}>
