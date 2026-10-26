@@ -178,6 +178,13 @@
   right: 1rem;
 }
 
+.coachingMotionControlBottom {
+  position: absolute;
+  top: auto;
+  right: 1rem;
+  bottom: 1rem;
+}
+
 .motionControl:hover {
   border-color: var(--color-blue);
   background: var(--color-white);
@@ -191,6 +198,33 @@
 .motionControl.coachingMotionControl:focus-visible {
   outline: 3px solid var(--color-yellow);
   outline-offset: 4px;
+}
+
+.motionIconSlot {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.motionIcon {
+  position: absolute;
+  inset: 0;
+  transition: opacity 140ms ease-out, transform 140ms ease-out;
+}
+
+.motionIconStatic {
+  transition: none !important;
+}
+
+.motionIconVisible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.motionIconHidden {
+  opacity: 0;
+  transform: scale(0.88);
 }
 
 @keyframes hero-entry-settle {
@@ -258,6 +292,10 @@
     top: 7rem;
   }
 
+  .coachingMotionControlBottom {
+    top: auto;
+  }
+
   .video {
     object-position: 80% 45%;
   }
@@ -274,6 +312,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .motionControl,
+  .motionIcon,
   .video,
   .heroLineDetailPath,
   .heroContent[data-entry-active="true"] .heroEntry {

@@ -42,9 +42,9 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.82fr);
+  grid-template-columns: minmax(0, 1.02fr) minmax(300px, 0.9fr);
   align-items: center;
-  gap: clamp(40px, 7vw, 104px);
+  gap: clamp(36px, 5vw, 72px);
   padding: 40px 24px 0;
 }
 
@@ -95,13 +95,13 @@
   position: relative;
   width: 100%;
   aspect-ratio: 0.82;
-  max-height: 590px;
+  max-height: 640px;
   overflow: hidden;
-  border: 1px solid rgba(246, 194, 65, 0.58);
-  border-radius: 48% 48% 22px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 46% 46% 18px 18px;
   background: rgba(255, 255, 255, 0.08);
   box-shadow: 0 24px 70px rgba(4, 18, 42, 0.32);
-  animation: portrait-reveal 820ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
+  animation: portrait-editorial-reveal 790ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
 
 .portraitImage {
@@ -139,13 +139,21 @@
   font-size: 1.2rem;
 }
 
-@keyframes portrait-reveal {
-  from {
-    transform: translate3d(0, 16px, 0) scale(0.985);
-    opacity: 0.7;
+@keyframes portrait-editorial-reveal {
+  0% {
+    clip-path: inset(0 0 0 100% round 46% 46% 18px 18px);
+    transform: translate3d(8px, 0, 0) scale(1.025);
+    opacity: 0.82;
   }
 
-  to {
+  76% {
+    clip-path: inset(0 0 0 0 round 46% 46% 18px 18px);
+    transform: translate3d(-1px, 0, 0) scale(1.006);
+    opacity: 1;
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0 round 46% 46% 18px 18px);
     transform: translate3d(0, 0, 0) scale(1);
     opacity: 1;
   }
@@ -188,5 +196,8 @@
 @media (prefers-reduced-motion: reduce) {
   .portrait {
     animation: none;
+    clip-path: none;
+    transform: none;
+    opacity: 1;
   }
 }
