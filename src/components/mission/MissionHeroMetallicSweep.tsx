@@ -6,12 +6,13 @@ import styles from "./MissionHeroMetallicSweep.module.css";
 const MOTION_QUERY =
   "(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
 const MISSION_RIBBON_PATH =
-  "M 40 7 C 240 -2, 622 2, 828 15 C 928 24, 982 51, 984 88 C 987 112, 979 134, 970 150 C 991 165, 998 187, 990 209 C 980 237, 951 255, 922 264 C 788 270, 606 269, 438 267 C 270 265, 140 265, 40 265";
-// The closed outline follows the outer edge forward and returns along the inner edge to two pointed left tips.
+  "M 26 218 C 48 197, 73 171, 99 166 C 236 154, 389 140, 540 126 C 670 112, 785 101, 856 90 C 904 86, 941 62, 968 31 C 988 9, 1009 27, 1004 49 C 1000 69, 971 91, 946 108 C 929 119, 918 131, 910 136";
 const MISSION_RIBBON_BAND_PATH =
-  "M 40 7 C 66 3, 96 -8, 124 -14 C 310 -17, 615 -13, 824 -4 C 914 4, 978 28, 1000 68 C 1015 96, 1003 130, 982 151 C 1009 171, 1022 198, 1004 225 C 984 254, 951 274, 920 280 C 768 288, 608 284, 438 278 C 280 274, 164 270, 124 270 C 91 270, 62 267, 40 265 C 64 265, 92 255, 124 249 C 275 245, 602 251, 920 249 C 944 242, 956 222, 964 204 C 975 184, 963 165, 945 151 C 960 130, 967 103, 963 84 C 953 56, 911 39, 824 31 C 615 23, 310 26, 124 29 C 94 29, 64 20, 40 7 Z";
+  "M 26 218 C 48 195, 73 169, 99 159 C 236 148, 389 132, 540 116 C 670 103, 785 91, 856 80 C 903 74, 941 50, 968 28 C 989 7, 1009 23, 1006 45 C 1003 67, 973 91, 946 108 C 930 118, 918 129, 910 136 C 890 126, 870 112, 850 101 C 780 111, 670 125, 540 137 C 389 151, 236 166, 99 173 C 73 188, 48 219, 26 218 Z";
+const MISSION_RIBBON_UNDERSIDE_PATH =
+  "M 977 31 C 990 19, 1005 29, 1001 47 C 996 68, 969 90, 946 107 C 929 120, 917 131, 910 136 C 920 117, 937 99, 953 84 C 971 66, 987 49, 977 31 Z";
 const MISSION_RIBBON_FOLD_PATH =
-  "M 978 146 C 1000 165, 1013 188, 1005 207 C 999 225, 980 240, 958 253 L 944 248 C 962 230, 975 211, 976 195 C 977 178, 960 162, 942 152 Z";
+  "M 962 38 C 975 32, 987 42, 981 56 C 974 72, 951 91, 932 110 L 910 136 C 920 112, 934 92, 949 73 C 961 58, 970 47, 962 38 Z";
 
 function subscribeToMediaQuery(query: MediaQueryList, listener: () => void) {
   if (
@@ -154,8 +155,8 @@ export function MissionHeroMetallicSweep({
       >
         <defs>
           <clipPath id={ribbonTaperId} clipPathUnits="userSpaceOnUse">
-            <rect x="124" y="-100" width="976" height="500" />
-            <path d="M 40 7 L 124 -19 L 124 33 Z M 40 265 L 124 239 L 124 291 Z" />
+            <rect x="99" y="-100" width="1001" height="500" />
+            <path d="M 26 218 L 99 159 L 99 173 Z" />
           </clipPath>
           <clipPath id={ribbonBandId} clipPathUnits="userSpaceOnUse">
             <path d={MISSION_RIBBON_BAND_PATH} />
@@ -209,15 +210,14 @@ export function MissionHeroMetallicSweep({
           mask={"url(#" + ribbonRevealId + ")"}
         >
           <path
-            className={styles.ribbonUnderside}
-            transform="translate(0 4)"
-            d={MISSION_RIBBON_BAND_PATH}
-          />
-          <path
             className={styles.ribbonPath}
             d={MISSION_RIBBON_BAND_PATH}
           />
           <g clipPath={"url(#" + ribbonBandId + ")"}>
+            <path
+              className={styles.ribbonUnderside}
+              d={MISSION_RIBBON_UNDERSIDE_PATH}
+            />
             <path className={styles.ribbonFold} d={MISSION_RIBBON_FOLD_PATH} />
           </g>
           <path className={styles.ribbonHighlight} d={MISSION_RIBBON_PATH} />
