@@ -1,0 +1,131 @@
+.metallicTitle {
+  position: relative;
+  display: block;
+  width: 100%;
+  isolation: isolate;
+  overflow: visible;
+  color: #f2d477;
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .metallicText {
+    position: relative;
+    z-index: 1;
+    display: block;
+    background-image:
+      linear-gradient(
+        100deg,
+        transparent 0%,
+        transparent 45%,
+        rgba(255, 255, 255, 0.92) 49%,
+        rgba(255, 229, 157, 0.98) 51%,
+        rgba(255, 255, 255, 0.88) 54%,
+        transparent 60%,
+        transparent 100%
+      ),
+      linear-gradient(
+        180deg,
+        #fff7d9 0%,
+        #d2a447 13%,
+        #fff8db 27%,
+        #b87920 42%,
+        #f5d77f 57%,
+        #a96f1b 73%,
+        #f7e2a0 88%,
+        #986115 100%
+      );
+    background-position: 100% 0, center;
+    background-repeat: no-repeat;
+    background-size: 260% 100%, 100% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .sweepActive .metallicText {
+    animation: mission-metallic-light-sweep 980ms
+      cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
+  }
+
+  @keyframes mission-metallic-light-sweep {
+    from {
+      background-position: 100% 0, center;
+    }
+
+    to {
+      background-position: 0 0, center;
+    }
+  }
+}
+
+.metallicText > * {
+  font-family: Cambria, Georgia, Palatino, serif;
+  text-shadow:
+    0 -1px 0 rgba(255, 252, 236, 0.96),
+    0 1px 0 rgba(131, 84, 15, 0.9),
+    0 2px 0 rgba(87, 53, 9, 0.66),
+    0 3px 2px rgba(4, 19, 43, 0.28);
+}
+
+.ribbon {
+  position: absolute;
+  z-index: 0;
+  top: -59px;
+  left: -72px;
+  width: calc(100% + 144px);
+  height: auto;
+  aspect-ratio: 1000 / 272;
+  overflow: visible;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ribbonLayer {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.ribbonUnderside {
+  stroke: url("#mission-ribbon-underside");
+  stroke-width: 38px;
+}
+
+.ribbonPath {
+  stroke: url("#mission-ribbon-gold");
+  stroke-width: 30px;
+}
+
+.ribbonHighlight {
+  stroke: url("#mission-ribbon-highlight");
+  stroke-width: 4px;
+}
+
+.sweepActive .ribbon {
+  visibility: visible;
+}
+
+.sweepActive .ribbonLayer {
+  animation: mission-metallic-ribbon-draw 1080ms
+    cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
+}
+
+@keyframes mission-metallic-ribbon-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sweepActive .metallicText,
+  .sweepActive .ribbonLayer {
+    animation: none;
+  }
+
+  .sweepActive .ribbon {
+    visibility: hidden;
+  }
+}
