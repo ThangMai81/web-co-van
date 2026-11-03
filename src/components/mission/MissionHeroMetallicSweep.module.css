@@ -16,23 +16,21 @@
       linear-gradient(
         100deg,
         transparent 0%,
-        transparent 45%,
-        rgba(255, 255, 255, 0.92) 49%,
-        rgba(255, 229, 157, 0.98) 51%,
-        rgba(255, 255, 255, 0.88) 54%,
-        transparent 60%,
+        transparent 48%,
+        rgba(255, 249, 221, 0.96) 50%,
+        rgba(255, 223, 143, 0.98) 51%,
+        rgba(255, 248, 220, 0.72) 52%,
+        transparent 55%,
         transparent 100%
       ),
       linear-gradient(
         180deg,
-        #fff7d9 0%,
-        #d2a447 13%,
-        #fff8db 27%,
-        #b87920 42%,
-        #f5d77f 57%,
-        #a96f1b 73%,
-        #f7e2a0 88%,
-        #986115 100%
+        #fff8d9 0%,
+        #e7ba56 22%,
+        #fff1b8 38%,
+        #bd8124 62%,
+        #f3d479 82%,
+        #885814 100%
       );
     background-position: 100% 0, center;
     background-repeat: no-repeat;
@@ -62,10 +60,11 @@
 .metallicText > * {
   font-family: Cambria, Georgia, Palatino, serif;
   text-shadow:
-    0 -1px 0 rgba(255, 252, 236, 0.96),
-    0 1px 0 rgba(131, 84, 15, 0.9),
-    0 2px 0 rgba(87, 53, 9, 0.66),
-    0 3px 2px rgba(4, 19, 43, 0.28);
+    0 -1px 0 rgba(255, 252, 231, 0.98),
+    0 1px 0 rgba(255, 234, 168, 0.96),
+    1px 2px 0 rgba(158, 101, 20, 0.96),
+    2px 4px 0 rgba(70, 43, 12, 0.9),
+    0 6px 7px rgba(3, 17, 38, 0.28);
 }
 
 .ribbon {
@@ -81,35 +80,55 @@
   pointer-events: none;
 }
 
-.ribbonLayer {
+.ribbonReveal {
   fill: none;
+  stroke: #fff;
+  stroke-width: 54px;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   stroke-linecap: butt;
-  stroke-linejoin: round;
 }
 
 .ribbonUnderside {
-  stroke: url("#mission-ribbon-underside");
-  stroke-width: 38px;
+  fill: url("#mission-ribbon-underside");
 }
 
 .ribbonPath {
-  stroke: url("#mission-ribbon-gold");
-  stroke-width: 30px;
+  fill: url("#mission-ribbon-gold");
+}
+
+.ribbonFold {
+  fill: url("#mission-ribbon-fold");
 }
 
 .ribbonHighlight {
+  fill: none;
   stroke: url("#mission-ribbon-highlight");
-  stroke-width: 4px;
+  stroke-width: 3px;
+  stroke-linecap: round;
+}
+
+.ribbonGlint {
+  fill: none;
+  stroke: #fff4c8;
+  stroke-width: 9px;
+  stroke-linecap: round;
+  stroke-dasharray: 0.075 1.075;
+  stroke-dashoffset: 0.075;
+  opacity: 0;
 }
 
 .sweepActive .ribbon {
   visibility: visible;
 }
 
-.sweepActive .ribbonLayer {
-  animation: mission-metallic-ribbon-draw 1080ms
+.sweepActive .ribbonReveal {
+  animation: mission-metallic-ribbon-draw 980ms
+    cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
+}
+
+.sweepActive .ribbonGlint {
+  animation: mission-metallic-ribbon-glint 980ms
     cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
 }
 
@@ -119,9 +138,27 @@
   }
 }
 
+@keyframes mission-metallic-ribbon-glint {
+  from {
+    stroke-dashoffset: 0.075;
+    opacity: 0;
+  }
+
+  8%,
+  92% {
+    opacity: 0.92;
+  }
+
+  to {
+    stroke-dashoffset: -0.925;
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sweepActive .metallicText,
-  .sweepActive .ribbonLayer {
+  .sweepActive .ribbonReveal,
+  .sweepActive .ribbonGlint {
     animation: none;
   }
 
