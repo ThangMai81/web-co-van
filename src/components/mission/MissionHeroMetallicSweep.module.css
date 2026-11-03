@@ -74,7 +74,7 @@
   left: -72px;
   width: calc(100% + 144px);
   height: auto;
-  aspect-ratio: 1000 / 272;
+  aspect-ratio: 1000 / 320;
   overflow: visible;
   visibility: hidden;
   pointer-events: none;
