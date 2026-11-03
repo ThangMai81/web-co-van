@@ -6,13 +6,15 @@ import styles from "./MissionHeroMetallicSweep.module.css";
 const MOTION_QUERY =
   "(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
 const MISSION_RIBBON_PATH =
-  "M 26 218 C 48 197, 73 171, 99 166 C 236 154, 389 140, 540 126 C 670 112, 785 101, 856 90 C 904 86, 941 62, 968 31 C 988 9, 1009 27, 1004 49 C 1000 69, 971 91, 946 108 C 929 119, 918 131, 910 136";
+  "M 56 118 C 90 68, 176 31, 292 28 C 411 25, 477 68, 512 122 C 603 163, 756 222, 890 221 C 969 220, 995 188, 960 157 C 929 129, 865 137, 791 157 C 658 193, 478 225, 323 220 C 174 216, 61 194, 53 158 C 46 128, 109 119, 219 120 C 337 121, 436 128, 512 122 C 625 118, 760 117, 895 126 C 950 131, 976 144, 960 157";
 const MISSION_RIBBON_BAND_PATH =
-  "M 26 218 C 48 195, 73 169, 99 159 C 236 148, 389 132, 540 116 C 670 103, 785 91, 856 80 C 903 74, 941 50, 968 28 C 989 7, 1009 23, 1006 45 C 1003 67, 973 91, 946 108 C 930 118, 918 129, 910 136 C 890 126, 870 112, 850 101 C 780 111, 670 125, 540 137 C 389 151, 236 166, 99 173 C 73 188, 48 219, 26 218 Z";
+  "M 52 118 C 86 63, 174 26, 292 22 C 409 18, 481 67, 520 121 C 632 113, 765 112, 900 122 C 953 127, 980 139, 962 154 C 935 137, 879 130, 814 126 C 698 119, 592 120, 514 129 C 438 114, 362 112, 283 114 C 189 117, 112 127, 63 137 C 46 134, 42 125, 52 118 Z";
+const MISSION_RIBBON_SECOND_BAND_PATH =
+  "M 512 122 C 604 165, 758 222, 891 220 C 968 219, 992 188, 959 157 C 930 129, 870 136, 793 157 C 660 193, 482 225, 325 220 C 177 216, 63 194, 54 158 C 47 131, 109 120, 218 120 C 338 121, 437 129, 512 122 L 512 138 C 426 146, 336 140, 215 136 C 99 136, 39 147, 45 170 C 55 207, 173 232, 322 236 C 483 241, 662 208, 794 172 C 870 151, 929 145, 950 170 C 976 202, 950 236, 891 237 C 758 239, 604 180, 512 138 Z";
 const MISSION_RIBBON_UNDERSIDE_PATH =
-  "M 977 31 C 990 19, 1005 29, 1001 47 C 996 68, 969 90, 946 107 C 929 120, 917 131, 910 136 C 920 117, 937 99, 953 84 C 971 66, 987 49, 977 31 Z";
+  "M 512 132 C 612 177, 760 231, 891 230 C 944 230, 973 211, 968 190 C 947 210, 916 218, 880 216 C 749 213, 610 164, 512 132 Z";
 const MISSION_RIBBON_FOLD_PATH =
-  "M 962 38 C 975 32, 987 42, 981 56 C 974 72, 951 91, 932 110 L 910 136 C 920 112, 934 92, 949 73 C 961 58, 970 47, 962 38 Z";
+  "M 480 121 C 493 116, 506 120, 519 130 C 532 140, 547 146, 561 148 L 551 158 C 535 153, 521 145, 509 137 C 497 129, 486 127, 476 132 Z";
 
 function subscribeToMediaQuery(query: MediaQueryList, listener: () => void) {
   if (
@@ -39,9 +41,9 @@ export function MissionHeroMetallicSweep({
 }: {
   children: ReactNode;
 }) {
-  const ribbonTaperId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  const ribbonBandId = ribbonTaperId + "-band";
-  const ribbonRevealId = ribbonTaperId + "-reveal";
+  const ribbonId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const ribbonBandId = ribbonId + "-band";
+  const ribbonRevealId = ribbonId + "-reveal";
   const titleRef = useRef<HTMLSpanElement>(null);
   const hasStartedRef = useRef(false);
   const disabledRef = useRef(false);
@@ -154,12 +156,9 @@ export function MissionHeroMetallicSweep({
         focusable="false"
       >
         <defs>
-          <clipPath id={ribbonTaperId} clipPathUnits="userSpaceOnUse">
-            <rect x="99" y="-100" width="1001" height="500" />
-            <path d="M 26 218 L 99 159 L 99 173 Z" />
-          </clipPath>
           <clipPath id={ribbonBandId} clipPathUnits="userSpaceOnUse">
             <path d={MISSION_RIBBON_BAND_PATH} />
+            <path d={MISSION_RIBBON_SECOND_BAND_PATH} />
           </clipPath>
           <mask
             id={ribbonRevealId}
@@ -205,13 +204,11 @@ export function MissionHeroMetallicSweep({
             <stop offset="100%" stopColor="#fff4c4" stopOpacity="0.38" />
           </linearGradient>
         </defs>
-        <g
-          clipPath={"url(#" + ribbonTaperId + ")"}
-          mask={"url(#" + ribbonRevealId + ")"}
-        >
+        <g mask={"url(#" + ribbonRevealId + ")"}>
+          {/* The lower loop sits behind the upper loop at the single gap crossing. */}
           <path
             className={styles.ribbonPath}
-            d={MISSION_RIBBON_BAND_PATH}
+            d={MISSION_RIBBON_SECOND_BAND_PATH}
           />
           <g clipPath={"url(#" + ribbonBandId + ")"}>
             <path
@@ -220,6 +217,7 @@ export function MissionHeroMetallicSweep({
             />
             <path className={styles.ribbonFold} d={MISSION_RIBBON_FOLD_PATH} />
           </g>
+          <path className={styles.ribbonPath} d={MISSION_RIBBON_BAND_PATH} />
           <path className={styles.ribbonHighlight} d={MISSION_RIBBON_PATH} />
           <path
             className={styles.ribbonGlint}
