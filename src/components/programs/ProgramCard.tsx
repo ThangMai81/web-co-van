@@ -12,13 +12,13 @@ export default function ProgramCard({ program }: { program: Program }) {
   return (
     <Link
       href={`/programs/${program.slug}`}
-      className={`group flex h-full flex-col overflow-hidden rounded-xl border shadow-sm transition hover:shadow-md ${
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl border bg-white transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 ${
         isPast
-          ? "border-blue/10 bg-white shadow-blue/5 hover:shadow-blue/10"
-          : "border-2 border-yellow bg-blue/5 shadow-blue/5 hover:shadow-blue/10"
+          ? "border-blue/10 shadow-blue/5 hover:border-blue/25 hover:shadow-blue/10"
+          : "border-yellow/60 shadow-blue/5 hover:border-yellow hover:shadow-blue/10"
       }`}
     >
-      <div className="relative h-44 w-full shrink-0 bg-blue/10">
+      <div className="relative h-48 w-full shrink-0 bg-blue/10 sm:h-52">
         {program.coverImage && (
           <ProgramCardThumbnail
             src={program.coverImage}
@@ -27,13 +27,13 @@ export default function ProgramCard({ program }: { program: Program }) {
             isPast={isPast}
           />
         )}
-        <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">
+        <span className="absolute left-3 top-3 flex max-w-[60%] items-center gap-1.5 rounded-full border border-white/60 bg-yellow px-3 py-1 text-xs font-bold text-blue shadow-sm">
           <CategoryIcon category={program.category} size={14} />
           {CATEGORY_LABELS[program.category]}
         </span>
         <span
-          className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
-            isPast ? "bg-white/90 text-blue" : "bg-blue text-white"
+          className={`absolute right-3 top-3 flex max-w-[42%] items-center gap-1.5 rounded-full border border-white/40 px-3 py-1 text-xs font-bold shadow-sm ${
+            isPast ? "bg-white/95 text-blue" : "bg-blue text-white"
           }`}
         >
           {!isPast && (
@@ -43,23 +43,24 @@ export default function ProgramCard({ program }: { program: Program }) {
         </span>
       </div>
 
-      {/* flex-1 để phần nội dung luôn lấp đầy chiều cao còn lại của card */}
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        {/* min-h ép tiêu đề luôn chiếm đúng 2 dòng dù ngắn hay dài -> mọi card bắt đầu cùng 1 điểm */}
-        <h3 className="line-clamp-2 min-h-[3.5rem] text-lg font-bold text-blue">
+      <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">
+        <h3 className="line-clamp-2 min-h-[3.25rem] text-lg font-bold leading-snug text-blue sm:text-xl">
           {program.title}
         </h3>
 
-        {program.location && (
-          <p className="line-clamp-1 flex items-center gap-2 text-sm font-medium text-blue/80">
-            <MapPin size={15} className="shrink-0" /> {program.location}
+        <div className="mt-1 grid gap-2 border-t border-blue/10 pt-3">
+          {program.location && (
+            <p className="flex min-w-0 items-start gap-2 text-sm font-medium leading-5 text-blue/75">
+              <MapPin size={15} className="mt-0.5 shrink-0 text-blue/50" />
+              <span className="min-w-0 break-words">{program.location}</span>
+            </p>
+          )}
+          <p className="flex min-w-0 items-start gap-2 text-sm font-semibold leading-5 text-blue">
+            <Calendar size={15} className="mt-0.5 shrink-0 text-blue/60" />
+            <span className="min-w-0 break-words">{program.schedule}</span>
           </p>
-        )}
-        <p className="line-clamp-1 flex items-center gap-2 text-sm font-medium text-blue/80">
-          <Calendar size={15} className="shrink-0" /> {program.schedule}
-        </p>
+        </div>
 
-        {/* mt-auto ép luôn dính đáy card, bất kể phía trên dài hay ngắn */}
         <div className="mt-auto pt-2">
           <ViewDetailLabel />
         </div>

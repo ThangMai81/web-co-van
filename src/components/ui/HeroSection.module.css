@@ -1,14 +1,158 @@
 .courseEditorialPortrait {
+  position: relative;
   border: 1px solid rgba(254, 206, 1, 0.68);
   background-color: rgba(20, 40, 80, 0.18);
   box-shadow:
     0 0 38px 2px rgba(254, 206, 1, 0.18),
     0 24px 56px rgba(4, 18, 42, 0.28);
+  transform: none;
+  transform-origin: left center;
+  opacity: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+.courseEditorialPortrait::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: -2px;
+  padding: 2px;
+  border-radius: inherit;
+  background-image: linear-gradient(
+    108deg,
+    transparent 38%,
+    rgba(255, 250, 220, 0.94) 49%,
+    rgba(246, 194, 65, 0.9) 52%,
+    transparent 64%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.coursesBreadcrumb {
+  opacity: 1;
+}
+
+.coursesKicker,
+.coursesDescription {
+  opacity: 1;
+  transform: none;
+}
+
+.coursesCount {
+  opacity: 1;
+  transform: none;
+  transform-origin: left center;
+}
+
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .coursesBreadcrumb {
+    animation: courses-breadcrumb-image-led 850ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
+  }
+
+  .coursesBreadcrumb:focus-within {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .coursesKicker {
+    animation: courses-enter-from-start 1050ms cubic-bezier(0.2, 0.75, 0.3, 1) 120ms both;
+  }
+
+  .coursesDescription {
+    animation: courses-enter-from-end 1300ms cubic-bezier(0.2, 0.75, 0.3, 1) 300ms both;
+  }
+
+  .coursesCount {
+    animation: courses-count-settle 1320ms cubic-bezier(0.2, 0.75, 0.3, 1) 560ms both;
+  }
+
   .courseEditorialPortrait {
-    animation: course-portrait-enter 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: course-portrait-hinge 560ms ease-out both;
+  }
+}
+
+@supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  @media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .courseEditorialPortrait::after {
+      visibility: visible;
+      animation: courses-frame-reflection 1450ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+    }
+  }
+}
+
+@keyframes courses-breadcrumb-image-led {
+  from {
+    opacity: 0.94;
+    transform: translateX(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes courses-enter-from-start {
+  from {
+    opacity: 0.9;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes courses-enter-from-end {
+  from {
+    opacity: 0.9;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes courses-count-settle {
+  from {
+    opacity: 0.96;
+    transform: scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes courses-frame-reflection {
+  from {
+    background-position: 100% 0;
+    opacity: 0;
+  }
+
+  16% {
+    opacity: 0.92;
+  }
+
+  84% {
+    opacity: 0.68;
+  }
+
+  to {
+    background-position: 0 0;
+    opacity: 0;
   }
 }
 
@@ -18,14 +162,12 @@
   }
 }
 
-@keyframes course-portrait-enter {
+@keyframes course-portrait-hinge {
   from {
-    transform: translate3d(0, 8px, 0);
-    opacity: 0.96;
+    transform: perspective(900px) rotateY(-3deg);
   }
 
   to {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
+    transform: none;
   }
 }

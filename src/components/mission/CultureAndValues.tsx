@@ -1,14 +1,16 @@
 import { Reveal } from "@/components/animation/Reveal";
+import { CultureValuesOrbit } from "./CultureValuesOrbit";
 
 export function CultureAndValues() {
   return (
-    <section className="relative overflow-hidden bg-blue px-6 py-24">
+    <section id="culture-values" className="relative scroll-mt-24 overflow-hidden bg-blue px-6 py-16 md:py-20">
       <div className="pointer-events-none absolute right-0 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-yellow/10 blur-3xl" />
+      <CultureValuesOrbit />
 
       <div className="relative mx-auto max-w-[var(--page-w)]">
-        <div className="grid gap-12 lg:grid-cols-2">
-          <Reveal direction="left">
-            <div className="h-full rounded-2xl border border-white/15 bg-white/5 p-8">
+        <div className="grid gap-5 lg:grid-cols-2 lg:gap-8">
+          <Reveal direction="left" showOnObserverSetupError>
+            <div className="h-full rounded-2xl border border-white/15 bg-white/[0.04] p-6 sm:p-8">
               <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
                 <span className="block h-px w-6 bg-yellow" />
                 Văn hoá
@@ -21,8 +23,8 @@ export function CultureAndValues() {
             </div>
           </Reveal>
 
-          <Reveal direction="right">
-            <div className="h-full rounded-2xl border border-white/15 bg-white/5 p-8">
+          <Reveal direction="right" showOnObserverSetupError>
+            <div className="h-full rounded-2xl border border-white/15 bg-white/[0.04] p-6 sm:p-8">
               <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
                 <span className="block h-px w-6 bg-yellow" />
                 Giá trị cốt lõi

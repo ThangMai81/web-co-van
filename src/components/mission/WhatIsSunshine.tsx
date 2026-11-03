@@ -1,22 +1,16 @@
-import Image from "next/image";
 import { Reveal } from "@/components/animation/Reveal";
+import { MissionOverviewGroupPhotoParallax } from "./MissionOverviewGroupPhotoParallax";
 
 export function WhatIsSunshine() {
   return (
-    <section className="bg-white px-6 py-24">
-      <div className="mx-auto max-w-[var(--page-w)]">
-        <Reveal direction="left">
-          <div className="relative left-1/2 aspect-[2/1] w-screen -translate-x-1/2 overflow-hidden shadow-lg shadow-blue/10 md:aspect-[21/8]">
-            <Image
-              src="/images/collaborate_team.jpg"
-              alt="Sunshine Center"
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-        </Reveal>
+    <section id="sunshine-overview" className="scroll-mt-24 bg-white py-16 md:py-20">
+      <Reveal direction="left">
+        <div className="relative aspect-[2/1] w-full overflow-hidden bg-blue/5 md:aspect-[21/8]">
+          <MissionOverviewGroupPhotoParallax />
+        </div>
+      </Reveal>
 
+      <div className="mx-auto mt-12 max-w-[var(--page-w)] px-6 md:mt-16">
         <Reveal direction="right">
           <div className="mx-auto mt-14 max-w-3xl text-center">
             <div className="mb-5 flex items-center gap-3 font-mono text-lg font-bold uppercase tracking-widest text-yellow md:text-xl">

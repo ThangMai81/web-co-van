@@ -10,6 +10,12 @@
   background-color: var(--color-blue);
 }
 
+.mediaPlane {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
 .posterFallback,
 .posterFallbackSecondary {
   position: absolute;
@@ -53,11 +59,32 @@
   opacity: 1;
 }
 
+.backdrop[data-home-parallax-active="true"]:not(.coachingBackdrop) .mediaPlane {
+  transform: translate3d(0, var(--home-hero-media-offset, 0px), 0)
+    scale(var(--home-hero-media-scale, 1));
+  transform-origin: center;
+  will-change: transform;
+}
+
 .scrim {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(9, 27, 57, 0.72) 0%,
+    rgba(9, 27, 57, 0.56) 28%,
+    rgba(9, 27, 57, 0.24) 50%,
+    rgba(9, 27, 57, 0.04) 72%,
+    transparent 84%
+  );
+}
+
+.backdrop:not(.coachingBackdrop) .scrim::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   background:
     radial-gradient(
       ellipse 24% 42% at 78% 23%,
@@ -71,15 +98,36 @@
       rgba(255, 197, 43, 0.3) 0%,
       rgba(255, 221, 118, 0.15) 42%,
       transparent 76%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(9, 27, 57, 0.72) 0%,
-      rgba(9, 27, 57, 0.56) 28%,
-      rgba(9, 27, 57, 0.24) 50%,
-      rgba(9, 27, 57, 0.04) 72%,
-      transparent 84%
     );
+  content: "";
+  pointer-events: none;
+}
+
+.backdrop[data-home-parallax-active="true"]:not(.coachingBackdrop) .scrim::after {
+  transform: translate3d(0, var(--home-hero-light-offset, 0px), 0);
+  will-change: transform;
+}
+
+.backdrop:not(.coachingBackdrop) .scrim::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transform: scale(0.82);
+  transform-origin: 78% 23%;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse 24% 42% at 78% 23%,
+    rgba(255, 255, 246, 0.46) 0%,
+    rgba(255, 232, 147, 0.34) 30%,
+    rgba(255, 197, 43, 0.22) 60%,
+    transparent 92%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.backdrop[data-home-bloom-active="true"]:not(.coachingBackdrop) .scrim::before {
+  animation: home-sunrise-bloom 840ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
 
 .coachingScrim {
@@ -249,8 +297,40 @@
   }
 }
 
+@keyframes home-sunrise-bloom {
+  0% {
+    transform: scale(0.82);
+    opacity: 0;
+  }
+
+  18% {
+    transform: scale(1.04);
+    opacity: 0.78;
+  }
+
+  42% {
+    transform: scale(1.18);
+    opacity: 0.54;
+  }
+
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 767px) {
   .scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(9, 27, 57, 0.66) 0%,
+      rgba(9, 27, 57, 0.5) 32%,
+      rgba(9, 27, 57, 0.22) 68%,
+      rgba(9, 27, 57, 0.14) 100%
+    );
+  }
+
+  .backdrop:not(.coachingBackdrop) .scrim::after {
     background:
       radial-gradient(
         ellipse 36% 38% at 76% 20%,
@@ -263,13 +343,6 @@
         ellipse 82% 70% at 74% 22%,
         rgba(255, 204, 62, 0.26) 0%,
         transparent 74%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(9, 27, 57, 0.66) 0%,
-        rgba(9, 27, 57, 0.5) 32%,
-        rgba(9, 27, 57, 0.22) 68%,
-        rgba(9, 27, 57, 0.14) 100%
       );
   }
 
@@ -310,14 +383,31 @@
   }
 }
 
+@media (max-width: 1023px), (pointer: coarse) {
+  .backdrop[data-home-parallax-active="true"] .mediaPlane,
+  .backdrop[data-home-parallax-active="true"]:not(.coachingBackdrop) .scrim::after {
+    transform: none;
+    will-change: auto;
+  }
+
+  .backdrop[data-home-bloom-active="true"] .scrim::before {
+    animation: none;
+    transform: none;
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .motionControl,
   .motionIcon,
   .video,
   .heroLineDetailPath,
-  .heroContent[data-entry-active="true"] .heroEntry {
+  .heroContent[data-entry-active="true"] .heroEntry,
+  .backdrop[data-home-bloom-active="true"] .scrim::before {
     animation: none;
     transition: none;
+    opacity: 0;
+    transform: none;
   }
 
   .heroContent[data-entry-active="true"] .heroLineDetailPath {
@@ -327,5 +417,11 @@
 
   .heroContent[data-entry-active="true"] .heroEntry {
     transform: none;
+  }
+
+  .backdrop[data-home-parallax-active="true"] .mediaPlane,
+  .backdrop[data-home-parallax-active="true"]:not(.coachingBackdrop) .scrim::after {
+    transform: none;
+    will-change: auto;
   }
 }

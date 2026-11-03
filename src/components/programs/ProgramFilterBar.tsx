@@ -26,10 +26,11 @@ export default function ProgramFilterBar({
   const statuses = Object.keys(STATUS_LABELS) as ProgramStatus[];
 
   return (
-    <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Nhóm: Loại chương trình - tông vàng */}
-        <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border-2 border-yellow bg-yellow/10 p-1.5">
+    <div className="flex min-w-0 flex-col gap-4 xl:flex-row xl:flex-wrap xl:items-end xl:justify-between">
+      <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:flex xl:flex-wrap">
+        <div className="grid min-w-0 gap-1.5">
+          <span className="px-1 text-[11px] font-bold uppercase tracking-[0.14em] text-blue/55">Loại chương trình</span>
+          <div className="flex min-w-0 flex-wrap items-center gap-1 rounded-xl border border-yellow/40 bg-yellow/[0.08] p-1">
           <CategoryPill
             href={buildHref(undefined, activeStatus, activeSort)}
             active={!activeCategory}
@@ -44,10 +45,12 @@ export default function ProgramFilterBar({
               label={CATEGORY_LABELS[cat]}
             />
           ))}
+          </div>
         </div>
 
-        {/* Nhóm: Thời gian - tông xanh dương, tách biệt hẳn với nhóm trên */}
-        <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border-2 border-blue bg-blue/10 p-1.5">
+        <div className="grid min-w-0 gap-1.5">
+          <span className="px-1 text-[11px] font-bold uppercase tracking-[0.14em] text-blue/55">Thời gian</span>
+          <div className="flex min-w-0 flex-wrap items-center gap-1 rounded-xl border border-blue/15 bg-blue/[0.04] p-1">
           <StatusPill
             href={buildHref(activeCategory, undefined, activeSort)}
             active={!activeStatus}
@@ -61,6 +64,7 @@ export default function ProgramFilterBar({
               label={STATUS_LABELS[st]}
             />
           ))}
+          </div>
         </div>
       </div>
 
@@ -88,7 +92,8 @@ function CategoryPill({
     <Link
       href={href}
       scroll={false}
-      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition ${
+      aria-current={active ? "page" : undefined}
+      className={`flex min-h-10 items-center gap-1.5 rounded-full px-3 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 ${
         active
           ? "bg-yellow font-extrabold text-blue shadow-sm"
           : "font-bold text-blue/80 hover:bg-yellow/25"
@@ -113,7 +118,8 @@ function StatusPill({
     <Link
       href={href}
       scroll={false}
-      className={`rounded-full px-3.5 py-2 text-sm transition ${
+      aria-current={active ? "page" : undefined}
+      className={`min-h-10 rounded-full px-3 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 ${
         active
           ? "bg-blue font-extrabold text-white shadow-sm"
           : "font-bold text-blue/80 hover:bg-blue/20"

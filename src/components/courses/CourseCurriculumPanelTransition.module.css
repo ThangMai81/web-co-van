@@ -1,0 +1,32 @@
+.panelTransition {
+  /* Kept local to this native disclosure so global intrinsic-size interpolation is unchanged. */
+}
+
+@supports selector(::details-content) and (interpolate-size: allow-keywords) {
+  .panelTransition {
+    interpolate-size: allow-keywords;
+  }
+
+  .panelTransition::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 280ms ease,
+      content-visibility 280ms allow-discrete;
+  }
+
+  .panelTransition[open]::details-content {
+    height: auto;
+  }
+
+  .panelTransition[data-route-entry-pending="true"]::details-content {
+    height: 0;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panelTransition::details-content {
+    transition: none;
+  }
+}

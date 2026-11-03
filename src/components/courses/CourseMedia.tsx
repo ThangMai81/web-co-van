@@ -1,5 +1,5 @@
-import Image from "next/image";
 import type { CourseDetail } from "@/types/course";
+import { CourseMediaApertureImage } from "./CourseMediaApertureImage";
 
 export default function CourseMedia({
   detail,
@@ -15,12 +15,10 @@ export default function CourseMedia({
 
   return (
     <div className="relative mx-auto aspect-[4/3] w-full max-w-4xl overflow-hidden rounded-xl border border-blue/10 bg-blue">
-      <Image
+      <CourseMediaApertureImage
         src={thumbnail}
         alt={title}
-        fill
         sizes="(min-width: 944px) 896px, calc(100vw - 4rem)"
-        className="object-contain"
       />
       {detail.videoUrl && (
         <a

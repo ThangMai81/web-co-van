@@ -1,0 +1,33 @@
+.sunrays {
+  opacity: 0.72;
+}
+
+.rayPath {
+  fill: none;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.drawActive .rayPath {
+  animation: mission-sunray-line-draw 620ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mission-sunray-line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .drawActive .rayPath {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

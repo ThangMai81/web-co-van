@@ -1,0 +1,40 @@
+.confirmationCircle {
+  animation: confirmation-circle-scale-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: center;
+}
+
+.confirmationCheck {
+  animation: confirmation-check-draw 460ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both;
+  stroke-dasharray: 20;
+}
+
+@keyframes confirmation-circle-scale-in {
+  0% {
+    transform: scale(0.78);
+  }
+
+  78% {
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes confirmation-check-draw {
+  from {
+    stroke-dashoffset: 20;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirmationCircle,
+  .confirmationCheck {
+    animation: none;
+  }
+}

@@ -2,6 +2,8 @@ import CourseGrid from "@/components/courses/CourseGrid";
 import CourseFilterBar from "@/components/courses/CourseFilterBar";
 import HeroSection from "@/components/ui/HeroSection";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
+import heroMotionStyles from "@/components/ui/HeroSection.module.css";
 import type { CourseListItem } from "@/types/course";
 
 async function getCourses(
@@ -59,6 +61,7 @@ export default async function CoursesPage({
         portraitPresentation="courseEditorial"
         leadingContent={
           <Breadcrumb
+            className={heroMotionStyles.coursesBreadcrumb}
             variant="light"
             items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
           />
@@ -70,19 +73,36 @@ export default async function CoursesPage({
           // role: "Chức danh",
         }}
       >
-        <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
+        <div
+          className={[
+            heroMotionStyles.coursesKicker,
+            "mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow",
+          ].join(" ")}
+        >
           <span className="block h-px w-6 bg-yellow" />
           Khóa học
         </div>
-        <h1 className="max-w-[20ch] font-display text-4xl font-bold text-white sm:text-5xl">
-          Đồng hành cùng bạn, từng bước một
-        </h1>
-        <p className="mt-4 max-w-[60ch] text-white/80">
+        <HeroLineMaskReveal>
+          <h1 className="max-w-[20ch] font-display text-4xl font-bold text-white sm:text-5xl">
+            Đồng hành cùng bạn, từng bước một
+          </h1>
+        </HeroLineMaskReveal>
+        <p
+          className={[
+            heroMotionStyles.coursesDescription,
+            "mt-4 max-w-[60ch] text-white/80",
+          ].join(" ")}
+        >
           Mỗi khóa học được thiết kế riêng cho một hành trình khác nhau — chọn
           điều phù hợp với bạn hoặc con bạn ngay bây giờ.
         </p>
 
-        <div className="mt-8 flex gap-8 border-t border-white/15 pt-6">
+        <div
+          className={[
+            heroMotionStyles.coursesCount,
+            "mt-8 flex gap-8 border-t border-white/15 pt-6",
+          ].join(" ")}
+        >
           <div>
             <div className="text-2xl font-extrabold text-yellow">
               {courses.length}

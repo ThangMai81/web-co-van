@@ -1,0 +1,50 @@
+.canvas {
+  position: relative;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 1;
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.current,
+.outgoing {
+  z-index: 1;
+}
+
+.preloading,
+.inactive {
+  opacity: 0;
+  transform: translateX(0);
+  visibility: hidden;
+}
+
+.preloading,
+.incoming {
+  z-index: 2;
+}
+
+.outgoing {
+  opacity: 0;
+}
+
+.incoming {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .motionEnabled {
+    transition-property: opacity, transform;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .preloading.motionEnabled {
+    transform: translateX(4px);
+  }
+}

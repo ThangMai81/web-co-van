@@ -6,17 +6,21 @@ import { JourneyInside } from "@/components/mission/JourneyInside";
 import { Mission } from "@/components/mission/Mission";
 import { CultureAndValues } from "@/components/mission/CultureAndValues";
 import { Founder } from "@/components/mission/Founder";
+import { MissionChapterNav } from "@/components/mission/MissionChapterNav";
 
 export function MissionPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-clip">
       <SiteHeader />
       <Hero />
-      <WhatIsSunshine />
-      <JourneyInside />
-      <Mission />
-      <CultureAndValues />
-      <Founder />
+      <div>
+        <MissionChapterNav />
+        <WhatIsSunshine />
+        <JourneyInside />
+        <Mission />
+        <CultureAndValues />
+        <Founder />
+      </div>
       <SiteFooter />
     </main>
   );

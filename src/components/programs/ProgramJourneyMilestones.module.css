@@ -1,0 +1,122 @@
+.curveFrame {
+  overflow: visible;
+}
+
+.journeySvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.milestonePoint {
+  fill: var(--color-yellow, #f6c241);
+  stroke: var(--color-blue, #0b2454);
+  stroke-width: 1;
+}
+
+.milestoneLabel {
+  position: absolute;
+  z-index: 1;
+  top: var(--milestone-y);
+  left: var(--milestone-x);
+  box-sizing: border-box;
+  width: clamp(3.25rem, 6.8vw, 6rem);
+  padding: 2px 4px;
+  border: 1px solid rgb(246 194 65 / 78%);
+  border-radius: 6px;
+  background: rgb(7 29 57 / 92%);
+  box-shadow: 0 2px 8px rgb(2 13 31 / 22%);
+  color: #fff;
+  font-size: clamp(0.56rem, 0.62vw, 0.625rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.milestoneLabel[data-lane="0"] {
+  --label-offset-y: calc(-100% - 32px);
+}
+
+.milestoneLabel[data-lane="1"] {
+  --label-offset-y: 32px;
+}
+
+.milestoneLabel[data-lane="2"] {
+  --label-offset-y: calc(-100% - 22px);
+}
+
+.milestoneLabel[data-lane="3"] {
+  --label-offset-y: 22px;
+}
+
+.milestoneLabel[data-lane="4"] {
+  --label-offset-y: calc(-100% - 37px);
+}
+
+.curveFrame > .milestoneLabel:nth-of-type(6) {
+  --label-offset-y: 32px;
+}
+
+.milestoneLabel[data-align="start"] {
+  transform: translateY(var(--label-offset-y));
+}
+
+.milestoneLabel[data-align="center"] {
+  transform: translate(-50%, var(--label-offset-y));
+}
+
+.milestoneLabel[data-align="end"] {
+  transform: translate(-100%, var(--label-offset-y));
+}
+
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .milestoneLabel {
+    width: 58px;
+    font-size: 0.56rem;
+  }
+
+  .curveFrame > .milestoneLabel:nth-of-type(4) {
+    width: 64px;
+    font-size: 0.59rem;
+    line-height: 1.08;
+  }
+
+  .curveFrame > .milestoneLabel:nth-of-type(1),
+  .curveFrame > .milestoneLabel:nth-of-type(3),
+  .curveFrame > .milestoneLabel:nth-of-type(5) {
+    --label-offset-y: calc(-100% - 18px);
+    transform: translate(-50%, var(--label-offset-y));
+  }
+
+  .curveFrame > .milestoneLabel:nth-of-type(2),
+  .curveFrame > .milestoneLabel:nth-of-type(4),
+  .curveFrame > .milestoneLabel:nth-of-type(6) {
+    --label-offset-y: 32px;
+    transform: translate(-50%, var(--label-offset-y));
+  }
+}
+
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  @supports (animation: programs-journey-milestone-reveal 120ms ease-out) {
+    .curveFrame[data-stage="path"] .milestonePoint,
+    .curveFrame[data-stage="path"] .milestoneLabel {
+      opacity: 0;
+      animation: programs-journey-milestone-reveal 120ms ease-out both;
+      animation-delay: var(--milestone-delay, 0ms);
+    }
+  }
+}
+
+@keyframes programs-journey-milestone-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

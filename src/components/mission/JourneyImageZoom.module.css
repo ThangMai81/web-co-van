@@ -1,0 +1,27 @@
+.zoomFrame {
+  position: absolute;
+  inset: 0;
+  transform: scale(1);
+  transform-origin: center;
+}
+
+.zoomActive {
+  animation: mission-journey-image-settle 760ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mission-journey-image-settle {
+  from {
+    transform: scale(1.025);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .zoomActive {
+    animation: none;
+  }
+}

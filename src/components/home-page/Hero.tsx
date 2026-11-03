@@ -1,21 +1,127 @@
 "use client";
 
 // import Image from "next/image"; // Restore with the commented Sunshine banner below.
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Play } from "@/lib/icons";
 import { FloatingContact } from "@/components/chatbot/FloatingContact";
 import { HomeHeroBackdrop } from "./HomeHeroBackdrop";
 import styles from "./HomeHeroBackdrop.module.css";
 
+const SUNRISE_BLOOM_DURATION_MS = 840;
+
 export function Hero() {
   const entryPendingRef = useRef(true);
+  const sunriseBloomStartedRef = useRef(false);
+  const sunriseBloomTimerRef = useRef<number | null>(null);
   const [entryMotionActive, setEntryMotionActive] = useState(false);
   const [contactMotionActive, setContactMotionActive] = useState(false);
+  const [sunriseBloomActive, setSunriseBloomActive] = useState(false);
+  const [sunriseBloomSettled, setSunriseBloomSettled] = useState(false);
+
+  const settleSunriseBloom = useCallback(() => {
+    if (sunriseBloomTimerRef.current !== null) {
+      window.clearTimeout(sunriseBloomTimerRef.current);
+      sunriseBloomTimerRef.current = null;
+    }
+    setSunriseBloomActive(false);
+    setSunriseBloomSettled(true);
+  }, []);
 
   const settleEntryMotion = useCallback(() => {
     entryPendingRef.current = false;
+    sunriseBloomStartedRef.current = true;
     setEntryMotionActive(false);
-  }, []);
+    settleSunriseBloom();
+  }, [settleSunriseBloom]);
+
+  const handleHomeBloomEligibilityChange = useCallback(
+    (allowed: boolean) => {
+      if (!entryPendingRef.current) return;
+
+      if (!allowed) {
+        if (sunriseBloomStartedRef.current) settleSunriseBloom();
+        return;
+      }
+
+      if (
+        sunriseBloomStartedRef.current ||
+        typeof window.matchMedia !== "function"
+      ) {
+        return;
+      }
+
+      const desktopQuery = window.matchMedia("(min-width: 1024px)");
+      const finePointerQuery = window.matchMedia("(pointer: fine)");
+      if (!desktopQuery.matches || !finePointerQuery.matches) {
+        sunriseBloomStartedRef.current = true;
+        setSunriseBloomSettled(true);
+        return;
+      }
+
+      sunriseBloomStartedRef.current = true;
+      setSunriseBloomSettled(false);
+      setSunriseBloomActive(true);
+    },
+    [settleSunriseBloom],
+  );
+
+  useEffect(() => {
+    if (!sunriseBloomActive) return;
+
+    const timer = window.setTimeout(() => {
+      sunriseBloomTimerRef.current = null;
+      setSunriseBloomActive(false);
+      setSunriseBloomSettled(true);
+    }, SUNRISE_BLOOM_DURATION_MS);
+    sunriseBloomTimerRef.current = timer;
+
+    return () => {
+      window.clearTimeout(timer);
+      if (sunriseBloomTimerRef.current === timer) {
+        sunriseBloomTimerRef.current = null;
+      }
+    };
+  }, [sunriseBloomActive]);
+
+  useEffect(() => {
+    if (!sunriseBloomActive) return;
+    if (typeof window.matchMedia !== "function") {
+      sunriseBloomStartedRef.current = true;
+      settleSunriseBloom();
+      return;
+    }
+
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const finePointerQuery = window.matchMedia("(pointer: fine)");
+    const cancelIfIneligible = () => {
+      if (desktopQuery.matches && finePointerQuery.matches) return;
+      sunriseBloomStartedRef.current = true;
+      settleSunriseBloom();
+    };
+    const subscribe = (query: MediaQueryList) => {
+      if (typeof query.addEventListener === "function") {
+        query.addEventListener("change", cancelIfIneligible);
+        return () => query.removeEventListener("change", cancelIfIneligible);
+      }
+      query.addListener(cancelIfIneligible);
+      return () => query.removeListener(cancelIfIneligible);
+    };
+    const removeDesktopListener = subscribe(desktopQuery);
+    const removePointerListener = subscribe(finePointerQuery);
+    const cancelOnScroll = () => {
+      sunriseBloomStartedRef.current = true;
+      settleSunriseBloom();
+    };
+
+    cancelIfIneligible();
+    window.addEventListener("scroll", cancelOnScroll, { passive: true });
+
+    return () => {
+      removeDesktopListener();
+      removePointerListener();
+      window.removeEventListener("scroll", cancelOnScroll);
+    };
+  }, [sunriseBloomActive, settleSunriseBloom]);
 
   const handleEntryMotionPermissionChange = useCallback(
     (allowed: boolean) => {
@@ -31,8 +137,15 @@ export function Hero() {
 
   return (
     <>
-      <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-white">
+      <section
+        className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-white"
+        onFocusCapture={settleEntryMotion}
+        onPointerDownCapture={settleEntryMotion}
+      >
         <HomeHeroBackdrop
+          homeBloomActive={sunriseBloomActive}
+          homeParallaxEnabled={sunriseBloomSettled}
+          onHomeBloomEligibilityChange={handleHomeBloomEligibilityChange}
           onEntryMotionAllowedChange={handleEntryMotionPermissionChange}
           onMotionActiveChange={setContactMotionActive}
           onMotionPause={settleEntryMotion}
@@ -42,8 +155,6 @@ export function Hero() {
         <div
           className={`${styles.heroContent} relative z-10 mx-auto flex w-full max-w-[var(--page-w)] flex-1 flex-col justify-center px-6 pt-[120px] pb-8 sm:pt-[74px] sm:pb-20`}
           data-entry-active={entryMotionActive}
-          onFocusCapture={settleEntryMotion}
-          onPointerDownCapture={settleEntryMotion}
         >
           <div
             className={`${styles.heroEntry} ${styles.heroKicker} mb-3 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-white sm:mb-5`}

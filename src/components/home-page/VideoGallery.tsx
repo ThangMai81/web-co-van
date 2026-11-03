@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { Reveal } from "@/components/animation/Reveal";
 import VideoModal from "./VideoModal";
 import type { Video } from "@/types/video";
 
 export function VideoGallery() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [activeVideo, setActiveVideo] = useState<Video | null>(null);
+  const [originRect, setOriginRect] = useState<DOMRect | null>(null);
+  const activeTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const closeVideo = useCallback(() => setActiveVideo(null), []);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/videos`)
@@ -30,39 +34,47 @@ export function VideoGallery() {
         </h2>
 
         <div className="grid grid-cols-1 items-start gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {videos.map((v) => (
+          {videos.map((v, index) => (
             <button
               key={v._id}
               type="button"
-              onClick={() => setActiveVideo(v)}
+              aria-haspopup="dialog"
+              onClick={(event) => {
+                activeTriggerRef.current = event.currentTarget;
+                const thumbnail = event.currentTarget.querySelector<HTMLElement>("[data-video-thumbnail]");
+                setOriginRect(thumbnail?.getBoundingClientRect() ?? null);
+                setActiveVideo(v);
+              }}
               className="group text-left"
             >
-              <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue/15 bg-blue/10">
-                {/* Ảnh thumbnail YouTube có sẵn miễn phí theo đúng video ID, không cần tự upload riêng */}
-                <Image
-                  src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                  alt={v.title}
-                  fill
-                  className="object-cover"
-                />
-                {v.durationLabel && (
-                  <span className="absolute left-2 top-2 rounded-full bg-blue px-2 py-0.5 font-mono text-[10px] font-bold text-white">
-                    {v.durationLabel}
+              <Reveal direction="up" repeat={false} delay={index * 60}>
+                <div data-video-thumbnail className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue/15 bg-blue/10">
+                  {/* Ảnh thumbnail YouTube có sẵn miễn phí theo đúng video ID, không cần tự upload riêng */}
+                  <Image
+                    src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                    alt={v.title}
+                    fill
+                    className="object-cover"
+                  />
+                  {v.durationLabel && (
+                    <span className="absolute left-2 top-2 rounded-full bg-blue px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+                      {v.durationLabel}
+                    </span>
+                  )}
+                  <span className="absolute inset-0 flex items-center justify-center bg-blue/10 transition group-hover:bg-blue/20">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-blue shadow-md transition-all duration-200 group-hover:scale-110 group-hover:bg-yellow">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </span>
                   </span>
-                )}
-                <span className="absolute inset-0 flex items-center justify-center bg-blue/10 transition group-hover:bg-blue/20">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-blue shadow-md transition-all duration-200 group-hover:scale-110 group-hover:bg-yellow">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </span>
-                </span>
-              </div>
+                </div>
+              </Reveal>
               <div className="mt-3">
                 <div className="font-display text-sm font-bold text-blue transition-colors group-hover:text-yellow">
                   {v.title}
@@ -79,7 +91,12 @@ export function VideoGallery() {
       </div>
 
       {activeVideo && (
-        <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />
+        <VideoModal
+          video={activeVideo}
+          originRect={originRect}
+          returnFocusElement={activeTriggerRef.current}
+          onClose={closeVideo}
+        />
       )}
     </section>
   );

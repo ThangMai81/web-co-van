@@ -35,6 +35,8 @@ export function VoiceCard({
     return () => observer.disconnect();
   }, [expanded, quote]);
 
+  const toggleExpanded = () => setExpanded((prev) => !prev);
+
   return (
     <article className="overflow-hidden rounded-xl border border-white/15 bg-white/5">
       {image && (
@@ -76,7 +78,7 @@ export function VoiceCard({
         {canExpand && (
           <button
             type="button"
-            onClick={() => setExpanded((v) => !v)}
+            onClick={toggleExpanded}
             aria-expanded={expanded}
             className="mt-4 inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-yellow hover:underline"
           >

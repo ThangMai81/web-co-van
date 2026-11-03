@@ -11,11 +11,11 @@ import styles from "./CoachDirectory.module.css";
 
 const FILTERS = ["Tất cả", "Bình an nội tâm", "Sự nghiệp", "Gia đình & quan hệ", "Chuyển hoá", "Giá trị bản thân"];
 const ARC_SLOTS = Array.from({ length: 11 }, (_, index) => index - 5);
-const MANUAL_STEP_MS = 420;
+const MANUAL_STEP_MS = 140;
 const AUTO_CHANGE_INTERVAL_MS = 7500;
 const AUTO_TRANSITION_MS = MANUAL_STEP_MS * 2;
 const AUTO_TRANSITION_START_MS = AUTO_CHANGE_INTERVAL_MS - AUTO_TRANSITION_MS / 2;
-type PendingProfileCommit = { index: number; slug: string; announce: boolean };
+type PendingProfileCommit = { index: number; slug: string; announce: boolean; direction: -1 | 1 };
 
 function normalizeSearchText(value: string) {
   return value.toLocaleLowerCase("vi").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
@@ -47,12 +47,15 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
   const [arcCenterSequence, setArcCenterSequence] = useState(0);
   const [autoRotationEnabled, setAutoRotationEnabled] = useState(true);
+  const [selectionControlFocused, setSelectionControlFocused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
   const [pageVisible, setPageVisible] = useState(false);
   const [stageVisible, setStageVisible] = useState(false);
   const [isEnhanced, setIsEnhanced] = useState(false);
   const [manualDirection, setManualDirection] = useState<-1 | 1 | null>(null);
+  const [profileDirection, setProfileDirection] = useState<-1 | 1>(1);
+  const [outgoingCoach, setOutgoingCoach] = useState<Coach | null>(null);
   const [manualAnnouncement, setManualAnnouncement] = useState("");
   const [profileLinkLockSlug, setProfileLinkLockSlug] = useState<string | null>(null);
   const railId = useId();
@@ -65,6 +68,8 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
   const pendingProfileCommitRef = useRef<PendingProfileCommit | null>(null);
   const phaseRef = useRef(0);
   const currentIndexRef = useRef(0);
+  const selectedCoachRef = useRef<Coach | null>(null);
+  const portraitCrossfadeTimerRef = useRef<number | null>(null);
   const arcCenterSequenceRef = useRef(0);
   const manualRemainingRef = useRef(0);
   const autoDwellElapsedRef = useRef(0);
@@ -82,6 +87,13 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
         featuredCoachLinkRef.current?.contains(focusedElement)
       ),
     );
+  }, []);
+  const isSelectionControlFocusTarget = useCallback((target: EventTarget | null) => {
+    const element = target as HTMLElement | null;
+    if (!element || typeof element.closest !== "function" || !stageRef.current?.contains(element)) {
+      return false;
+    }
+    return Boolean(element.closest("button") || railRef.current?.contains(element));
   }, []);
 
   const visibleCoaches = useMemo(() => {
@@ -107,41 +119,54 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
     profileLinkCommittedSlugRef.current = currentCoach?.slug ?? null;
   }, [currentCoach?.slug, profileLinkIsFocused]);
 
+  useLayoutEffect(() => {
+    const previousCoach = selectedCoachRef.current;
+    selectedCoachRef.current = currentCoach;
+
+    if (portraitCrossfadeTimerRef.current !== null) {
+      window.clearTimeout(portraitCrossfadeTimerRef.current);
+      portraitCrossfadeTimerRef.current = null;
+    }
+
+    if (
+      prefersReducedMotion ||
+      !previousCoach ||
+      !currentCoach ||
+      previousCoach.slug === currentCoach.slug
+    ) {
+      setOutgoingCoach(null);
+      return;
+    }
+
+    setOutgoingCoach(previousCoach);
+    const timer = window.setTimeout(() => {
+      setOutgoingCoach((coach) => coach?.slug === previousCoach.slug ? null : coach);
+      if (portraitCrossfadeTimerRef.current === timer) {
+        portraitCrossfadeTimerRef.current = null;
+      }
+    }, 280);
+    portraitCrossfadeTimerRef.current = timer;
+
+    return () => {
+      window.clearTimeout(timer);
+      if (portraitCrossfadeTimerRef.current === timer) {
+        portraitCrossfadeTimerRef.current = null;
+      }
+    };
+  }, [currentCoach, prefersReducedMotion]);
+
   const updateArcPositions = useCallback((phase: number) => {
     const rail = railRef.current;
-    if (!rail || !rail.clientWidth) return;
-    const { width, compact, cardWidth, step } = getArcGeometry(rail);
-    const curve = Math.min(compact ? 58 : 96, rail.clientHeight * 0.32);
+    if (!rail) return;
     rail.querySelectorAll<HTMLLIElement>("[data-arc-slot]").forEach((item) => {
       const slot = Number(item.dataset.arcSlot);
       const isSelected = slot === 0;
-      const x = (slot - phase) * step;
-      const edge = Math.min(1, Math.abs(x) / Math.max(1, width / 2));
-      const y = curve * edge * edge;
-      const scale = 1 - edge * 0.28;
-      const emphasis = Math.max(0, 1 - Math.abs(slot - phase));
-      const opacity = 0.9 + emphasis * 0.1;
-      item.style.transform = "translate3d(calc(-50% + " + x + "px), " + y + "px, 0) scale(" + scale + ")";
-      item.style.opacity = String(opacity);
-      item.style.setProperty("--arc-emphasis-pct", (emphasis * 100) + "%");
-      item.style.setProperty("--arc-card-growth", (emphasis * 8) + "%");
-      item.style.setProperty("--arc-image-brightness", String(0.9 + emphasis * 0.1));
-      item.style.setProperty("--arc-image-saturation", String(0.9 + emphasis * 0.1));
-      item.style.zIndex = String(100 + Math.round(emphasis * 100));
-      const visualWidth = item.offsetWidth * (1 + emphasis * 0.08) * scale;
-      const halfCard = visualWidth / 2;
-      const visibleWidth = Math.max(0, Math.min(x + halfCard, width / 2) - Math.max(x - halfCard, -width / 2));
-      const visibleRatio = visibleWidth / Math.max(1, visualWidth);
       const disclosure = isSelected ? "featured" : "name";
-      const showMobileSideName = compact && Math.abs(slot) === 1;
-      const edgeLabelOpacity = visibleRatio >= 0.98 || showMobileSideName ? 1 : 0;
       item.dataset.arcDisclosure = disclosure;
-      item.style.setProperty("--arc-name-opacity", String(edgeLabelOpacity));
-      item.style.setProperty(
-        "--arc-detail-opacity",
-        isSelected ? "1" : "0",
-      );
-      item.style.visibility = x + halfCard > -width / 2 && x - halfCard < width / 2 ? "visible" : "hidden";
+      item.style.transform = "none";
+      item.style.opacity = isSelected ? "1" : "0";
+      item.style.zIndex = isSelected ? "1" : "0";
+      item.style.visibility = isSelected ? "visible" : "hidden";
     });
   }, []);
 
@@ -149,11 +174,13 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
     if (!visibleCoaches.length) return false;
     const nextIndex = wrapIndex(index, visibleCoaches.length);
     const coach = visibleCoaches[nextIndex];
+    const indexDelta = index - currentIndexRef.current;
+    const direction: -1 | 1 = indexDelta < 0 ? -1 : 1;
     if (profileLinkLockSlugRef.current !== null || isProfileLinkFocused()) {
-      pendingProfileCommitRef.current = { index: nextIndex, slug: coach.slug, announce };
+      pendingProfileCommitRef.current = { index: nextIndex, slug: coach.slug, announce, direction };
       return false;
     }
-    const indexDelta = index - currentIndexRef.current;
+    if (indexDelta !== 0) setProfileDirection(direction);
     const nextArcCenterSequence = Math.abs(indexDelta) === 1
       ? arcCenterSequenceRef.current + indexDelta
       : nextIndex;
@@ -199,6 +226,21 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
     setManualDirection(direction);
   }, [commitIndex, prefersReducedMotion, updateArcPositions, visibleCoaches.length]);
 
+  const selectCoach = useCallback((index: number) => {
+    if (index === currentIndexRef.current || !visibleCoaches.length) return;
+    motionTokenRef.current += 1;
+    phaseRef.current = 0;
+    manualRemainingRef.current = 0;
+    autoDwellElapsedRef.current = 0;
+    autoTransitionProgressRef.current = 0;
+    autoTransitioningRef.current = false;
+    autoHandoffCommittedRef.current = false;
+    const selected = commitIndex(index, true);
+    updateArcPositions(0);
+    if (selected && !prefersReducedMotion) setManualDirection(1);
+    else setManualDirection(null);
+  }, [commitIndex, prefersReducedMotion, updateArcPositions, visibleCoaches.length]);
+
   const moveToEdge = useCallback((edge: "start" | "end") => {
     motionTokenRef.current += 1;
     if (!visibleCoaches.length) return;
@@ -210,9 +252,11 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
     autoHandoffCommittedRef.current = false;
     setManualDirection(null);
     const index = edge === "start" ? 0 : visibleCoaches.length - 1;
-    commitIndex(index, true);
+    const selected = commitIndex(index, true);
     updateArcPositions(0);
-  }, [commitIndex, updateArcPositions, visibleCoaches.length]);
+    if (selected && !prefersReducedMotion) setManualDirection(1);
+    else setManualDirection(null);
+  }, [commitIndex, prefersReducedMotion, updateArcPositions, visibleCoaches.length]);
 
   const handleRailKeyDown = useCallback((event: ReactKeyboardEvent<HTMLUListElement>) => {
     if (event.target !== event.currentTarget || visibleCoaches.length < 2) return;
@@ -294,6 +338,7 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
     autoTransitioningRef.current = false;
     autoHandoffCommittedRef.current = false;
     setManualDirection(null);
+    setProfileDirection(1);
     setCurrentSlug(firstVisibleSlug);
     setManualAnnouncement("");
     updateArcPositions(0);
@@ -304,13 +349,41 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
   useEffect(() => {
     const rail = railRef.current;
     if (!rail) return;
-    updateArcPositions(phaseRef.current);
-    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => updateArcPositions(phaseRef.current));
+    let layoutFrame: number | null = null;
+    const updateLayout = () => {
+      if (layoutFrame !== null) window.cancelAnimationFrame(layoutFrame);
+      layoutFrame = window.requestAnimationFrame(() => {
+        layoutFrame = null;
+        const featured = rail.querySelector<HTMLLIElement>('[data-arc-slot="0"]');
+        if (!featured) return;
+        updateArcPositions(phaseRef.current);
+        const link = featured.querySelector<HTMLAnchorElement>("a");
+        const isWideSplit = link && getComputedStyle(link).display === "grid";
+        const railTop = rail.getBoundingClientRect().top;
+        let lowerEdge = featured.offsetHeight;
+        if (isWideSplit) {
+          rail.querySelectorAll<HTMLLIElement>("[data-arc-slot]").forEach((item) => {
+            lowerEdge = Math.max(lowerEdge, item.getBoundingClientRect().bottom - railTop);
+          });
+        }
+        const nextHeight = Math.ceil(lowerEdge + 12);
+        if (Math.abs(rail.clientHeight - nextHeight) > 1) {
+          rail.style.height = `${nextHeight}px`;
+          updateArcPositions(phaseRef.current);
+        }
+      });
+    };
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(updateLayout);
     observer?.observe(rail);
-    if (!observer) window.addEventListener("resize", onResize);
-    function onResize() { updateArcPositions(phaseRef.current); }
-    return () => { observer?.disconnect(); window.removeEventListener("resize", onResize); };
-  }, [isEnhanced, updateArcPositions, visibleSequence]);
+    rail.querySelectorAll<HTMLLIElement>("[data-arc-slot]").forEach((item) => observer?.observe(item));
+    updateLayout();
+    if (!observer) window.addEventListener("resize", updateLayout);
+    return () => {
+      if (layoutFrame !== null) window.cancelAnimationFrame(layoutFrame);
+      observer?.disconnect();
+      window.removeEventListener("resize", updateLayout);
+    };
+  }, [arcCenterSequence, currentSlug, isEnhanced, updateArcPositions, visibleSequence]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -334,40 +407,49 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
 
   useEffect(() => {
     const manual = manualDirection !== null;
-    const canAuto = autoRotationEnabled && !prefersReducedMotion && !profileLinkBlocksAuto && !isTouching && pageVisible && stageVisible;
+    const canAuto = autoRotationEnabled && !prefersReducedMotion && !profileLinkBlocksAuto && !selectionControlFocused && !isTouching && pageVisible && stageVisible;
     if (!isEnhanced || visibleCoaches.length < 2 || (!manual && !canAuto)) return;
     const motionToken = ++motionTokenRef.current;
-    let frame = 0;
+    let frame: number | null = null;
+    let dwellTimer: number | null = null;
     let previousTime: number | null = null;
-    const tick = (time: number) => {
+    function scheduleAutoTransition() {
+      const remaining = Math.max(0, AUTO_TRANSITION_START_MS - autoDwellElapsedRef.current);
+      dwellTimer = window.setTimeout(() => {
+        dwellTimer = null;
+        if (motionToken !== motionTokenRef.current) return;
+        const rail = railRef.current;
+        if (!rail || getArcGeometry(rail).step <= 0) {
+          autoDwellElapsedRef.current = 0;
+          scheduleAutoTransition();
+          return;
+        }
+        autoDwellElapsedRef.current = AUTO_TRANSITION_START_MS;
+        autoTransitioningRef.current = true;
+        autoTransitionProgressRef.current = 0;
+        autoHandoffCommittedRef.current = false;
+        previousTime = performance.now();
+        frame = window.requestAnimationFrame(tick);
+      }, remaining);
+    }
+    function tick(time: number) {
       if (motionToken !== motionTokenRef.current) return;
+      frame = null;
       const elapsed = previousTime === null ? 0 : Math.min(64, time - previousTime);
       previousTime = time;
-      const rail = railRef.current;
-      const step = rail ? getArcGeometry(rail).step : 0;
       let phase = phaseRef.current;
       if (elapsed > 0 && manual) {
         const amount = Math.min(elapsed / AUTO_TRANSITION_MS, manualRemainingRef.current);
         phase += (manualDirection as -1 | 1) * amount;
         manualRemainingRef.current -= amount;
-      } else if (elapsed > 0 && canAuto && step > 0) {
-        if (!autoTransitioningRef.current) {
-          autoDwellElapsedRef.current += elapsed;
-          if (autoDwellElapsedRef.current >= AUTO_TRANSITION_START_MS) {
-            autoDwellElapsedRef.current = AUTO_TRANSITION_START_MS;
-            autoTransitioningRef.current = true;
-            autoTransitionProgressRef.current = 0;
-            autoHandoffCommittedRef.current = false;
-          }
-        } else {
-          autoTransitionProgressRef.current = Math.min(
-            1,
-            autoTransitionProgressRef.current + elapsed / AUTO_TRANSITION_MS,
-          );
-          phase = autoHandoffCommittedRef.current
-            ? autoTransitionProgressRef.current - 1
-            : autoTransitionProgressRef.current;
-        }
+      } else if (elapsed > 0 && canAuto && autoTransitioningRef.current) {
+        autoTransitionProgressRef.current = Math.min(
+          1,
+          autoTransitionProgressRef.current + elapsed / AUTO_TRANSITION_MS,
+        );
+        phase = autoHandoffCommittedRef.current
+          ? autoTransitionProgressRef.current - 1
+          : autoTransitionProgressRef.current;
       }
       let handedOff = false;
       if (phase >= 0.5) {
@@ -421,17 +503,29 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
         autoHandoffCommittedRef.current = false;
         phaseRef.current = 0;
         updateArcPositions(0);
+        scheduleAutoTransition();
+        return;
       }
       frame = window.requestAnimationFrame(tick);
-    };
-    frame = window.requestAnimationFrame(tick);
+    }
+    if (manual) frame = window.requestAnimationFrame(tick);
+    else scheduleAutoTransition();
     return () => {
       motionTokenRef.current += 1;
-      window.cancelAnimationFrame(frame);
+      if (dwellTimer !== null) window.clearTimeout(dwellTimer);
+      if (frame !== null) window.cancelAnimationFrame(frame);
     };
-  }, [autoRotationEnabled, commitIndex, isEnhanced, isTouching, manualDirection, pageVisible, prefersReducedMotion, profileLinkBlocksAuto, stageVisible, updateArcPositions, visibleCoaches.length]);
+  }, [autoRotationEnabled, commitIndex, isEnhanced, isTouching, manualDirection, pageVisible, prefersReducedMotion, profileLinkBlocksAuto, selectionControlFocused, stageVisible, updateArcPositions, visibleCoaches.length]);
 
   const handleFocusCapture = (event: ReactFocusEvent<HTMLDivElement>) => {
+    if (isSelectionControlFocusTarget(event.target)) {
+      setSelectionControlFocused(true);
+      autoDwellElapsedRef.current = 0;
+      autoTransitionProgressRef.current = 0;
+      autoTransitioningRef.current = false;
+      autoHandoffCommittedRef.current = false;
+      syncToSelectedApex();
+    }
     const profileLink = profileLinkRef.current;
     const featuredCoachLink = featuredCoachLinkRef.current;
     if (profileLink?.contains(event.target as Node) || featuredCoachLink?.contains(event.target as Node)) {
@@ -450,6 +544,9 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
   };
   const handleBlurCapture = (event: ReactFocusEvent<HTMLDivElement>) => {
     const target = event.target as Node;
+    if (isSelectionControlFocusTarget(target) && !isSelectionControlFocusTarget(event.relatedTarget)) {
+      setSelectionControlFocused(false);
+    }
     if (profileLinkRef.current?.contains(target) || featuredCoachLinkRef.current?.contains(target)) {
       profileLinkLockSlugRef.current = null;
       setProfileLinkLockSlug(null);
@@ -461,6 +558,7 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
           currentIndexRef.current = pendingIndex;
           arcCenterSequenceRef.current = pendingIndex;
           setArcCenterSequence(pendingIndex);
+          setProfileDirection(pending.direction);
           setCurrentSlug(pending.slug);
           if (pending.announce) {
             const coach = visibleCoaches[pendingIndex];
@@ -496,35 +594,63 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
             autoHandoffCommittedRef.current = false;
             setAutoRotationEnabled((enabled) => !enabled);
           }}>{autoRotationEnabled ? "Dừng tự chuyển" : "Bật tự chuyển"}</button></div>}
-          {visibleCoaches.length > 1 && isEnhanced && <div className={styles.mobileSideNames} role="group" aria-label="Người đồng hành ở hai bên">
-            <span>{visibleCoaches[wrapIndex(currentIndex - 1, visibleCoaches.length)]?.name}</span>
-            <span>{visibleCoaches[wrapIndex(currentIndex + 1, visibleCoaches.length)]?.name}</span>
-          </div>}
+          {isEnhanced && visibleCoaches.length > 1 && (
+            <div className={styles.roster} role="group" aria-label="Chọn người đồng hành">
+              {visibleCoaches.map((coach, index) => (
+                <button
+                  key={coach.slug}
+                  type="button"
+                  className={styles.rosterButton}
+                  aria-label={`Chọn ${coach.name}${coach.title ? `, ${coach.title}` : ""}`}
+                  aria-pressed={coach.slug === currentCoach?.slug}
+                  aria-controls={railId}
+                  onClick={() => selectCoach(index)}
+                >
+                  <span className={styles.rosterAvatar} aria-hidden="true">
+                    {coach.image ? (
+                      <Image src={coach.image} alt="" fill sizes="36px" />
+                    ) : (
+                      <span>{coach.initials}</span>
+                    )}
+                  </span>
+                  <span className={styles.rosterName}>{coach.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
           {isEnhanced ? (
             <div className={styles.arcRow}>
               {visibleCoaches.length > 1 && <button type="button" className={styles.control + " " + styles.sideControl} aria-label="Xem người đồng hành trước" aria-controls={railId} onClick={() => moveBy(-1)}><ArrowLeft size={20} aria-hidden="true" /></button>}
-              <ul ref={railRef} id={railId} className={styles.rail} tabIndex={0} aria-label="Dải cung người đồng hành" onKeyDown={handleRailKeyDown} onFocus={(event) => { delete event.currentTarget.dataset.arrowNavigation; }} onBlur={(event) => { delete event.currentTarget.dataset.arrowNavigation; }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onTouchCancel={() => { touchStartRef.current = null; setIsTouching(false); }}>
+              <ul ref={railRef} id={railId} className={styles.rail} tabIndex={0} aria-label="Hồ sơ người đồng hành đang chọn" onKeyDown={handleRailKeyDown} onFocus={(event) => { delete event.currentTarget.dataset.arrowNavigation; }} onBlur={(event) => { delete event.currentTarget.dataset.arrowNavigation; }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onTouchCancel={() => { touchStartRef.current = null; setIsTouching(false); }}>
                 {ARC_SLOTS.map((slot) => {
                   const sequenceIndex = arcCenterSequence + slot;
                   const coach = visibleCoaches[wrapIndex(sequenceIndex, visibleCoaches.length)];
+                  const featured = slot === 0;
+                  const fadingCoach = featured && !prefersReducedMotion && outgoingCoach && currentCoach?.slug !== outgoingCoach.slug
+                    ? outgoingCoach
+                    : null;
                   const cardContent = <>
                       <div className={`${styles.portraitFrame} relative aspect-[4/4.5] overflow-hidden bg-blue/10`}>
-                        {coach.image ? <Image src={coach.image} alt="" fill sizes="(min-width: 1024px) 14rem, 34vw" className={styles.portraitImage} /> : <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,.85),transparent_40%),linear-gradient(145deg,var(--coach-accent),#172d55)]" style={{ "--coach-accent": coach.accent } as CSSProperties}><span className="font-display text-7xl font-bold text-white drop-shadow-lg">{coach.initials}</span></div>}
+                        {fadingCoach && <div className={styles.portraitOutgoing} aria-hidden="true">
+                          {fadingCoach.image ? <Image src={fadingCoach.image} alt="" fill sizes="(min-width: 1024px) 14rem, 34vw" className={styles.portraitImage} /> : <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,.85),transparent_40%),linear-gradient(145deg,var(--coach-accent),#172d55)]" style={{ "--coach-accent": fadingCoach.accent } as CSSProperties}><span className="font-display text-7xl font-bold text-white drop-shadow-lg">{fadingCoach.initials}</span></div>}
+                        </div>}
+                        {coach.image ? <Image src={coach.image} alt="" fill sizes="(min-width: 1024px) 14rem, 34vw" className={`${styles.portraitImage} ${fadingCoach ? styles.portraitImageEntering : ""}`} /> : <div className={`flex h-full items-center justify-center bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,.85),transparent_40%),linear-gradient(145deg,var(--coach-accent),#172d55)] ${fadingCoach ? styles.portraitImageEntering : ""}`} style={{ "--coach-accent": coach.accent } as CSSProperties}><span className="font-display text-7xl font-bold text-white drop-shadow-lg">{coach.initials}</span></div>}
                       </div>
-                      <span className={`${styles.portraitName} font-sans text-2xl font-bold text-blue`}>{coach.name}</span>
-                      <span className={`${styles.portraitDetail} text-[10px] font-bold uppercase tracking-[0.16em] text-blue/55`}>
-                        {coach.focusAreas.length > 1
-                          ? coach.focusAreas.slice(0, 2).join(" · ")
-                          : [coach.focusAreas[0], coach.title].filter(Boolean).join(" · ")}
-                      </span>
-                      <span className={styles.portraitSummary}>
-                        {coach.approach}
-                      </span>
-                      <span className={styles.portraitAction} aria-hidden="true">
-                        Xem hồ sơ <span>→</span>
-                      </span>
+                      <div className={styles.portraitCopy}>
+                        <span className={`${styles.portraitName} font-sans text-2xl font-bold text-blue`}>{coach.name}</span>
+                        <span className={`${styles.portraitDetail} text-[10px] font-bold uppercase tracking-[0.16em] text-blue/55`}>
+                          {coach.focusAreas.length > 1
+                            ? coach.focusAreas.slice(0, 2).join(" · ")
+                            : [coach.focusAreas[0], coach.title].filter(Boolean).join(" · ")}
+                        </span>
+                        <span className={styles.portraitSummary}>
+                          {coach.approach}
+                        </span>
+                        <span className={styles.portraitAction} aria-hidden="true">
+                          Xem hồ sơ <ArrowRight size={16} aria-hidden="true" className={styles.portraitActionIcon} />
+                        </span>
+                      </div>
                     </>;
-                  const featured = slot === 0;
                   return <li key={sequenceIndex} className={styles.item} data-arc-slot={slot} data-arc-disclosure={featured ? "featured" : "name"} aria-hidden={featured ? undefined : true} inert={!featured}>
                     <Link ref={featured ? featuredCoachLinkRef : null} href={`/coaching/${coach.slug}`} aria-label={`Xem hồ sơ của ${coach.name}`} className={`${styles.card} ${styles.featuredCardLink}`}>{cardContent}</Link>
                   </li>;
@@ -538,14 +664,30 @@ export function CoachDirectory({ coaches }: { coaches: Coach[] }) {
             </ul>
           )}
           {currentCoach && <article className={styles.details} aria-label={`Thông tin về ${currentCoach.name}`} aria-live="off">
-            <div key={currentCoach.slug} className={styles.detailsContent}>
-              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue/55">{currentCoach.title}</div>
-              <h3 className="mt-2 font-display text-2xl font-bold text-blue">{currentCoach.name}</h3>
-              {currentCoach.isDemo && <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-blue/55">Hồ sơ demo</p>}
-              <p className="mt-3 text-sm leading-6 text-blue/75">{currentCoach.quote}</p>
-              {currentCoach.bio && <p className="mt-4 text-sm leading-6 text-blue/75">{currentCoach.bio}</p>}
-              {currentCoach.focusAreas.length > 0 && <ul className="mt-5 flex flex-wrap gap-2" aria-label="Lĩnh vực đồng hành">{currentCoach.focusAreas.map((area) => <li key={area} className="rounded-full bg-blue/5 px-3 py-1 text-[10px] font-semibold text-blue/75">{area}</li>)}</ul>}
-              <Link ref={profileLinkRef} href={`/coaching/${currentCoach.slug}`} className="mt-5 inline-flex min-h-11 items-center gap-3 rounded-full border border-yellow bg-blue px-5 py-3 text-sm font-bold text-yellow transition hover:brightness-95">Xem hồ sơ <span aria-hidden="true">→</span></Link>
+            <div
+              key={currentCoach.slug}
+              className={styles.detailsContent}
+              data-direction={profileDirection > 0 ? "next" : "previous"}
+            >
+              <div className={styles.detailsIdentity}>
+                <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue/55">{currentCoach.title}</div>
+                <h3 className={`mt-2 font-display text-2xl font-bold text-blue ${styles.detailsName}`}>{currentCoach.name}</h3>
+                {currentCoach.isDemo && <p className={styles.detailsDemo}>Hồ sơ demo</p>}
+              </div>
+              <div className={styles.detailsNarrative}>
+                <p className="text-sm leading-6 text-blue/75">{currentCoach.quote}</p>
+                {currentCoach.bio && <p className="text-sm leading-6 text-blue/75">{currentCoach.bio}</p>}
+                {currentCoach.approach.trim() && currentCoach.approach !== currentCoach.quote && currentCoach.approach !== currentCoach.bio && (
+                  <div className="grid gap-1">
+                    <h4 className="m-0 text-xs font-bold text-blue/55">Cách tiếp cận</h4>
+                    <p className="break-words text-sm leading-6 text-blue/75">{currentCoach.approach}</p>
+                  </div>
+                )}
+              </div>
+              <div className={styles.detailsFooter}>
+                {currentCoach.focusAreas.length > 0 && <ul className={styles.detailsFocusAreas} aria-label="Lĩnh vực đồng hành">{currentCoach.focusAreas.map((area) => <li key={area} className="rounded-full bg-blue/5 px-3 py-1 text-[10px] font-semibold text-blue/75">{area}</li>)}</ul>}
+                <Link ref={profileLinkRef} href={`/coaching/${currentCoach.slug}`} className={`inline-flex min-h-11 items-center gap-3 rounded-full border border-yellow bg-blue px-5 py-3 text-sm font-bold text-yellow transition hover:brightness-95 ${styles.detailsAction}`}>Xem hồ sơ <ArrowRight size={16} aria-hidden="true" /></Link>
+              </div>
             </div>
           </article>}
           <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{manualAnnouncement}</p>

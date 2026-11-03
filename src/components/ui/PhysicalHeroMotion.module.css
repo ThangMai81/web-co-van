@@ -1,0 +1,315 @@
+.titleSettle {
+  transform-origin: 50% 100%;
+}
+
+.programsBreadcrumb {
+  opacity: 1;
+  clip-path: none;
+  transform: none;
+}
+
+.programsKicker {
+  opacity: 1;
+  clip-path: none;
+}
+
+.programsKickerAccent {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.programsDescription {
+  opacity: 1;
+  clip-path: none;
+  transform: none;
+}
+
+.programsStats {
+  position: relative;
+  isolation: isolate;
+  opacity: 1;
+  transform: none;
+}
+
+.programsStats::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: -5px;
+  padding: 2px;
+  border-radius: 16px;
+  background-image: linear-gradient(
+    108deg,
+    transparent 38%,
+    rgba(246, 194, 65, 0.92) 48%,
+    rgba(255, 239, 183, 0.9) 52%,
+    transparent 64%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.journeyCurve {
+  position: absolute;
+  top: 145px;
+  right: clamp(24px, 4vw, 56px);
+  width: clamp(112px, 16vw, 220px);
+  height: auto;
+  overflow: visible;
+  color: var(--color-yellow);
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+.journeyCurveSequenced {
+  opacity: 0.84;
+}
+
+@media (max-width: 767px) {
+  .journeyCurve {
+    top: 200px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .journeyCurve {
+    right: clamp(60px, 5vw, 72px);
+    width: clamp(360px, 30vw, 380px);
+  }
+}
+
+.journeyPath {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-dasharray: 2 5;
+  stroke-linecap: round;
+}
+
+.journeyPathDrawing {
+  stroke: var(--color-yellow);
+  stroke-width: 1.8;
+  stroke-dasharray: 1 !important;
+  stroke-dashoffset: 1;
+  opacity: 1;
+  animation: programs-journey-draw 800ms linear forwards;
+}
+
+.journeyPathComplete {
+  stroke: var(--color-yellow);
+  stroke-width: 1.8;
+  stroke-dasharray: 1 !important;
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+
+.waypointMoving,
+.waypointRest {
+  fill: currentColor;
+}
+
+.waypointMoving {
+  display: none;
+}
+
+.waypointRest {
+  display: block;
+}
+
+.programsStatsControlled {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+}
+
+.programsStatsControlled::after {
+  animation: none !important;
+  visibility: hidden !important;
+}
+
+.programsStatsWaiting {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .titleSettle {
+    animation: physical-title-settle 660ms cubic-bezier(0.22, 1.16, 0.36, 1) both;
+  }
+}
+
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .programsBreadcrumb {
+    animation: programs-breadcrumb-editorial 900ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
+  }
+
+  .programsBreadcrumb:focus-within {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .programsKicker {
+    animation: programs-kicker-editorial 1000ms cubic-bezier(0.2, 0.75, 0.3, 1) 140ms both;
+  }
+
+  .programsKickerAccent {
+    animation: programs-accent-draw 1000ms cubic-bezier(0.2, 0.75, 0.3, 1) 140ms both;
+  }
+
+  .programsDescription {
+    animation: programs-description-editorial 1250ms cubic-bezier(0.2, 0.75, 0.3, 1) 360ms both;
+  }
+
+  .programsStats {
+    animation: programs-stats-editorial 1260ms cubic-bezier(0.2, 0.75, 0.3, 1) 620ms both;
+  }
+
+  .waypointMoving {
+    display: block;
+  }
+
+  .waypointRest {
+    display: none;
+  }
+}
+
+@supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  @media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .programsStats::after {
+      visibility: visible;
+      animation: programs-stats-edge-glint 1600ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+    }
+  }
+}
+
+@keyframes programs-breadcrumb-editorial {
+  from {
+    opacity: 0.94;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes programs-kicker-editorial {
+  from {
+    clip-path: inset(-0.12em 100% -0.12em 0);
+    opacity: 0.92;
+  }
+
+  to {
+    clip-path: none;
+    opacity: 1;
+  }
+}
+
+@keyframes programs-accent-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes programs-description-editorial {
+  from {
+    clip-path: inset(-0.16em 100% -0.16em 0);
+    opacity: 0.92;
+    transform: translateX(6px);
+  }
+
+  to {
+    clip-path: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes programs-stats-editorial {
+  from {
+    opacity: 0.96;
+    transform: scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes programs-stats-edge-glint {
+  from {
+    background-position: 100% 0;
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.92;
+  }
+
+  82% {
+    opacity: 0.72;
+  }
+
+  to {
+    background-position: 0 0;
+    opacity: 0;
+  }
+}
+
+@keyframes programs-journey-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes physical-title-settle {
+  0% {
+    opacity: 0.94;
+    transform: translate3d(0, 8px, 0) scale(0.985);
+  }
+
+  72% {
+    opacity: 1;
+    transform: translate3d(0, -1px, 0) scale(1.006);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleSettle {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .waypointMoving {
+    display: none;
+  }
+
+  .waypointRest {
+    display: block;
+  }
+}

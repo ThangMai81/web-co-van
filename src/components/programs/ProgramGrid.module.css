@@ -1,0 +1,11 @@
+.programCardReveal {
+  transition-duration: 460ms !important;
+}
+
+.programCardReveal:focus-within {
+  opacity: 1 !important;
+  transform: none !important;
+  translate: none !important;
+  transition: none !important;
+  transition-delay: 0ms !important;
+}

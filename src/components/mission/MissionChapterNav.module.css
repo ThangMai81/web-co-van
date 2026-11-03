@@ -1,0 +1,41 @@
+.chapterNav {
+  position: relative;
+}
+
+.chapterLink {
+  transition: color 220ms ease;
+}
+
+.progressTrack {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  pointer-events: none;
+}
+
+.progressFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #fece01;
+  transform-origin: left center;
+  transition:
+    transform 220ms ease-out,
+    opacity 220ms ease-out;
+}
+
+@media (min-width: 1024px) {
+  .chapterNav {
+    position: sticky;
+    z-index: 40;
+    top: var(--mission-sticky-top, 5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapterLink,
+  .progressFill {
+    transition: none;
+  }
+}

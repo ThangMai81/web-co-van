@@ -41,6 +41,8 @@ export function Reveal({
   repeat = false,
   preset,
   className = "",
+  enabled = true,
+  showOnObserverSetupError = false,
 }: {
   children: ReactNode;
   direction?: Direction;
@@ -48,6 +50,8 @@ export function Reveal({
   repeat?: boolean;
   preset?: "soft";
   className?: string;
+  enabled?: boolean;
+  showOnObserverSetupError?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
@@ -87,6 +91,23 @@ export function Reveal({
       return removePreferenceListener;
     }
 
+    if (!enabled) {
+      if (
+        !el ||
+        preference?.matches ||
+        typeof IntersectionObserver === "undefined"
+      ) {
+        bypassMotion();
+        return removePreferenceListener;
+      }
+
+      motionEnvironmentRef.current = "enabled";
+      setVisible(false);
+      setMotionBypassed(false);
+      setTransitionSuppressed(true);
+      return removePreferenceListener;
+    }
+
     if (
       !el ||
       preference?.matches ||
@@ -103,25 +124,45 @@ export function Reveal({
       setTransitionSuppressed(true);
     }
 
-    observer = new IntersectionObserver(
-      ([entry]) => {
-        if (preference?.matches) {
-          bypassMotion();
-          return;
-        }
-        setVisible(entry.isIntersecting);
-        setTransitionSuppressed(false);
-        if (entry.isIntersecting && !repeat) observer?.unobserve(el);
-      },
-      { threshold: 0.15 },
-    );
+    const observeEntry = (entries: IntersectionObserverEntry[]) => {
+      const entry = entries[0];
+      if (preference?.matches) {
+        bypassMotion();
+        return;
+      }
+      setVisible(entry.isIntersecting);
+      setTransitionSuppressed(false);
+      if (entry.isIntersecting && !repeat) observer?.unobserve(el);
+    };
+    const setupObserver = () => {
+      observer = new IntersectionObserver(observeEntry, { threshold: 0.15 });
+      observer.observe(el);
+    };
 
-    observer.observe(el);
+    if (showOnObserverSetupError) {
+      try {
+        setupObserver();
+      } catch {
+        motionEnvironmentRef.current = "bypassed";
+        setMotionBypassed(true);
+        setVisible(true);
+        setTransitionSuppressed(false);
+        try {
+          observer?.disconnect();
+        } catch {
+          // Keep the card visible if observer cleanup also fails.
+        }
+        observer = null;
+      }
+    } else {
+      setupObserver();
+    }
+
     return () => {
       observer?.disconnect();
       removePreferenceListener();
     };
-  }, [repeat]);
+  }, [enabled, repeat, showOnObserverSetupError]);
 
   const revealClassName = preset === "soft"
     ? `${styles.softGroup} ${motionBypassed ? styles.motionBypassed : ""} ${transitionSuppressed ? styles.transitionSuppressed : ""} ${className}`.trim()

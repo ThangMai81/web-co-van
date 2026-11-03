@@ -1,6 +1,13 @@
 import ProgramGrid from "@/components/programs/ProgramGrid";
+import {
+  ProgramJourneyCurve,
+  ProgramJourneySequenceProvider,
+  ProgramJourneyStats,
+} from "@/components/programs/ProgramJourneySequence";
 import ProgramFilterBar from "@/components/programs/ProgramFilterBar";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
+import motionStyles from "@/components/ui/PhysicalHeroMotion.module.css";
 import type { Program } from "@/types/program";
 
 async function getPrograms(
@@ -35,6 +42,7 @@ export default async function ProgramsPage({
   const showSplit = !status && !sort;
   const upcoming = programs.filter((p) => p.status === "upcoming");
   const past = programs.filter((p) => p.status === "past");
+  const journeyPrograms = showSplit ? [...upcoming, ...past] : programs;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -48,59 +56,67 @@ export default async function ProgramsPage({
   };
 
   return (
-    <main className="min-h-svh bg-white">
+    <ProgramJourneySequenceProvider hasPrograms={journeyPrograms.length > 0}>
+      <main className="min-h-svh bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header className="relative overflow-hidden bg-blue pb-16 pt-[88px]">
+      <header className="relative overflow-hidden bg-blue pb-12 pt-[88px] sm:pb-14">
         <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-yellow/20 blur-3xl" />
-        <div className="relative mx-auto max-w-[var(--page-w)] px-6">
-          <Breadcrumb
-            variant="light"
-            items={[
-              { label: "Trang chủ", href: "/" },
-              { label: "Chương trình" },
-            ]}
+        <ProgramJourneyCurve items={journeyPrograms} />
+        <div className="relative z-10 mx-auto grid max-w-[var(--page-w)] gap-8 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.68fr)] lg:items-end">
+          <div className="min-w-0">
+            <Breadcrumb
+              className={motionStyles.programsBreadcrumb}
+              variant="light"
+              items={[
+                { label: "Trang chủ", href: "/" },
+                { label: "Chương trình" },
+              ]}
+            />
+
+            <div
+              className={[
+                motionStyles.programsKicker,
+                "mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.16em] text-yellow sm:text-sm",
+              ].join(" ")}
+            >
+              <span
+                className={[
+                  motionStyles.programsKickerAccent,
+                  "block h-px w-6 bg-yellow",
+                ].join(" ")}
+              />
+              Chương trình
+            </div>
+            <HeroLineMaskReveal>
+              <h1 className="max-w-[18ch] font-display text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
+                Những hành trình của Sunshine Center
+              </h1>
+            </HeroLineMaskReveal>
+            <p
+              className={[
+                motionStyles.programsDescription,
+                "mt-4 max-w-[60ch] text-sm leading-6 text-white/80 sm:text-base",
+              ].join(" ")}
+            >
+              Từ trại hè, leo núi, workshop đến những buổi off chữa lành — mỗi
+              chương trình là một trải nghiệm để kết nối và trưởng thành.
+            </p>
+          </div>
+
+          <ProgramJourneyStats
+            total={programs.length}
+            upcoming={upcoming.length}
           />
-
-          <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
-            <span className="block h-px w-6 bg-yellow" />
-            Chương trình
-          </div>
-          <h1 className="max-w-[20ch] font-display text-4xl font-bold text-white sm:text-5xl">
-            Những hành trình của Sunshine Center
-          </h1>
-          <p className="mt-4 max-w-[60ch] text-white/80">
-            Từ trại hè, leo núi, workshop đến những buổi off chữa lành — mỗi
-            chương trình là một trải nghiệm để kết nối và trưởng thành.
-          </p>
-
-          <div className="mt-8 flex gap-8 border-t border-white/15 pt-6">
-            <div>
-              <div className="text-2xl font-extrabold text-yellow">
-                {programs.length}
-              </div>
-              <div className="text-xs font-medium text-white/60">
-                Chương trình
-              </div>
-            </div>
-            <div>
-              <div className="text-2xl font-extrabold text-yellow">
-                {upcoming.length}
-              </div>
-              <div className="text-xs font-medium text-white/60">
-                Sắp diễn ra
-              </div>
-            </div>
-          </div>
         </div>
       </header>
 
       <nav
         aria-label="Lọc chương trình"
-        className="z-30 border-b border-blue/10 bg-white/95 py-4 backdrop-blur-sm"
+        className="z-30 border-b border-blue/10 bg-white/95 py-4 shadow-sm shadow-blue/5 backdrop-blur-sm"
       >
         <div className="mx-auto max-w-[var(--page-w)] px-6">
           <ProgramFilterBar
@@ -111,18 +127,18 @@ export default async function ProgramsPage({
         </div>
       </nav>
 
-      <section aria-label="Danh sách chương trình" className="bg-white py-14">
+      <section aria-label="Danh sách chương trình" className="bg-blue/[0.025] py-10 md:py-14">
         <div className="mx-auto max-w-[var(--page-w)] px-6">
           {programs.length === 0 ? (
             <p className="font-medium text-blue/50">
               Chưa có chương trình nào phù hợp với bộ lọc.
             </p>
           ) : showSplit ? (
-            <div className="space-y-16">
+            <div className="space-y-12 md:space-y-14">
               {upcoming.length > 0 && (
                 <ProgramGroup
                   title="Sắp diễn ra"
-                  dotClassName="animate-pulse bg-yellow"
+                  dotClassName="bg-yellow"
                   items={upcoming}
                 />
               )}
@@ -139,7 +155,8 @@ export default async function ProgramsPage({
           )}
         </div>
       </section>
-    </main>
+      </main>
+    </ProgramJourneySequenceProvider>
   );
 }
 

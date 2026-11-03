@@ -1,11 +1,12 @@
-import Image from "next/image";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/lib/programLabels";
 import { MapPin, Calendar } from "@/lib/icons";
 import CategoryIcon from "./CategoryIcon";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import ProgramHeroImageViewer from "./ProgramHeroImageViewer";
+import styles from "./ProgramHero.module.css";
 import type { Program } from "@/types/program";
 
-export default function ProgramHero({ program }: { program: Program }) {
+export default function ProgramHero({ program, viewerEnabled }: { program: Program; viewerEnabled: boolean }) {
   const coverImage = program.coverImage;
 
   return (
@@ -24,15 +25,14 @@ export default function ProgramHero({ program }: { program: Program }) {
 
         {coverImage && (
           <div
-            className="relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-2xl border border-blue/10 bg-white"
+            className={`${styles.coverWipeFrame} relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-2xl border border-blue/10 bg-white`}
           >
-            <Image
+            <ProgramHeroImageViewer
               src={coverImage}
               alt={program.title}
-              fill
               priority
               sizes="(max-width: 90rem) calc(100vw - 3rem), 87rem"
-              className="object-cover object-center"
+              viewerEnabled={viewerEnabled}
             />
           </div>
         )}

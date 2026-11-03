@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Reveal } from "@/components/animation/Reveal";
 import CourseCard from "./CourseCard";
+import styles from "./CourseGrid.module.css";
 import type { CourseListItem } from "@/types/course";
 
 const PAGE_SIZE = 6;
@@ -14,8 +16,15 @@ export default function CourseGrid({ items }: { items: CourseListItem[] }) {
   return (
     <div>
       <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-7">
-        {shown.map((course) => (
-          <CourseCard key={course._id} course={course} />
+        {shown.map((course, index) => (
+          <Reveal
+            key={course._id}
+            direction="up"
+            delay={Math.min(index * 60, 300)}
+            className={styles.courseCardReveal}
+          >
+            <CourseCard course={course} />
+          </Reveal>
         ))}
       </div>
 

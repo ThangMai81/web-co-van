@@ -60,11 +60,28 @@
 .metallicText > * {
   font-family: Cambria, Georgia, Palatino, serif;
   text-shadow:
-    0 -1px 0 rgba(255, 252, 231, 0.98),
-    0 1px 0 rgba(255, 234, 168, 0.96),
-    1px 2px 0 rgba(158, 101, 20, 0.96),
-    2px 4px 0 rgba(70, 43, 12, 0.9),
-    0 6px 7px rgba(3, 17, 38, 0.28);
+    0 -2px 0 rgba(255, 253, 237, 0.98),
+    0 -1px 0 rgba(255, 247, 216, 0.98),
+    0 1px 0 rgba(231, 190, 94, 0.98),
+    1px 1px 0 rgba(194, 134, 38, 0.98),
+    2px 2px 0 rgba(158, 99, 24, 0.98),
+    3px 3px 0 rgba(123, 73, 16, 0.97),
+    4px 4px 0 rgba(94, 56, 13, 0.96),
+    5px 5px 0 rgba(66, 43, 14, 0.95),
+    6px 6px 0 rgba(39, 29, 14, 0.94),
+    0 7px 9px rgba(3, 17, 38, 0.24);
+}
+
+@media (max-width: 767px) {
+  .metallicText > * {
+    text-shadow:
+      0 -1px 0 rgba(255, 252, 231, 0.98),
+      0 1px 0 rgba(231, 190, 94, 0.98),
+      1px 1px 0 rgba(194, 134, 38, 0.98),
+      2px 2px 0 rgba(132, 79, 18, 0.97),
+      3px 3px 0 rgba(55, 40, 17, 0.94),
+      0 4px 6px rgba(3, 17, 38, 0.2);
+  }
 }
 
 .ribbon {

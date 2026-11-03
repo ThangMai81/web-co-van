@@ -1,7 +1,15 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 function cancelOwnedAnimation(animationRef: { current: Animation | null }) {
   const animation = animationRef.current;
@@ -11,6 +19,24 @@ function cancelOwnedAnimation(animationRef: { current: Animation | null }) {
   if (animation.playState !== "idle" && animation.playState !== "finished") {
     animation.cancel();
   }
+}
+
+function RouteCommitObserver({
+  pathname,
+  onCommit,
+}: {
+  pathname: string | null;
+  onCommit: (location: string) => void;
+}) {
+  const searchParams = useSearchParams();
+  const search = searchParams?.toString() ?? "";
+
+  useLayoutEffect(() => {
+    if (pathname === null) return;
+    onCommit(`${pathname}${window.location.search}`);
+  }, [pathname, searchParams, search, onCommit]);
+
+  return null;
 }
 
 export function RouteEntryFade({ children }: { children: ReactNode }) {
@@ -23,9 +49,20 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
   const animationRef = useRef<Animation | null>(null);
   const routePendingRef = useRef(false);
   const routeStartedAtRef = useRef(0);
+  const routeOriginRef = useRef<string | null>(null);
   const routeDestinationRef = useRef<string | null>(null);
   const routeProgressTimerRef = useRef<number | null>(null);
   const routeHideTimerRef = useRef<number | null>(null);
+  const finishRouteRef = useRef<() => void>(() => {});
+  const cancelRouteRef = useRef<() => void>(() => {});
+  const handleRouteCommit = useCallback((committedLocation: string) => {
+    if (!routePendingRef.current) return;
+    if (committedLocation === routeDestinationRef.current) {
+      finishRouteRef.current();
+    } else if (committedLocation !== routeOriginRef.current) {
+      cancelRouteRef.current();
+    }
+  }, []);
 
   useEffect(() => {
     const clearRouteTimers = () => {
@@ -50,6 +87,7 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
         window.clearTimeout(routeHideTimerRef.current);
         routeHideTimerRef.current = null;
       }
+      routeOriginRef.current = null;
       routeDestinationRef.current = null;
       setRouteProgress(100);
       const visibleFor = Date.now() - routeStartedAtRef.current;
@@ -60,28 +98,39 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
       }, Math.max(180, 360 - visibleFor));
     };
 
+    const cancelRoute = () => {
+      if (!routePendingRef.current) return;
+      routePendingRef.current = false;
+      clearRouteTimers();
+      routeOriginRef.current = null;
+      routeDestinationRef.current = null;
+      setRoutePending(false);
+      setRouteProgress(8);
+    };
+
+    finishRouteRef.current = finishRoute;
+    cancelRouteRef.current = cancelRoute;
+
     const startRoute = (destination: URL) => {
-      if (routePendingRef.current) return;
+      const nextDestination = destination.pathname + destination.search;
+      if (routePendingRef.current && routeDestinationRef.current === nextDestination) return;
+
+      clearRouteTimers();
       routePendingRef.current = true;
       routeStartedAtRef.current = Date.now();
-      routeDestinationRef.current = destination.pathname + destination.search;
+      routeOriginRef.current = `${window.location.pathname}${window.location.search}`;
+      routeDestinationRef.current = nextDestination;
       setRoutePending(true);
-      setRouteProgress(8);
+      const animateProgress = reducedMotionRef.current !== true;
+      setRouteProgress(animateProgress ? 8 : 90);
+      // Commit handling comes from RouteCommitObserver; this timer only advances visible progress.
       routeProgressTimerRef.current = window.setInterval(() => {
-        if (`${window.location.pathname}${window.location.search}` === routeDestinationRef.current) {
-          finishRoute();
-          return;
+        if (reducedMotionRef.current !== true) {
+          setRouteProgress((progress) => Math.min(90, progress + Math.max(1, (90 - progress) * 0.12)));
         }
-        setRouteProgress((progress) => Math.min(90, progress + Math.max(1, (90 - progress) * 0.12)));
       }, 160);
-      // If navigation is canceled or errors before pathname commits, remove the indicator.
-      routeHideTimerRef.current = window.setTimeout(() => {
-        routePendingRef.current = false;
-        routeDestinationRef.current = null;
-        setRoutePending(false);
-        setRouteProgress(8);
-        clearRouteTimers();
-      }, 20000);
+      // If no observable URL commit or cancellation arrives, remove the indicator within the accepted bound.
+      routeHideTimerRef.current = window.setTimeout(cancelRoute, 20000);
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -97,10 +146,14 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
       } catch {
         return;
       }
-      if (
-        destination.origin !== window.location.origin ||
-        (destination.pathname === window.location.pathname && destination.search === window.location.search)
-      ) return;
+      if (destination.origin !== window.location.origin) return;
+
+      const destinationLocation = destination.pathname + destination.search;
+      const currentLocation = `${window.location.pathname}${window.location.search}`;
+      if (destinationLocation === currentLocation) {
+        if (routePendingRef.current) cancelRouteRef.current();
+        return;
+      }
       startRoute(destination);
     };
 
@@ -108,6 +161,8 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
     return () => {
       document.removeEventListener("click", handleClick, true);
       clearRouteTimers();
+      finishRouteRef.current = () => {};
+      cancelRouteRef.current = () => {};
     };
   }, []);
 
@@ -129,7 +184,10 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
 
     const handlePreferenceChange = (event: MediaQueryListEvent) => {
       reducedMotionRef.current = event.matches;
-      if (event.matches) cancelOwnedAnimation(animationRef);
+      if (event.matches) {
+        cancelOwnedAnimation(animationRef);
+        if (routePendingRef.current) setRouteProgress(90);
+      }
     };
 
     if (typeof motionQuery.addEventListener === "function") {
@@ -201,6 +259,9 @@ export function RouteEntryFade({ children }: { children: ReactNode }) {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <RouteCommitObserver pathname={pathname} onCommit={handleRouteCommit} />
+      </Suspense>
       <div className={`route-progress ${routePending ? "is-active" : ""}`} aria-hidden="true">
         <span className="route-progress__bar" style={{ transform: `scaleX(${routeProgress / 100})` }} />
         <span className="route-progress__spinner" />

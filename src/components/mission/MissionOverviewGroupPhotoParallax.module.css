@@ -1,0 +1,26 @@
+.imageWindow {
+  position: absolute;
+  inset: 0;
+}
+
+.motionWindow {
+  top: -48px;
+  bottom: -48px;
+}
+
+.motionImage {
+  transform: translate3d(0, var(--mission-overview-photo-offset, 0px), 0);
+  will-change: transform;
+}
+
+@media (max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .motionWindow {
+    top: 0;
+    bottom: 0;
+  }
+
+  .motionImage {
+    transform: none;
+    will-change: auto;
+  }
+}

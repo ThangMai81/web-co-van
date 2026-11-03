@@ -1,0 +1,26 @@
+.summary {
+  position: relative;
+}
+
+.summary::after {
+  position: absolute;
+  top: 50%;
+  right: 1.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+:global(details[open]) > .summary::after {
+  transform: translateY(-50%) rotate(225deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary::after {
+    transition: none;
+  }
+}

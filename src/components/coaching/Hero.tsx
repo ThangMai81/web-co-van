@@ -1,8 +1,53 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Reveal } from "@/components/animation/Reveal";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import styles from "./Hero.module.css";
+
+function subscribeToMediaQuery(query: MediaQueryList, listener: () => void) {
+  if (typeof query.addEventListener === "function") {
+    query.addEventListener("change", listener);
+    return () => query.removeEventListener("change", listener);
+  }
+
+  query.addListener(listener);
+  return () => query.removeListener(listener);
+}
 
 export function Hero() {
+  const [gravityInitialActive, setGravityInitialActive] = useState(false);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+
+    let eligibilityQueries: MediaQueryList[];
+    try {
+      eligibilityQueries = [
+        window.matchMedia("(min-width: 1024px)"),
+        window.matchMedia("(pointer: fine)"),
+        window.matchMedia("(prefers-reduced-motion: no-preference)"),
+      ];
+    } catch {
+      return;
+    }
+
+    const isEligible = () => eligibilityQueries.every((query) => query.matches);
+    if (!isEligible()) return;
+
+    // Sample once at entry. Losing eligibility consumes this one-shot, even if desktop is restored.
+    setGravityInitialActive(true);
+    const disableAfterEligibilityLoss = () => {
+      if (!isEligible()) setGravityInitialActive(false);
+    };
+    const unsubscribe = eligibilityQueries.map((query) =>
+      subscribeToMediaQuery(query, disableAfterEligibilityLoss),
+    );
+
+    return () => unsubscribe.forEach((removeListener) => removeListener());
+  }, []);
+
   return (
     <section className="relative overflow-hidden bg-blue px-6 pb-36 pt-[88px] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(255,204,0,.16),transparent_30%)]" />
@@ -20,7 +65,7 @@ export function Hero() {
               Dịch vụ coaching 1:1
             </div>
             <h1 className="max-w-2xl font-display text-4xl font-bold leading-[1.08] text-white sm:text-5xl md:text-6xl xl:text-7xl">
-              <span className="block"><span className="mr-2 inline-block align-[-0.08em] text-[1.2em] leading-none text-yellow">C</span>ùng bạn</span>
+              <span className="block"><span className={`${gravityInitialActive ? styles.gravityInitial : ""} mr-2 inline-block align-[-0.08em] text-[1.2em] leading-none text-yellow`} onAnimationEnd={() => setGravityInitialActive(false)}>C</span>ùng bạn</span>
               <span className="mt-2 block font-display font-semibold tracking-tight text-yellow">gỡ rối, mở lối</span>
               <span className="mt-2 block">cho hành trình riêng.</span>
             </h1>

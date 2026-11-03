@@ -1,0 +1,31 @@
+.coverWipeFrame {
+  isolation: isolate;
+}
+
+.coverWipeFrame::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-left: 2px solid var(--color-yellow);
+  background-color: var(--color-blue);
+  content: "";
+  pointer-events: none;
+  transform: translateX(100%);
+  animation: coverWipe 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes coverWipe {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coverWipeFrame::after {
+    animation: none;
+  }
+}

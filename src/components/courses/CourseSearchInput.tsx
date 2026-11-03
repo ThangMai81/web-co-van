@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "@/lib/icons";
 
@@ -16,6 +16,10 @@ export default function CourseSearchInput({
   const [value, setValue] = useState(search || "");
   const router = useRouter();
 
+  useEffect(() => {
+    setValue(search || "");
+  }, [search]);
+
   function handleSearch() {
     const query = new URLSearchParams();
     if (category) query.set("category", category);
@@ -30,6 +34,7 @@ export default function CourseSearchInput({
       <Search size={16} className="shrink-0 text-blue/50" />
       <input
         type="text"
+        aria-label="Tìm khóa học"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}

@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 import { InquiryForm } from "@/components/home-page/InquiryForm";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { CoachingJourney } from "@/components/coaching/CoachingJourney";
+import { StoryQuoteTrace } from "@/components/coaching/StoryQuoteTrace";
 import { getCoach } from "@/data/coaches";
 
 export default async function CoachProfilePage({
@@ -17,6 +18,7 @@ export default async function CoachProfilePage({
   const { coachSlug } = await params;
   const coach = await getCoach(coachSlug);
   if (!coach) notFound();
+  const hasKineticCoachName = coachSlug === "le-thi-kim-yen";
 
   return (
     <main className="min-h-screen bg-white">
@@ -58,8 +60,18 @@ export default async function CoachProfilePage({
               <p className="mb-4 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">
                 {coach.title}
               </p>
-              <h1 className="font-display text-5xl font-bold leading-tight text-white md:text-7xl">
-                {coach.name}
+              <h1
+                className="font-display text-5xl font-bold leading-tight text-white md:text-7xl"
+                data-coach-name-kinetic={hasKineticCoachName ? "true" : undefined}
+              >
+                {hasKineticCoachName
+                  ? coach.name.split(" ").map((word, index) => (
+                      <Fragment key={`${index}-${word}`}>
+                        {index > 0 ? " " : null}
+                        <span className="coach-profile-name-kinetic__word">{word}</span>
+                      </Fragment>
+                    ))
+                  : coach.name}
               </h1>
               <p className="mt-6 max-w-2xl text-xl leading-8 text-white/80">
                 {coach.quote}
@@ -111,10 +123,10 @@ export default async function CoachProfilePage({
             {coach.story.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
-            <blockquote className="rounded-3xl border border-yellow/70 bg-blue p-7 text-xl font-medium italic leading-8 text-white shadow-xl shadow-blue/10 md:p-9">
+            <StoryQuoteTrace>
               “{coach.quote}”
               <footer className="mt-4 font-mono text-xs font-bold not-italic uppercase tracking-wider text-yellow">— {coach.name}</footer>
-            </blockquote>
+            </StoryQuoteTrace>
           </div>
         </div>
       </section>

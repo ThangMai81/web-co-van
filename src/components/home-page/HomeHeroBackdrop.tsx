@@ -9,6 +9,12 @@ const POSTER_SOURCE = "/images/home-fansipan-0147-poster.jpg";
 const SECTION_CONTROL_SIZE_REM = 2.75;
 const SECTION_CONTROL_INSET_REM = 1;
 const HEADER_BOTTOM_PX = 74;
+const HOME_PARALLAX_MEDIA_TRAVEL_PX = 24;
+const HOME_PARALLAX_LIGHT_TRAVEL_PX = 10;
+const HOME_PARALLAX_ROOT_MARGIN = "150px 0px";
+const HOME_PARALLAX_MEDIA_OFFSET_PROPERTY = "--home-hero-media-offset";
+const HOME_PARALLAX_MEDIA_SCALE_PROPERTY = "--home-hero-media-scale";
+const HOME_PARALLAX_LIGHT_OFFSET_PROPERTY = "--home-hero-light-offset";
 
 type PlaybackParticipant = {
   eligible: boolean;
@@ -88,6 +94,9 @@ type HomeHeroBackdropProps = {
   videoSource?: string;
   posterSource?: string;
   controlPlacement?: "viewport" | "section-bottom";
+  homeBloomActive?: boolean;
+  homeParallaxEnabled?: boolean;
+  onHomeBloomEligibilityChange?: (allowed: boolean) => void;
   onEntryMotionAllowedChange?: (allowed: boolean) => void;
   onMotionActiveChange?: (active: boolean) => void;
   onMotionPause?: () => void;
@@ -126,6 +135,9 @@ export function HomeHeroBackdrop({
   videoSource = VIDEO_SOURCE,
   posterSource = POSTER_SOURCE,
   controlPlacement = "viewport",
+  homeBloomActive = false,
+  homeParallaxEnabled = false,
+  onHomeBloomEligibilityChange,
   onEntryMotionAllowedChange,
   onMotionActiveChange,
   onMotionPause,
@@ -286,6 +298,292 @@ export function HomeHeroBackdrop({
     stageInView,
     stageVisibilityReady,
     userPaused,
+  ]);
+
+  useEffect(() => {
+    if (!motionPreferenceReady || !stageVisibilityReady) return;
+    onHomeBloomEligibilityChange?.(
+      variant === "home" &&
+        motionAllowed &&
+        intersectionObserverAvailable &&
+        stageInView &&
+        pageVisible &&
+        controlAccessible &&
+        !userPaused &&
+        !mediaFailed &&
+        activeVideo === videoRef.current,
+    );
+  }, [
+    activeVideo,
+    controlAccessible,
+    intersectionObserverAvailable,
+    mediaFailed,
+    motionAllowed,
+    motionPreferenceReady,
+    onHomeBloomEligibilityChange,
+    pageVisible,
+    stageInView,
+    stageVisibilityReady,
+    userPaused,
+    variant,
+  ]);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const resetParallax = () => {
+      stage.removeAttribute("data-home-parallax-active");
+      stage.style.removeProperty(HOME_PARALLAX_MEDIA_OFFSET_PROPERTY);
+      stage.style.removeProperty(HOME_PARALLAX_MEDIA_SCALE_PROPERTY);
+      stage.style.removeProperty(HOME_PARALLAX_LIGHT_OFFSET_PROPERTY);
+    };
+    const eligible =
+      variant === "home" &&
+      homeParallaxEnabled &&
+      !homeBloomActive &&
+      motionPreferenceReady &&
+      intersectionObserverAvailable &&
+      stageVisibilityReady &&
+      motionAllowed &&
+      stageInView &&
+      pageVisible &&
+      controlAccessible &&
+      !userPaused &&
+      !mediaFailed &&
+      activeVideo === videoRef.current;
+
+    if (!eligible) {
+      resetParallax();
+      return;
+    }
+
+    if (
+      typeof window.matchMedia !== "function" ||
+      typeof IntersectionObserver === "undefined" ||
+      typeof window.requestAnimationFrame !== "function" ||
+      typeof window.cancelAnimationFrame !== "function"
+    ) {
+      resetParallax();
+      return;
+    }
+
+    let desktopQuery: MediaQueryList;
+    let finePointerQuery: MediaQueryList;
+    try {
+      desktopQuery = window.matchMedia("(min-width: 1024px)");
+      finePointerQuery = window.matchMedia("(pointer: fine)");
+    } catch {
+      resetParallax();
+      return;
+    }
+
+    let observer: IntersectionObserver | null = null;
+    let motionEligible = false;
+    let nearViewport = false;
+    let scrollListenerAttached = false;
+    let resizeListenerAttached = false;
+    let pendingFrame: number | null = null;
+    let setupFailed = false;
+    let disposed = false;
+    const removeMediaListeners: Array<() => void> = [];
+
+    const cancelPendingFrame = () => {
+      if (pendingFrame === null) return;
+      window.cancelAnimationFrame(pendingFrame);
+      pendingFrame = null;
+    };
+
+    const clearMediaListeners = () => {
+      for (const removeListener of removeMediaListeners.splice(0)) {
+        try {
+          removeListener();
+        } catch {
+          // A failed cleanup must not leave the parallax active.
+        }
+      }
+    };
+
+    const stopNearViewportWork = () => {
+      nearViewport = false;
+      if (scrollListenerAttached) {
+        window.removeEventListener("scroll", scheduleUpdate);
+        scrollListenerAttached = false;
+      }
+      if (resizeListenerAttached) {
+        window.removeEventListener("resize", scheduleUpdate);
+        resizeListenerAttached = false;
+      }
+      cancelPendingFrame();
+      resetParallax();
+    };
+
+    const stopMotion = () => {
+      motionEligible = false;
+      try {
+        observer?.disconnect();
+      } catch {
+        // Keep the backdrop static if observer cleanup fails.
+      }
+      observer = null;
+      stopNearViewportWork();
+    };
+
+    const failClosed = () => {
+      if (setupFailed) return;
+      setupFailed = true;
+      stopMotion();
+      clearMediaListeners();
+    };
+
+    function scheduleUpdate() {
+      if (
+        !motionEligible ||
+        !nearViewport ||
+        disposed ||
+        pendingFrame !== null
+      ) {
+        return;
+      }
+
+      try {
+        pendingFrame = window.requestAnimationFrame(() => {
+          pendingFrame = null;
+          if (!motionEligible || !nearViewport || disposed) return;
+
+          try {
+            const rect = stage.getBoundingClientRect();
+            const stageHeight = rect.height;
+            if (stageHeight <= 0) {
+              stage.style.setProperty(HOME_PARALLAX_MEDIA_OFFSET_PROPERTY, "0px");
+              stage.style.setProperty(HOME_PARALLAX_MEDIA_SCALE_PROPERTY, "1");
+              stage.style.setProperty(HOME_PARALLAX_LIGHT_OFFSET_PROPERTY, "0px");
+              return;
+            }
+
+            const exitProgress = Math.min(
+              1,
+              Math.max(0, -rect.top / stageHeight),
+            );
+            const mediaOffset =
+              -HOME_PARALLAX_MEDIA_TRAVEL_PX * exitProgress;
+            const lightOffset =
+              HOME_PARALLAX_LIGHT_TRAVEL_PX * exitProgress;
+            const mediaScale =
+              1 +
+              (2 * HOME_PARALLAX_MEDIA_TRAVEL_PX * exitProgress) /
+                stageHeight;
+
+            stage.style.setProperty(
+              HOME_PARALLAX_MEDIA_OFFSET_PROPERTY,
+              `${mediaOffset}px`,
+            );
+            stage.style.setProperty(
+              HOME_PARALLAX_MEDIA_SCALE_PROPERTY,
+              `${mediaScale}`,
+            );
+            stage.style.setProperty(
+              HOME_PARALLAX_LIGHT_OFFSET_PROPERTY,
+              `${lightOffset}px`,
+            );
+          } catch {
+            failClosed();
+          }
+        });
+      } catch {
+        failClosed();
+      }
+    }
+
+    function enterNearViewport() {
+      if (nearViewport || !motionEligible || disposed || setupFailed) return;
+      nearViewport = true;
+
+      try {
+        stage.setAttribute("data-home-parallax-active", "true");
+        window.addEventListener("scroll", scheduleUpdate, { passive: true });
+        scrollListenerAttached = true;
+        window.addEventListener("resize", scheduleUpdate, { passive: true });
+        resizeListenerAttached = true;
+        scheduleUpdate();
+      } catch {
+        failClosed();
+      }
+    }
+
+    function handleIntersection(entries: IntersectionObserverEntry[]) {
+      if (!motionEligible || disposed || setupFailed) return;
+      const stageEntry = entries.find((entry) => entry.target === stage);
+      if (!stageEntry) return;
+
+      if (stageEntry.isIntersecting) {
+        enterNearViewport();
+      } else {
+        stopNearViewportWork();
+      }
+    }
+
+    function startMotion() {
+      if (motionEligible || disposed || setupFailed) return;
+      motionEligible = true;
+
+      try {
+        observer = new IntersectionObserver(handleIntersection, {
+          rootMargin: HOME_PARALLAX_ROOT_MARGIN,
+          threshold: 0,
+        });
+        observer.observe(stage);
+      } catch {
+        failClosed();
+      }
+    }
+
+    function syncEligibility() {
+      if (disposed || setupFailed) return;
+
+      try {
+        if (desktopQuery.matches && finePointerQuery.matches) {
+          startMotion();
+        } else {
+          stopMotion();
+        }
+      } catch {
+        failClosed();
+      }
+    }
+
+    try {
+      removeMediaListeners.push(
+        subscribeToPreference(desktopQuery, syncEligibility),
+      );
+      removeMediaListeners.push(
+        subscribeToPreference(finePointerQuery, syncEligibility),
+      );
+      syncEligibility();
+    } catch {
+      failClosed();
+    }
+
+    return () => {
+      disposed = true;
+      stopMotion();
+      clearMediaListeners();
+      resetParallax();
+    };
+  }, [
+    activeVideo,
+    controlAccessible,
+    homeBloomActive,
+    homeParallaxEnabled,
+    intersectionObserverAvailable,
+    mediaFailed,
+    motionAllowed,
+    motionPreferenceReady,
+    pageVisible,
+    stageInView,
+    stageVisibilityReady,
+    userPaused,
+    variant,
   ]);
 
   useEffect(() => {
@@ -505,67 +803,70 @@ export function HomeHeroBackdrop({
         ref={stageRef}
         className={`${styles.backdrop} ${variant === "coaching" ? styles.coachingBackdrop : ""}`}
         data-video-visible={videoStarted && !mediaFailed}
+        data-home-bloom-active={variant === "home" && homeBloomActive ? "true" : undefined}
         aria-hidden="true"
       >
-        <object
-          className={styles.posterFallback}
-          data={posterSource}
-          type="image/jpeg"
-          aria-hidden="true"
-          tabIndex={-1}
-        >
+        <div className={styles.mediaPlane}>
           <object
-            className={styles.posterFallbackSecondary}
-            data="/images/home-opening-sunshine.png"
-            type="image/png"
+            className={styles.posterFallback}
+            data={posterSource}
+            type="image/jpeg"
             aria-hidden="true"
             tabIndex={-1}
           >
-            <span className={styles.posterFallbackEmpty} aria-hidden="true" />
+            <object
+              className={styles.posterFallbackSecondary}
+              data="/images/home-opening-sunshine.png"
+              type="image/png"
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <span className={styles.posterFallbackEmpty} aria-hidden="true" />
+            </object>
           </object>
-        </object>
-        <video
-          ref={videoRef}
-          className={styles.video}
-          poster={posterSource}
-          muted
-          playsInline
-          loop
-          preload="none"
-          tabIndex={-1}
-          onLoadedMetadata={(event) => {
-            if (event.currentTarget.getAttribute("src") !== videoSource) return;
-            setVideoMetadataReady(true);
-          }}
-          onLoadedData={(event) => {
-            if (event.currentTarget.getAttribute("src") !== videoSource) return;
-            markMediaReady();
-          }}
-          onPlaying={(event) => {
-            const video = event.currentTarget;
-            if (
-              video.getAttribute("src") !== videoSource ||
-              video.paused
-            ) {
-              return;
-            }
-            if (activePlaybackVideo !== video) {
-              pauseVideo(video);
-              return;
-            }
-            markMediaReady();
-            setVideoStarted(true);
-          }}
-          onError={(event) => {
-            if (event.currentTarget.getAttribute("src") !== videoSource) {
-              return;
-            }
-            if (event.currentTarget.error?.code === MediaError.MEDIA_ERR_ABORTED) {
-              return;
-            }
-            usePosterFallback();
-          }}
-        />
+          <video
+            ref={videoRef}
+            className={styles.video}
+            poster={posterSource}
+            muted
+            playsInline
+            loop
+            preload="none"
+            tabIndex={-1}
+            onLoadedMetadata={(event) => {
+              if (event.currentTarget.getAttribute("src") !== videoSource) return;
+              setVideoMetadataReady(true);
+            }}
+            onLoadedData={(event) => {
+              if (event.currentTarget.getAttribute("src") !== videoSource) return;
+              markMediaReady();
+            }}
+            onPlaying={(event) => {
+              const video = event.currentTarget;
+              if (
+                video.getAttribute("src") !== videoSource ||
+                video.paused
+              ) {
+                return;
+              }
+              if (activePlaybackVideo !== video) {
+                pauseVideo(video);
+                return;
+              }
+              markMediaReady();
+              setVideoStarted(true);
+            }}
+            onError={(event) => {
+              if (event.currentTarget.getAttribute("src") !== videoSource) {
+                return;
+              }
+              if (event.currentTarget.error?.code === MediaError.MEDIA_ERR_ABORTED) {
+                return;
+              }
+              usePosterFallback();
+            }}
+          />
+        </div>
         <div
           className={`${styles.scrim} ${variant === "coaching" ? styles.coachingScrim : ""}`}
         />

@@ -1,0 +1,17 @@
+.waiting {
+  clip-path: inset(49% 0 49% 0);
+  transition: none;
+}
+
+.revealing {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 680ms ease-out;
+}
+
+@media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+  .waiting,
+  .revealing {
+    clip-path: none;
+    transition: none;
+  }
+}

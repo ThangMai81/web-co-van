@@ -7,6 +7,7 @@ import {
   getCourseThumbnailAspectRatio,
   getCourseThumbnailFallback,
 } from "./courseThumbnails";
+import styles from "./RelatedCourseCard.module.css";
 
 export default function RelatedCourseCard({
   course,
@@ -23,7 +24,7 @@ export default function RelatedCourseCard({
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-blue/15 bg-blue/5 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      className={`group ${styles.card} flex h-full flex-col overflow-hidden rounded-xl border border-blue/15 bg-blue/5 shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
     >
       {thumbnailSrc && (
         <div

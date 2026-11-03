@@ -38,7 +38,10 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
       <DetailRouteScrollReset />
       <SiteHeader />
       <main className="route-detail-enter">
-        <ProgramHero program={displayProgram} />
+        <ProgramHero
+          program={displayProgram}
+          viewerEnabled={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
+        />
 
         <div className="mx-auto max-w-4xl px-6 pb-10">
           {program.videoUrl && <ProgramVideo url={program.videoUrl} />}
