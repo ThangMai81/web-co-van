@@ -148,7 +148,11 @@ export function Reveal({
         setVisible(true);
         setTransitionSuppressed(false);
         try {
-          observer?.disconnect();
+          // TypeScript does not track assignments made inside setupObserver
+          // when narrowing this catch branch, so read the shared observer
+          // through its declared nullable type before attempting cleanup.
+          const failedObserver = observer as IntersectionObserver | null;
+          failedObserver?.disconnect();
         } catch {
           // Keep the card visible if observer cleanup also fails.
         }

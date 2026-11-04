@@ -133,7 +133,11 @@ export function MissionStatementGravity({
       startObserver();
     } catch {
       setupFailed = true;
-      observer?.disconnect();
+      // Assignments inside startObserver are not reflected in this catch
+      // branch's control-flow narrowing, so preserve the nullable observer
+      // type explicitly while cleaning up a partially created observer.
+      const failedObserver = observer as IntersectionObserver | null;
+      failedObserver?.disconnect();
       observer = null;
       removeMediaListeners.splice(0).forEach((remove) => remove());
     }

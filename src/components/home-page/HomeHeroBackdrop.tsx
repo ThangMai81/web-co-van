@@ -331,12 +331,15 @@ export function HomeHeroBackdrop({
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
+    // Keep a non-null alias for callbacks created below; some TypeScript
+    // versions widen the ref-derived local again across nested callbacks.
+    const activeStage = stage as HTMLDivElement;
 
     const resetParallax = () => {
-      stage.removeAttribute("data-home-parallax-active");
-      stage.style.removeProperty(HOME_PARALLAX_MEDIA_OFFSET_PROPERTY);
-      stage.style.removeProperty(HOME_PARALLAX_MEDIA_SCALE_PROPERTY);
-      stage.style.removeProperty(HOME_PARALLAX_LIGHT_OFFSET_PROPERTY);
+      activeStage.removeAttribute("data-home-parallax-active");
+      activeStage.style.removeProperty(HOME_PARALLAX_MEDIA_OFFSET_PROPERTY);
+      activeStage.style.removeProperty(HOME_PARALLAX_MEDIA_SCALE_PROPERTY);
+      activeStage.style.removeProperty(HOME_PARALLAX_LIGHT_OFFSET_PROPERTY);
     };
     const eligible =
       variant === "home" &&
@@ -452,12 +455,12 @@ export function HomeHeroBackdrop({
           if (!motionEligible || !nearViewport || disposed) return;
 
           try {
-            const rect = stage.getBoundingClientRect();
+            const rect = activeStage.getBoundingClientRect();
             const stageHeight = rect.height;
             if (stageHeight <= 0) {
-              stage.style.setProperty(HOME_PARALLAX_MEDIA_OFFSET_PROPERTY, "0px");
-              stage.style.setProperty(HOME_PARALLAX_MEDIA_SCALE_PROPERTY, "1");
-              stage.style.setProperty(HOME_PARALLAX_LIGHT_OFFSET_PROPERTY, "0px");
+              activeStage.style.setProperty(HOME_PARALLAX_MEDIA_OFFSET_PROPERTY, "0px");
+              activeStage.style.setProperty(HOME_PARALLAX_MEDIA_SCALE_PROPERTY, "1");
+              activeStage.style.setProperty(HOME_PARALLAX_LIGHT_OFFSET_PROPERTY, "0px");
               return;
             }
 
@@ -474,15 +477,15 @@ export function HomeHeroBackdrop({
               (2 * HOME_PARALLAX_MEDIA_TRAVEL_PX * exitProgress) /
                 stageHeight;
 
-            stage.style.setProperty(
+            activeStage.style.setProperty(
               HOME_PARALLAX_MEDIA_OFFSET_PROPERTY,
               `${mediaOffset}px`,
             );
-            stage.style.setProperty(
+            activeStage.style.setProperty(
               HOME_PARALLAX_MEDIA_SCALE_PROPERTY,
               `${mediaScale}`,
             );
-            stage.style.setProperty(
+            activeStage.style.setProperty(
               HOME_PARALLAX_LIGHT_OFFSET_PROPERTY,
               `${lightOffset}px`,
             );
@@ -500,7 +503,7 @@ export function HomeHeroBackdrop({
       nearViewport = true;
 
       try {
-        stage.setAttribute("data-home-parallax-active", "true");
+        activeStage.setAttribute("data-home-parallax-active", "true");
         window.addEventListener("scroll", scheduleUpdate, { passive: true });
         scrollListenerAttached = true;
         window.addEventListener("resize", scheduleUpdate, { passive: true });
@@ -513,7 +516,7 @@ export function HomeHeroBackdrop({
 
     function handleIntersection(entries: IntersectionObserverEntry[]) {
       if (!motionEligible || disposed || setupFailed) return;
-      const stageEntry = entries.find((entry) => entry.target === stage);
+      const stageEntry = entries.find((entry) => entry.target === activeStage);
       if (!stageEntry) return;
 
       if (stageEntry.isIntersecting) {
@@ -532,7 +535,7 @@ export function HomeHeroBackdrop({
           rootMargin: HOME_PARALLAX_ROOT_MARGIN,
           threshold: 0,
         });
-        observer.observe(stage);
+        observer.observe(activeStage);
       } catch {
         failClosed();
       }
