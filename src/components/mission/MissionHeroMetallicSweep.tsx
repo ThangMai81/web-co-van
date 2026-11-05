@@ -75,8 +75,12 @@ export function MissionHeroMetallicSweep({
         );
       }
       motionQuery = window.matchMedia(MOTION_QUERY);
+      const ribbonMask = title.querySelector(
+        `mask[id="${ribbonRevealId}"]`,
+      );
       const supportsRibbon =
-        typeof SVGMaskElement !== "undefined" &&
+        ribbonMask !== null &&
+        CSS.supports("mask", `url(#${ribbonRevealId})`) &&
         CSS.supports("clip-path", "inset(0)") &&
         CSS.supports("stroke-dasharray", "1") &&
         CSS.supports("stroke-dashoffset", "1");
