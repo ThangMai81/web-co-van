@@ -8,21 +8,21 @@ const MOTION_QUERY =
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const MOTION_QUERY_SETTLE_MS = 5000;
 const MISSION_RIBBON_PATH =
-  "M 72 94 C 184 98, 280 119, 374 148 " +
-  "C 426 164, 473 177, 508 183 C 521 186, 537 180, 555 168 " +
-  "C 590 143, 625 129, 665 134 C 759 147, 850 196, 928 240";
+  "M 64 88 C 184 88, 276 118, 362 158 " +
+  "C 414 182, 468 198, 508 183 C 548 169, 560 118, 600 94 " +
+  "C 644 68, 695 76, 736 103 C 810 150, 864 223, 950 249";
 const MISSION_RIBBON_BAND_PATH =
-  "M 72 92 C 184 95, 280 110, 374 136 " +
-  "C 427 152, 474 163, 508 169 C 523 172, 539 167, 555 155 " +
-  "C 590 130, 625 115, 665 120 C 759 132, 850 180, 928 236 " +
-  "C 934 240, 931 247, 924 243 C 850 208, 759 165, 664 155 " +
-  "C 623 151, 590 166, 555 189 C 539 201, 522 206, 507 202 " +
-  "C 474 193, 427 178, 373 162 C 279 135, 183 110, 72 97 " +
-  "C 66 96, 66 92, 72 92 Z";
+  "M 72 72 C 184 72, 276 102, 362 142 " +
+  "C 414 166, 468 182, 508 167 C 548 153, 560 102, 600 78 " +
+  "C 644 52, 695 60, 736 87 C 810 134, 864 207, 928 234 " +
+  "C 936 240, 936 250, 928 250 C 864 219, 810 145, 730 119 " +
+  "C 690 95, 645 88, 606 112 C 570 140, 555 188, 516 199 " +
+  "C 470 214, 414 202, 360 174 C 276 134, 184 104, 72 104 " +
+  "C 64 104, 64 85, 72 72 Z";
 const MISSION_RIBBON_UNDERPASS_PATH =
-  "M 458 144 C 493 157, 531 177, 575 202 " +
-  "C 583 207, 579 213, 571 209 C 526 187, 492 166, 454 151 " +
-  "C 448 148, 452 142, 458 144 Z";
+  "M 458 159 C 483 169, 500 179, 516 184 " +
+  "C 522 187, 519 194, 513 191 C 494 183, 477 173, 454 165 " +
+  "C 448 162, 452 156, 458 159 Z";
 
 function subscribeToMediaQuery(query: MediaQueryList, listener: () => void) {
   if (
@@ -51,6 +51,7 @@ export function MissionHeroMetallicSweep({
 }) {
   const ribbonId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const ribbonBandId = ribbonId + "-band";
+  const ribbonCrossingGapId = ribbonId + "-crossing-gap";
   const ribbonRevealId = ribbonId + "-reveal";
   const metallicFilterId = ribbonId + "-metallic-lighting";
   const titleRef = useRef<HTMLSpanElement>(null);
@@ -213,6 +214,12 @@ export function MissionHeroMetallicSweep({
             <path d={MISSION_RIBBON_BAND_PATH} />
             <path d={MISSION_RIBBON_UNDERPASS_PATH} />
           </clipPath>
+          <clipPath
+            id={ribbonCrossingGapId}
+            clipPathUnits="userSpaceOnUse"
+          >
+            <rect x="478" y="177" width="64" height="12" rx="6" />
+          </clipPath>
           <mask
             id={ribbonRevealId}
             maskUnits="userSpaceOnUse"
@@ -259,6 +266,58 @@ export function MissionHeroMetallicSweep({
               operator="in"
               result="metallicSpecularInside"
             />
+            <feMorphology
+              in="SourceAlpha"
+              operator="erode"
+              radius="1"
+              result="metallicBevelInset"
+            />
+            <feOffset
+              in="metallicBevelInset"
+              dx="1"
+              dy="1"
+              result="metallicBevelInsetLowerRight"
+            />
+            <feComposite
+              in="SourceAlpha"
+              in2="metallicBevelInsetLowerRight"
+              operator="out"
+              result="metallicBevelUpperLeftMask"
+            />
+            <feOffset
+              in="metallicBevelInset"
+              dx="-1"
+              dy="-1"
+              result="metallicBevelInsetUpperLeft"
+            />
+            <feComposite
+              in="SourceAlpha"
+              in2="metallicBevelInsetUpperLeft"
+              operator="out"
+              result="metallicBevelLowerRightMask"
+            />
+            <feFlood
+              floodColor="#fff1bd"
+              floodOpacity="0.72"
+              result="metallicBevelChampagneSource"
+            />
+            <feComposite
+              in="metallicBevelChampagneSource"
+              in2="metallicBevelUpperLeftMask"
+              operator="in"
+              result="metallicBevelChampagne"
+            />
+            <feFlood
+              floodColor="#6a431b"
+              floodOpacity="0.42"
+              result="metallicBevelBronzeSource"
+            />
+            <feComposite
+              in="metallicBevelBronzeSource"
+              in2="metallicBevelLowerRightMask"
+              operator="in"
+              result="metallicBevelBronze"
+            />
             <feComposite
               in="SourceGraphic"
               in2="metallicSpecularInside"
@@ -267,7 +326,13 @@ export function MissionHeroMetallicSweep({
               k2="1"
               k3="0.42"
               k4="0"
+              result="metallicBase"
             />
+            <feMerge>
+              <feMergeNode in="metallicBase" />
+              <feMergeNode in="metallicBevelBronze" />
+              <feMergeNode in="metallicBevelChampagne" />
+            </feMerge>
           </filter>
           <linearGradient id="mission-ribbon-underside" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="#654111" />
@@ -319,6 +384,11 @@ export function MissionHeroMetallicSweep({
             d={MISSION_RIBBON_UNDERPASS_PATH}
           />
           <path className={styles.ribbonPath} d={MISSION_RIBBON_BAND_PATH} />
+          <path
+            className={styles.ribbonPath}
+            d={MISSION_RIBBON_UNDERPASS_PATH}
+            clipPath={`url(#${ribbonCrossingGapId})`}
+          />
           <g clipPath={"url(#" + ribbonBandId + ")"}>
             <path className={styles.ribbonHighlight} d={MISSION_RIBBON_PATH} />
             <path
