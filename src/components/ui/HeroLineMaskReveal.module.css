@@ -10,7 +10,9 @@
   .mask:not(.releaseOverflowAfterReveal) > * {
     animation: hero-line-mask-rise 620ms ease-out both;
   }
+}
 
+@media (prefers-reduced-motion: no-preference) {
   .releaseOverflowAfterReveal[data-motion-ready="true"] > * {
     animation: hero-line-mask-release 620ms ease-out both;
   }

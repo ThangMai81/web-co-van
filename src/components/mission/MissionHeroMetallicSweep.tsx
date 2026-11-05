@@ -94,8 +94,7 @@ export function MissionHeroMetallicSweep({
       if (
         !supportsRibbon ||
         ribbonPaths.length !== 1 ||
-        !revealMask ||
-        (!motionQuery.matches && !hasStartedRef.current)
+        !revealMask
       ) {
         disabledRef.current = true;
         return;
@@ -135,8 +134,15 @@ export function MissionHeroMetallicSweep({
         }
       }
     };
+    const activateSweep = () => {
+      if (disabledRef.current || hasStartedRef.current) return;
+      if (reducedMotionQuery.matches || !motionQuery.matches) return;
+      setSweepActive(true);
+      revealMask.setAttribute("data-motion-ready", "true");
+      hasStartedRef.current = true;
+    };
     const scheduleSweepDisable = () => {
-      if (pendingDisableTimer !== null) return;
+      if (!hasStartedRef.current || pendingDisableTimer !== null) return;
       pendingDisableTimer = window.setTimeout(() => {
         pendingDisableTimer = null;
         try {
@@ -154,9 +160,13 @@ export function MissionHeroMetallicSweep({
         }
         if (motionQuery.matches) {
           clearPendingDisable();
+          if (!hasStartedRef.current) activateSweep();
           return;
         }
-        scheduleSweepDisable();
+        if (hasStartedRef.current) {
+          revealMask.removeAttribute("data-motion-ready");
+          scheduleSweepDisable();
+        }
       } catch {
         disableSweep();
       }
@@ -169,12 +179,7 @@ export function MissionHeroMetallicSweep({
       removeMediaListeners.push(
         subscribeToMediaQuery(reducedMotionQuery, syncMotionEligibility),
       );
-      if (!motionQuery.matches) syncMotionEligibility();
-      if (!hasStartedRef.current) {
-        setSweepActive(true);
-        revealMask.setAttribute("data-motion-ready", "true");
-        hasStartedRef.current = true;
-      }
+      syncMotionEligibility();
     } catch {
       disableSweep();
     }
