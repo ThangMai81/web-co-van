@@ -62,8 +62,10 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
 
           {program.gallery.length > 0 && (
             <ProgramGallery
+              key={slug}
               images={program.gallery}
               revealAccent={slug === "chinh-phuc-fansipan-noc-nha-dong-duong"}
+              revealEntries={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
             />
           )}
         </div>
