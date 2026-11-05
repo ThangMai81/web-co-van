@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import styles from "./MissionHeroMetallicSweep.module.css";
 
 const MOTION_QUERY =
   "(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const MOTION_QUERY_SETTLE_MS = 5000;
 const MISSION_RIBBON_PATH =
   "M 72 94 C 184 98, 280 119, 374 148 " +
   "C 426 164, 473 177, 508 183 C 521 186, 537 180, 555 168 " +
@@ -53,6 +55,7 @@ export function MissionHeroMetallicSweep({
   const titleRef = useRef<HTMLSpanElement>(null);
   const hasStartedRef = useRef(false);
   const disabledRef = useRef(false);
+  const [sweepActive, setSweepActive] = useState(false);
 
   useEffect(() => {
     const title = titleRef.current;
@@ -67,6 +70,7 @@ export function MissionHeroMetallicSweep({
     }
 
     let motionQuery: MediaQueryList;
+    let reducedMotionQuery: MediaQueryList;
     let revealMask: Element | null = null;
     try {
       if (typeof title.closest === "function") {
@@ -75,6 +79,7 @@ export function MissionHeroMetallicSweep({
         );
       }
       motionQuery = window.matchMedia(MOTION_QUERY);
+      reducedMotionQuery = window.matchMedia(REDUCED_MOTION_QUERY);
       const ribbonMask = title.querySelector(
         `mask[id="${ribbonRevealId}"]`,
       );
@@ -86,15 +91,11 @@ export function MissionHeroMetallicSweep({
         CSS.supports("stroke-dashoffset", "1");
       const ribbonPaths = title.querySelectorAll("[data-ribbon-draw]");
       if (
-        !motionQuery.matches ||
         !supportsRibbon ||
         ribbonPaths.length !== 1 ||
-        !revealMask
+        !revealMask ||
+        (!motionQuery.matches && !hasStartedRef.current)
       ) {
-        if (!motionQuery.matches && hasStartedRef.current) {
-          title.classList.remove(styles.sweepActive);
-          revealMask?.removeAttribute("data-motion-ready");
-        }
         disabledRef.current = true;
         return;
       }
@@ -104,11 +105,23 @@ export function MissionHeroMetallicSweep({
     }
 
     const removeMediaListeners: Array<() => void> = [];
+    let pendingDisableTimer: number | null = null;
+    const clearPendingDisable = () => {
+      if (pendingDisableTimer === null) return;
+      const timer = pendingDisableTimer;
+      pendingDisableTimer = null;
+      try {
+        window.clearTimeout(timer);
+      } catch {
+        // A stale timeout still checks eligibility before disabling motion.
+      }
+    };
     const disableSweep = () => {
       if (disabledRef.current) return;
       disabledRef.current = true;
+      clearPendingDisable();
       try {
-        title.classList.remove(styles.sweepActive);
+        setSweepActive(false);
         revealMask.removeAttribute("data-motion-ready");
       } catch {
         // Static high-contrast text remains the fallback.
@@ -121,19 +134,43 @@ export function MissionHeroMetallicSweep({
         }
       }
     };
+    const scheduleSweepDisable = () => {
+      if (pendingDisableTimer !== null) return;
+      pendingDisableTimer = window.setTimeout(() => {
+        pendingDisableTimer = null;
+        try {
+          if (!motionQuery.matches) disableSweep();
+        } catch {
+          disableSweep();
+        }
+      }, MOTION_QUERY_SETTLE_MS);
+    };
+    const syncMotionEligibility = () => {
+      try {
+        if (reducedMotionQuery.matches) {
+          disableSweep();
+          return;
+        }
+        if (motionQuery.matches) {
+          clearPendingDisable();
+          return;
+        }
+        scheduleSweepDisable();
+      } catch {
+        disableSweep();
+      }
+    };
 
     try {
       removeMediaListeners.push(
-        subscribeToMediaQuery(motionQuery, () => {
-          try {
-            if (!motionQuery.matches) disableSweep();
-          } catch {
-            disableSweep();
-          }
-        }),
+        subscribeToMediaQuery(motionQuery, syncMotionEligibility),
       );
+      removeMediaListeners.push(
+        subscribeToMediaQuery(reducedMotionQuery, syncMotionEligibility),
+      );
+      if (!motionQuery.matches) syncMotionEligibility();
       if (!hasStartedRef.current) {
-        title.classList.add(styles.sweepActive);
+        setSweepActive(true);
         revealMask.setAttribute("data-motion-ready", "true");
         hasStartedRef.current = true;
       }
@@ -142,6 +179,7 @@ export function MissionHeroMetallicSweep({
     }
 
     return () => {
+      clearPendingDisable();
       for (const removeListener of removeMediaListeners.splice(0)) {
         try {
           removeListener();
@@ -153,7 +191,10 @@ export function MissionHeroMetallicSweep({
   }, []);
 
   return (
-    <span ref={titleRef} className={styles.metallicTitle}>
+    <span
+      ref={titleRef}
+      className={`${styles.metallicTitle} ${sweepActive ? styles.sweepActive : ""}`}
+    >
       <svg
         className={styles.ribbon}
         viewBox="0 0 1000 320"

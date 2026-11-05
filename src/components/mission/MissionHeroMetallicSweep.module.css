@@ -187,3 +187,15 @@
     visibility: hidden;
   }
 }
+
+@media (max-width: 1023px), (pointer: coarse) {
+  .sweepActive .metallicText,
+  .sweepActive .ribbonReveal,
+  .sweepActive .ribbonGlint {
+    animation-play-state: paused;
+  }
+
+  .sweepActive .ribbon {
+    visibility: hidden;
+  }
+}
