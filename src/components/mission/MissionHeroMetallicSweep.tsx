@@ -12,12 +12,12 @@ const MISSION_RIBBON_PATH =
   "C 426 164, 473 177, 508 183 C 521 186, 537 180, 555 168 " +
   "C 590 143, 625 129, 665 134 C 759 147, 850 196, 928 240";
 const MISSION_RIBBON_BAND_PATH =
-  "M 72 92 C 184 95, 280 114, 374 140 " +
-  "C 427 156, 474 167, 508 173 C 523 176, 539 171, 555 159 " +
-  "C 590 134, 625 119, 665 124 C 759 136, 850 184, 928 236 " +
-  "C 934 240, 931 247, 924 243 C 850 204, 759 161, 664 151 " +
-  "C 623 147, 590 162, 555 185 C 539 197, 522 202, 507 198 " +
-  "C 474 189, 427 174, 373 158 C 279 131, 183 106, 72 97 " +
+  "M 72 92 C 184 95, 280 110, 374 136 " +
+  "C 427 152, 474 163, 508 169 C 523 172, 539 167, 555 155 " +
+  "C 590 130, 625 115, 665 120 C 759 132, 850 180, 928 236 " +
+  "C 934 240, 931 247, 924 243 C 850 208, 759 165, 664 155 " +
+  "C 623 151, 590 166, 555 189 C 539 201, 522 206, 507 202 " +
+  "C 474 193, 427 178, 373 162 C 279 135, 183 110, 72 97 " +
   "C 66 96, 66 92, 72 92 Z";
 const MISSION_RIBBON_UNDERPASS_PATH =
   "M 458 144 C 493 157, 531 177, 575 202 " +
@@ -52,6 +52,7 @@ export function MissionHeroMetallicSweep({
   const ribbonId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const ribbonBandId = ribbonId + "-band";
   const ribbonRevealId = ribbonId + "-reveal";
+  const metallicFilterId = ribbonId + "-metallic-lighting";
   const titleRef = useRef<HTMLSpanElement>(null);
   const hasStartedRef = useRef(false);
   const disabledRef = useRef(false);
@@ -224,6 +225,45 @@ export function MissionHeroMetallicSweep({
               pathLength={1}
             />
           </mask>
+          <filter
+            id={metallicFilterId}
+            x="-8%"
+            y="-16%"
+            width="116%"
+            height="132%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feGaussianBlur
+              in="SourceAlpha"
+              stdDeviation="0.8"
+              result="metallicBump"
+            />
+            <feSpecularLighting
+              in="metallicBump"
+              surfaceScale="2.4"
+              specularConstant="0.42"
+              specularExponent="20"
+              lightingColor="#ffebad"
+              result="metallicSpecular"
+            >
+              <feDistantLight azimuth="315" elevation="48" />
+            </feSpecularLighting>
+            <feComposite
+              in="metallicSpecular"
+              in2="SourceAlpha"
+              operator="in"
+              result="metallicSpecularInside"
+            />
+            <feComposite
+              in="SourceGraphic"
+              in2="metallicSpecularInside"
+              operator="arithmetic"
+              k1="0"
+              k2="1"
+              k3="0.42"
+              k4="0"
+            />
+          </filter>
           <linearGradient id="mission-ribbon-underside" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="#654111" />
             <stop offset="38%" stopColor="#2e1c09" />
@@ -285,7 +325,12 @@ export function MissionHeroMetallicSweep({
         </g>
       </svg>
 
-      <span className={styles.metallicText}>{children}</span>
+      <span
+        className={styles.metallicText}
+        style={{ filter: `url(#${metallicFilterId})` }}
+      >
+        {children}
+      </span>
     </span>
   );
 }
