@@ -271,7 +271,7 @@
   }
 
   .tagline {
-    margin-top: 36px;
+    margin-top: 80px;
     color: rgba(255, 255, 255, 0.96);
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(1.2rem, 1.75vw, 1.5rem);
