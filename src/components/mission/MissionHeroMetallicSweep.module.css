@@ -4,7 +4,7 @@
   width: 100%;
   isolation: isolate;
   overflow: visible;
-  color: #f2d477;
+  color: #fece01;
 }
 
 .metallicText {
@@ -19,23 +19,18 @@
       linear-gradient(
         100deg,
         transparent 0%,
-        transparent 47.2%,
-        rgba(255, 236, 198, 0.3) 48.3%,
-        rgba(255, 244, 214, 0.58) 50%,
-        rgba(255, 224, 166, 0.42) 51.7%,
-        rgba(219, 165, 92, 0.18) 53.2%,
-        transparent 54%,
+        transparent 48.6%,
+        rgba(255, 240, 173, 0.38) 49.25%,
+        #fff0ad 50%,
+        rgba(255, 240, 173, 0.54) 50.75%,
+        transparent 51.4%,
         transparent 100%
       ),
       linear-gradient(
         180deg,
-        #f2e0b7 0%,
-        #dfc38e 16%,
-        #ba8348 34%,
-        #ecd5a0 51%,
-        #d8b77e 66%,
-        #a97844 83%,
-        #dfbd7e 100%
+        #fece01 0%,
+        #fece01 72%,
+        #d99520 100%
       );
     background-position: 100% 0, center;
     background-repeat: no-repeat;
@@ -64,20 +59,17 @@
 
 .metallicText > * {
   text-shadow:
-    0 -1px 0 rgba(255, 237, 203, 0.64),
-    1px 0 0 rgba(207, 160, 89, 0.62),
-    0 1px 0 rgba(154, 106, 50, 0.52),
-    1px 1px 0 rgba(218, 177, 101, 0.76),
-    2px 2px 0 rgba(180, 132, 67, 0.78),
-    3px 3px 0 rgba(140, 99, 52, 0.7),
-    4px 4px 0 rgba(99, 70, 39, 0.58),
-    5px 5px 1px rgba(48, 37, 24, 0.28),
+    0 -1px 0 rgba(255, 240, 173, 0.68),
+    1px 0 0 #d99520,
+    0 1px 0 rgba(169, 106, 17, 0.62),
+    2px 2px 0 rgba(169, 106, 17, 0.5),
+    3px 4px 5px rgba(45, 34, 18, 0.28),
     0 7px 14px rgba(1, 9, 24, 0.2);
 }
 
 @media (min-width: 1024px) {
   .metallicText {
-    transform: scaleX(1.24);
+    transform: scaleX(1.16);
     transform-origin: center;
   }
 }
@@ -85,13 +77,10 @@
 @media (max-width: 1023px) {
   .metallicText > * {
     text-shadow:
-      0 -1px 0 rgba(255, 237, 203, 0.64),
-      1px 0 0 rgba(207, 160, 89, 0.6),
-      0 1px 0 rgba(154, 106, 50, 0.5),
-      1px 1px 0 rgba(218, 177, 101, 0.74),
-      2px 2px 0 rgba(180, 132, 67, 0.72),
-      3px 3px 0 rgba(140, 99, 52, 0.64),
-      4px 4px 1px rgba(74, 55, 31, 0.44),
+      0 -1px 0 rgba(255, 240, 173, 0.64),
+      1px 0 0 #d99520,
+      0 1px 0 rgba(169, 106, 17, 0.58),
+      2px 2px 1px rgba(74, 55, 31, 0.36),
       0 7px 14px rgba(1, 9, 24, 0.2);
   }
 }
@@ -99,12 +88,10 @@
 @media (max-width: 767px), (pointer: coarse) {
   .metallicText > * {
     text-shadow:
-      0 -1px 0 rgba(255, 237, 203, 0.64),
-      0 1px 0 rgba(154, 106, 50, 0.5),
-      1px 1px 0 rgba(218, 177, 101, 0.72),
-      2px 2px 0 rgba(180, 132, 67, 0.68),
-      3px 3px 1px rgba(125, 88, 39, 0.6),
-      4px 4px 2px rgba(49, 38, 25, 0.36),
+      0 -1px 0 rgba(255, 240, 173, 0.62),
+      0 1px 0 #d99520,
+      1px 1px 0 rgba(169, 106, 17, 0.52),
+      3px 3px 3px rgba(49, 38, 25, 0.3),
       0 6px 12px rgba(1, 9, 24, 0.18);
   }
 }
