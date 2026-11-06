@@ -28,9 +28,14 @@
       ),
       linear-gradient(
         180deg,
-        #fece01 0%,
-        #fece01 72%,
-        #d99520 100%
+        #fff2c1 0%,
+        #f2d47b 10%,
+        #c98a24 27%,
+        #f7dc83 43%,
+        #dfa83a 59%,
+        #fff0b1 73%,
+        #b6761c 87%,
+        #684014 100%
       );
     background-position: 100% 0, center;
     background-repeat: no-repeat;
@@ -39,11 +44,6 @@
     -webkit-background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
-  }
-
-  .sweepActive .metallicText {
-    animation: mission-metallic-light-sweep 980ms
-      cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
   }
 
   @keyframes mission-metallic-light-sweep {
@@ -59,41 +59,14 @@
 
 .metallicText > * {
   text-shadow:
-    0 -1px 0 rgba(255, 240, 173, 0.68),
-    1px 0 0 #d99520,
-    0 1px 0 rgba(169, 106, 17, 0.62),
-    2px 2px 0 rgba(169, 106, 17, 0.5),
-    3px 4px 5px rgba(45, 34, 18, 0.28),
-    0 7px 14px rgba(1, 9, 24, 0.2);
-}
-
-@media (min-width: 1024px) {
-  .metallicText {
-    transform: scaleX(1.16);
-    transform-origin: center;
-  }
-}
-
-@media (max-width: 1023px) {
-  .metallicText > * {
-    text-shadow:
-      0 -1px 0 rgba(255, 240, 173, 0.64),
-      1px 0 0 #d99520,
-      0 1px 0 rgba(169, 106, 17, 0.58),
-      2px 2px 1px rgba(74, 55, 31, 0.36),
-      0 7px 14px rgba(1, 9, 24, 0.2);
-  }
-}
-
-@media (max-width: 767px), (pointer: coarse) {
-  .metallicText > * {
-    text-shadow:
-      0 -1px 0 rgba(255, 240, 173, 0.62),
-      0 1px 0 #d99520,
-      1px 1px 0 rgba(169, 106, 17, 0.52),
-      3px 3px 3px rgba(49, 38, 25, 0.3),
-      0 6px 12px rgba(1, 9, 24, 0.18);
-  }
+    0 -0.035em 0 rgba(255, 250, 222, 0.96),
+    0 -0.008em 0 #fff1bc,
+    0 0.012em 0 #e6bb55,
+    0.018em 0.022em 0 #bb7e1d,
+    0.04em 0.045em 0 #83520f,
+    0.065em 0.068em 0 #58360d,
+    0.078em 0.095em 0.035em rgba(39, 27, 12, 0.44),
+    0 0.16em 0.28em rgba(1, 9, 24, 0.3);
 }
 
 .ribbon {
@@ -105,7 +78,7 @@
   height: auto;
   aspect-ratio: 1000 / 320;
   overflow: visible;
-  visibility: hidden;
+  visibility: visible;
   pointer-events: none;
 }
 
@@ -116,12 +89,21 @@
   }
 }
 
+@media (max-width: 1023px) {
+  .ribbon {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+}
+
 .ribbonReveal {
   fill: none;
   stroke: #fff;
   stroke-width: 144px;
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+  stroke-dashoffset: 0;
   stroke-linecap: butt;
 }
 
@@ -154,26 +136,6 @@
   opacity: 0;
 }
 
-.sweepActive .ribbon {
-  visibility: visible;
-}
-
-.sweepActive .ribbonReveal {
-  animation: mission-metallic-ribbon-draw 980ms
-    cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
-}
-
-.sweepActive .ribbonGlint {
-  animation: mission-metallic-ribbon-glint 980ms
-    cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
-}
-
-@keyframes mission-metallic-ribbon-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
 @keyframes mission-metallic-ribbon-glint {
   from {
     stroke-dashoffset: 0.075;
@@ -191,26 +153,18 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sweepActive .metallicText,
-  .sweepActive .ribbonReveal,
-  .sweepActive .ribbonGlint {
-    animation: none;
-  }
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    @supports (filter: url("#mission-metallic-filter")) {
+      .sweepActive .metallicText {
+        animation: mission-metallic-light-sweep 980ms
+          cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
+      }
 
-  .sweepActive .ribbon {
-    visibility: hidden;
-  }
-}
-
-@media (max-width: 1023px), (pointer: coarse) {
-  .sweepActive .metallicText,
-  .sweepActive .ribbonReveal,
-  .sweepActive .ribbonGlint {
-    animation-play-state: paused;
-  }
-
-  .sweepActive .ribbon {
-    visibility: hidden;
+      .sweepActive .ribbonGlint {
+        animation: mission-metallic-ribbon-glint 980ms
+          cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
+      }
+    }
   }
 }

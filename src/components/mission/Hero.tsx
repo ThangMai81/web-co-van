@@ -1,8 +1,16 @@
 import { Quote } from "@/lib/icons";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { Playfair_Display } from "next/font/google";
 import { MissionHeroGlowParallax } from "./MissionHeroGlowParallax";
+import { MissionHeroMetallicSweep } from "./MissionHeroMetallicSweep";
 import { MissionPortraitReveal } from "./MissionPortraitReveal";
 import styles from "./Hero.module.css";
+
+const missionHeadingFont = Playfair_Display({
+  variable: "--font-mission-display",
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+});
 
 export function Hero() {
   return (
@@ -35,9 +43,11 @@ export function Hero() {
             <span className={styles.missionKickerAccent} aria-hidden="true" />
             Câu chuyện Sunshine Center
           </div>
-          <h1 className={styles.heading}>
-            <span className={styles.headingLine}>Khai tâm mở lối</span>
-            <span className={styles.headingLine}>Tìm lại chính mình</span>
+          <h1 className={`${styles.heading} ${missionHeadingFont.variable}`}>
+            <MissionHeroMetallicSweep>
+              <span className={styles.headingLine}>Khai tâm mở lối</span>
+              <span className={styles.headingLine}>Tìm lại chính mình</span>
+            </MissionHeroMetallicSweep>
           </h1>
 
           <p className={styles.tagline}>

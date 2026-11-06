@@ -1,12 +1,155 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import styles from "./MissionHeroMetallicSweep.module.css";
 
 const MOTION_QUERY =
   "(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-const MOTION_QUERY_SETTLE_MS = 5000;
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+type MissionRouteState = {
+  previousPathname: string;
+  entryChanged: boolean;
+};
+
+type MissionWindow = Window & {
+  navigation?: EventTarget;
+  __missionHeroRouteState?: MissionRouteState;
+};
+
+type NavigationEntryChange = Event & {
+  from?: { url?: string } | null;
+};
+
+function normalizePathname(pathname: string) {
+  return pathname.replace(/\/+$/, "") || "/";
+}
+
+function isMissionPathname(pathname: string) {
+  return normalizePathname(pathname) === "/mission";
+}
+
+function initializeMissionRouteTracking(): MissionRouteState | null {
+  if (typeof window === "undefined") return null;
+
+  const missionWindow = window as MissionWindow;
+  if (missionWindow.__missionHeroRouteState) {
+    return missionWindow.__missionHeroRouteState;
+  }
+
+  const state: MissionRouteState = {
+    previousPathname: window.location.pathname,
+    entryChanged: false,
+  };
+  missionWindow.__missionHeroRouteState = state;
+  const navigation = missionWindow.navigation;
+
+  const recordRouteChange = (fromPathname: string, currentPathname: string) => {
+    if (isMissionPathname(fromPathname) !== isMissionPathname(currentPathname)) {
+      state.entryChanged = true;
+    }
+    state.previousPathname = currentPathname;
+  };
+
+  const handleCurrentEntryChange = (event: Event) => {
+    const fromUrl = (event as NavigationEntryChange).from?.url;
+    if (!fromUrl) return;
+
+    try {
+      const fromPathname = new URL(fromUrl, window.location.href).pathname;
+      recordRouteChange(fromPathname, window.location.pathname);
+    } catch {
+      state.previousPathname = window.location.pathname;
+    }
+  };
+
+  const handlePopState = () => {
+    recordRouteChange(state.previousPathname, window.location.pathname);
+  };
+
+  navigation?.addEventListener("currententrychange", handleCurrentEntryChange);
+  window.addEventListener("popstate", handlePopState);
+
+  return state;
+}
+
+const missionRouteState = initializeMissionRouteTracking();
+
+function canAnimateCurrentMissionEntry() {
+  if (
+    typeof PerformanceObserver === "undefined" ||
+    !Array.isArray(PerformanceObserver.supportedEntryTypes) ||
+    !PerformanceObserver.supportedEntryTypes.includes("paint") ||
+    typeof window.performance.getEntriesByType !== "function"
+  ) {
+    return false;
+  }
+
+  const hasFirstContentfulPaint = window.performance
+    .getEntriesByType("paint")
+    .some((entry) => entry.name === "first-contentful-paint");
+
+  const hasRouteEntrySignal =
+    missionRouteState?.entryChanged === true ||
+    document.querySelector(".route-progress.is-active") !== null;
+  if (missionRouteState) missionRouteState.entryChanged = false;
+  if (hasRouteEntrySignal || !hasFirstContentfulPaint) return true;
+
+  const documentNavigation = window.performance.getEntriesByType("navigation")[0];
+  if (!documentNavigation?.name) return false;
+
+  try {
+    const documentPathname = new URL(
+      documentNavigation.name,
+      window.location.href,
+    ).pathname;
+
+    return (
+      normalizePathname(documentPathname) !==
+      normalizePathname(window.location.pathname)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function supportsMotionSetup(filterId: string, revealId: string) {
+  if (typeof CSS === "undefined" || typeof CSS.supports !== "function") {
+    return false;
+  }
+
+  const filter = document.getElementById(filterId);
+  const svg = filter?.closest("svg");
+  const revealMask = svg?.querySelector("#" + revealId);
+  const glintPath = svg?.querySelector('[data-ribbon-glint="true"]');
+  const supportsTextFace =
+    CSS.supports("background-clip", "text") ||
+    CSS.supports("-webkit-background-clip", "text");
+  const supportsMetallicFilter = CSS.supports("filter", "url(#" + filterId + ")");
+  const supportsRibbonGlint =
+    CSS.supports("stroke-dasharray", "0.075 1.075") &&
+    CSS.supports("stroke-dashoffset", "-0.925");
+
+  return (
+    supportsTextFace &&
+    supportsMetallicFilter &&
+    supportsRibbonGlint &&
+    filter?.tagName.toLowerCase() === "filter" &&
+    filter.querySelector("feSpecularLighting") !== null &&
+    filter.querySelector("feMerge") !== null &&
+    revealMask?.tagName.toLowerCase() === "mask" &&
+    glintPath?.tagName.toLowerCase() === "path"
+  );
+}
+
 const MISSION_RIBBON_PATH =
   "M 10 145 C 82 80, 158 42, 230 48 " +
   "C 314 56, 408 115, 500 170 " +
@@ -56,152 +199,62 @@ export function MissionHeroMetallicSweep({
   const ribbonCrossingGapId = ribbonId + "-crossing-gap";
   const ribbonRevealId = ribbonId + "-reveal";
   const metallicFilterId = ribbonId + "-metallic-lighting";
-  const titleRef = useRef<HTMLSpanElement>(null);
   const hasStartedRef = useRef(false);
-  const disabledRef = useRef(false);
+  const motionDisabledRef = useRef(false);
   const [sweepActive, setSweepActive] = useState(false);
 
-  useEffect(() => {
-    const title = titleRef.current;
-    if (!title || disabledRef.current) return;
-    if (
-      typeof window.matchMedia !== "function" ||
-      typeof CSS === "undefined" ||
-      typeof CSS.supports !== "function"
-    ) {
-      disabledRef.current = true;
-      return;
-    }
+  useIsomorphicLayoutEffect(() => {
+    let removeMotionQueryListener = () => {};
 
-    let motionQuery: MediaQueryList;
-    let reducedMotionQuery: MediaQueryList;
-    let revealMask: Element | null = null;
     try {
-      if (typeof title.closest === "function") {
-        revealMask = title.closest(
-          '[data-hero-line-mask="release-overflow"]',
-        );
-      }
-      motionQuery = window.matchMedia(MOTION_QUERY);
-      reducedMotionQuery = window.matchMedia(REDUCED_MOTION_QUERY);
-      const ribbonMask = title.querySelector(
-        `mask[id="${ribbonRevealId}"]`,
-      );
-      const supportsRibbon =
-        ribbonMask !== null &&
-        CSS.supports("mask", `url(#${ribbonRevealId})`) &&
-        CSS.supports("clip-path", "inset(0)") &&
-        CSS.supports("stroke-dasharray", "1") &&
-        CSS.supports("stroke-dashoffset", "1");
-      const ribbonPaths = title.querySelectorAll("[data-ribbon-draw]");
-      if (
-        !supportsRibbon ||
-        ribbonPaths.length !== 1 ||
-        !revealMask
-      ) {
-        disabledRef.current = true;
+      if (typeof window.matchMedia !== "function") {
+        motionDisabledRef.current = true;
         return;
       }
-    } catch {
-      disabledRef.current = true;
-      return;
-    }
+      const motionQuery = window.matchMedia(MOTION_QUERY);
+      const syncMotionEligibility = () => {
+        if (motionDisabledRef.current) return;
 
-    const removeMediaListeners: Array<() => void> = [];
-    let pendingDisableTimer: number | null = null;
-    const clearPendingDisable = () => {
-      if (pendingDisableTimer === null) return;
-      const timer = pendingDisableTimer;
-      pendingDisableTimer = null;
-      try {
-        window.clearTimeout(timer);
-      } catch {
-        // A stale timeout still checks eligibility before disabling motion.
-      }
-    };
-    const disableSweep = () => {
-      if (disabledRef.current) return;
-      disabledRef.current = true;
-      clearPendingDisable();
-      try {
-        setSweepActive(false);
-        revealMask.removeAttribute("data-motion-ready");
-      } catch {
-        // Static high-contrast text remains the fallback.
-      }
-      for (const removeListener of removeMediaListeners.splice(0)) {
-        try {
-          removeListener();
-        } catch {
-          // Continue cleaning up remaining media listeners.
-        }
-      }
-    };
-    const activateSweep = () => {
-      if (disabledRef.current || hasStartedRef.current) return;
-      if (reducedMotionQuery.matches || !motionQuery.matches) return;
-      setSweepActive(true);
-      revealMask.setAttribute("data-motion-ready", "true");
-      hasStartedRef.current = true;
-    };
-    const scheduleSweepDisable = () => {
-      if (!hasStartedRef.current || pendingDisableTimer !== null) return;
-      pendingDisableTimer = window.setTimeout(() => {
-        pendingDisableTimer = null;
-        try {
-          if (!motionQuery.matches) disableSweep();
-        } catch {
-          disableSweep();
-        }
-      }, MOTION_QUERY_SETTLE_MS);
-    };
-    const syncMotionEligibility = () => {
-      try {
-        if (reducedMotionQuery.matches) {
-          disableSweep();
+        if (!motionQuery.matches) {
+          motionDisabledRef.current = true;
+          if (hasStartedRef.current) setSweepActive(false);
           return;
         }
+
+        if (hasStartedRef.current) return;
+
+        if (
+          !canAnimateCurrentMissionEntry() ||
+          !supportsMotionSetup(metallicFilterId, ribbonRevealId)
+        ) {
+          motionDisabledRef.current = true;
+          return;
+        }
+
         if (motionQuery.matches) {
-          clearPendingDisable();
-          if (!hasStartedRef.current) activateSweep();
-          return;
+          hasStartedRef.current = true;
+          setSweepActive(true);
         }
-        if (hasStartedRef.current) {
-          revealMask.removeAttribute("data-motion-ready");
-          scheduleSweepDisable();
-        }
-      } catch {
-        disableSweep();
-      }
-    };
+      };
 
-    try {
-      removeMediaListeners.push(
-        subscribeToMediaQuery(motionQuery, syncMotionEligibility),
-      );
-      removeMediaListeners.push(
-        subscribeToMediaQuery(reducedMotionQuery, syncMotionEligibility),
+      removeMotionQueryListener = subscribeToMediaQuery(
+        motionQuery,
+        syncMotionEligibility,
       );
       syncMotionEligibility();
+      return () => {
+        removeMotionQueryListener();
+      };
     } catch {
-      disableSweep();
+      removeMotionQueryListener();
+      motionDisabledRef.current = true;
+      setSweepActive(false);
+      return;
     }
-
-    return () => {
-      clearPendingDisable();
-      for (const removeListener of removeMediaListeners.splice(0)) {
-        try {
-          removeListener();
-        } catch {
-          // The title node is removed with its component.
-        }
-      }
-    };
-  }, []);
+  }, [metallicFilterId, ribbonRevealId]);
 
   return (
     <span
-      ref={titleRef}
       className={`${styles.metallicTitle} ${sweepActive ? styles.sweepActive : ""}`}
     >
       <svg
@@ -395,6 +448,7 @@ export function MissionHeroMetallicSweep({
             <path className={styles.ribbonHighlight} d={MISSION_RIBBON_PATH} />
             <path
               className={styles.ribbonGlint}
+              data-ribbon-glint="true"
               d={MISSION_RIBBON_PATH}
               pathLength={1}
             />

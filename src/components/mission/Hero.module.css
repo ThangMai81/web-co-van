@@ -62,12 +62,12 @@
   width: fit-content;
   max-width: 100%;
   margin: 0 auto;
-  color: #fffaf0;
-  font-family: var(--font-sans-raw), sans-serif;
+  color: #fece01;
+  font-family: var(--font-mission-display), Georgia, "Times New Roman", serif;
   font-size: clamp(2.1rem, 8.8vw, 4.5rem);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 0.96;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
   text-align: center;
   text-wrap: balance;
 }
@@ -258,8 +258,8 @@
 
 @media (min-width: 1024px) {
   .heading {
-    font-size: clamp(3.75rem, 8.2vw, 8rem);
-    letter-spacing: -0.015em;
+    font-size: clamp(3.75rem, 8vw, 7.25rem);
+    letter-spacing: -0.035em;
   }
 
   .headingLine {
@@ -481,7 +481,7 @@
   }
 
   .heading {
-    font-size: clamp(2.1rem, 8.8vw, 3.3rem);
+    font-size: clamp(1.9rem, 8.8vw, 3.1rem);
     letter-spacing: -0.015em;
     line-height: 1.02;
   }
