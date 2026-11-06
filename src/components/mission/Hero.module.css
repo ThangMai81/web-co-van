@@ -262,7 +262,7 @@
   }
 
   .heading {
-    font-size: clamp(3.75rem, 10.3vw, 8.5rem);
+    font-size: clamp(3.75rem, 11.25vw, 10.2rem);
     letter-spacing: -0.035em;
   }
 
@@ -271,11 +271,17 @@
   }
 
   .tagline {
-    margin-top: 30px;
+    margin-top: 36px;
+    color: rgba(255, 255, 255, 0.96);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.2rem, 1.75vw, 1.5rem);
+    font-style: italic;
+    line-height: 1.55;
+    text-wrap: balance;
   }
 
   .cta {
-    min-width: min(360px, 100%);
+    min-width: min(450px, 100%);
     justify-content: center;
     margin-top: 24px;
     padding: 15px 32px 16px;
