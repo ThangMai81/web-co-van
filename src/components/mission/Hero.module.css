@@ -257,8 +257,12 @@
 }
 
 @media (min-width: 1024px) {
+  .layout {
+    padding-top: clamp(32px, 4.8vh, 48px);
+  }
+
   .heading {
-    font-size: clamp(3.75rem, 8vw, 7.25rem);
+    font-size: clamp(3.75rem, 10.3vw, 8.5rem);
     letter-spacing: -0.035em;
   }
 
@@ -267,7 +271,19 @@
   }
 
   .tagline {
+    margin-top: 30px;
+  }
+
+  .cta {
+    min-width: min(360px, 100%);
+    justify-content: center;
     margin-top: 24px;
+    padding: 15px 32px 16px;
+    font-size: 1.08rem;
+  }
+
+  .support {
+    margin-top: 48px;
   }
 }
 
