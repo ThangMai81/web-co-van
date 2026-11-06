@@ -77,7 +77,7 @@
 }
 
 @media (min-width: 1024px) {
-  .metallicText > * {
+  .metallicText {
     transform: scaleX(1.16);
     transform-origin: center;
   }
