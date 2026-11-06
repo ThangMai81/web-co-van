@@ -254,9 +254,9 @@ export function MissionHeroMetallicSweep({
             />
             <feSpecularLighting
               in="metallicBump"
-              surfaceScale="2.4"
-              specularConstant="0.42"
-              specularExponent="20"
+              surfaceScale="1.7"
+              specularConstant="0.28"
+              specularExponent="15"
               lightingColor="#ffebad"
               result="metallicSpecular"
             >
@@ -300,7 +300,7 @@ export function MissionHeroMetallicSweep({
             />
             <feFlood
               floodColor="#fff1bd"
-              floodOpacity="0.72"
+              floodOpacity="0.52"
               result="metallicBevelChampagneSource"
             />
             <feComposite
@@ -311,7 +311,7 @@ export function MissionHeroMetallicSweep({
             />
             <feFlood
               floodColor="#6a431b"
-              floodOpacity="0.42"
+              floodOpacity="0.28"
               result="metallicBevelBronzeSource"
             />
             <feComposite

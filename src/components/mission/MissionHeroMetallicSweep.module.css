@@ -19,24 +19,24 @@
       linear-gradient(
         100deg,
         transparent 0%,
-        transparent 49.2%,
-        rgba(255, 231, 151, 0.78) 49.6%,
-        rgba(255, 244, 194, 0.96) 50%,
-        rgba(255, 214, 111, 0.94) 50.4%,
-        rgba(232, 163, 45, 0.58) 50.8%,
-        transparent 51.3%,
+        transparent 48.7%,
+        rgba(255, 232, 178, 0.48) 49.4%,
+        rgba(255, 244, 208, 0.78) 50%,
+        rgba(255, 221, 146, 0.66) 50.65%,
+        rgba(226, 169, 88, 0.34) 51.35%,
+        transparent 52.1%,
         transparent 100%
       ),
       linear-gradient(
         180deg,
-        #f3ca64 0%,
-        #d89e36 12%,
-        #a8661b 24%,
-        #edbf55 38%,
-        #f7d471 52%,
-        #a76518 66%,
-        #d59a32 82%,
-        #895013 100%
+        #f3d995 0%,
+        #dfb96d 14%,
+        #b98140 28%,
+        #ead090 42%,
+        #f3d998 55%,
+        #c18945 70%,
+        #e2b86c 84%,
+        #9c6c32 100%
       );
     background-position: 100% 0, center;
     background-repeat: no-repeat;
@@ -64,47 +64,49 @@
 }
 
 .metallicText > * {
-  font-family: Cambria, Georgia, Palatino, serif;
   text-shadow:
-    0 -2px 0 #ffe39a,
-    0 -1px 0 #f1c355,
-    1px 0 0 #d99a31,
-    0 1px 0 #b97b24,
-    1px 1px 0 #e1ae48,
-    2px 2px 0 #b77d28,
-    3px 3px 0 #7c511d,
-    4px 4px 0 #583a18,
-    5px 5px 0 #3f2d17,
-    6px 6px 0 #302315,
-    7px 7px 0 #302315,
-    8px 8px 0 #302315;
+    0 -1px 0 rgba(255, 236, 194, 0.82),
+    1px 0 0 rgba(221, 178, 99, 0.88),
+    0 1px 0 rgba(187, 135, 60, 0.82),
+    1px 1px 0 rgba(226, 189, 117, 0.95),
+    2px 2px 0 rgba(201, 154, 81, 0.95),
+    3px 3px 0 rgba(154, 109, 48, 0.92),
+    4px 4px 0 rgba(112, 78, 37, 0.8),
+    5px 5px 1px rgba(49, 38, 25, 0.52),
+    0 9px 18px rgba(1, 9, 24, 0.3);
+}
+
+@media (min-width: 1024px) {
+  .metallicText > * {
+    transform: scaleX(1.16);
+    transform-origin: center;
+  }
 }
 
 @media (max-width: 1023px) {
   .metallicText > * {
     text-shadow:
-      0 -2px 0 #ffe39a,
-      0 -1px 0 #f1c355,
-      1px 0 0 #d99a31,
-      0 1px 0 #b97b24,
-      1px 1px 0 #e1ae48,
-      2px 2px 0 #b77d28,
-      3px 3px 0 #7c511d,
-      4px 4px 0 #583a18,
-      5px 5px 0 #3f2d17,
-      6px 6px 0 #302315;
+      0 -1px 0 rgba(255, 236, 194, 0.82),
+      1px 0 0 rgba(221, 178, 99, 0.88),
+      0 1px 0 rgba(187, 135, 60, 0.82),
+      1px 1px 0 rgba(226, 189, 117, 0.95),
+      2px 2px 0 rgba(201, 154, 81, 0.95),
+      3px 3px 0 rgba(154, 109, 48, 0.92),
+      4px 4px 1px rgba(74, 55, 31, 0.58),
+      0 8px 16px rgba(1, 9, 24, 0.28);
   }
 }
 
 @media (max-width: 767px), (pointer: coarse) {
   .metallicText > * {
     text-shadow:
-      0 -1px 0 #ffe39a,
-      0 1px 0 #b97b24,
-      1px 1px 0 #e1ae48,
-      2px 2px 0 #b77d28,
-      3px 3px 0 #7c511d,
-      4px 4px 0 #3f2d17;
+      0 -1px 0 rgba(255, 236, 194, 0.82),
+      0 1px 0 rgba(187, 135, 60, 0.82),
+      1px 1px 0 rgba(226, 189, 117, 0.92),
+      2px 2px 0 rgba(201, 154, 81, 0.92),
+      3px 3px 1px rgba(125, 88, 39, 0.72),
+      4px 4px 2px rgba(49, 38, 25, 0.5),
+      0 7px 14px rgba(1, 9, 24, 0.26);
   }
 }
 
