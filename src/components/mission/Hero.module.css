@@ -262,7 +262,7 @@
   }
 
   .heading {
-    font-size: clamp(3.75rem, 11.25vw, 10.2rem);
+    font-size: clamp(3.375rem, 10.125vw, 9.18rem);
     letter-spacing: -0.035em;
   }
 
