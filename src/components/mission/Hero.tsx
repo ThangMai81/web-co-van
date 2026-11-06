@@ -1,6 +1,5 @@
 import { Quote } from "@/lib/icons";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
-import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import { MissionHeroGlowParallax } from "./MissionHeroGlowParallax";
 import { MissionPortraitReveal } from "./MissionPortraitReveal";
 import styles from "./Hero.module.css";
@@ -36,12 +35,10 @@ export function Hero() {
             <span className={styles.missionKickerAccent} aria-hidden="true" />
             Câu chuyện Sunshine Center
           </div>
-          <HeroLineMaskReveal>
-            <h1 className={styles.heading}>
-              <span className={styles.headingLine}>Khai tâm mở lối</span>
-              <span className={styles.headingLine}>Tìm lại chính mình</span>
-            </h1>
-          </HeroLineMaskReveal>
+          <h1 className={styles.heading}>
+            <span className={styles.headingLine}>Khai tâm mở lối</span>
+            <span className={styles.headingLine}>Tìm lại chính mình</span>
+          </h1>
 
           <p className={styles.tagline}>
             Đánh thức ánh sáng bên trong, kiến tạo cuộc đời bạn mong muốn.
