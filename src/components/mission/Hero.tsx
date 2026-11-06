@@ -50,7 +50,7 @@ export function Hero() {
             </MissionHeroMetallicSweep>
           </h1>
 
-          <p className={styles.tagline}>
+          <p className={`${styles.tagline} ${missionHeadingFont.variable}`}>
             Đánh thức ánh sáng bên trong, kiến tạo cuộc đời bạn mong muốn.
           </p>
 
