@@ -3,7 +3,6 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import { MissionHeroGlowParallax } from "./MissionHeroGlowParallax";
 import { MissionPortraitReveal } from "./MissionPortraitReveal";
-import { MissionHeroMetallicSweep } from "./MissionHeroMetallicSweep";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -37,12 +36,10 @@ export function Hero() {
             <span className={styles.missionKickerAccent} aria-hidden="true" />
             Câu chuyện Sunshine Center
           </div>
-          <HeroLineMaskReveal releaseOverflowAfterReveal>
+          <HeroLineMaskReveal>
             <h1 className={styles.heading}>
-              <MissionHeroMetallicSweep>
-                <span className={styles.headingLine}>Khai tâm mở lối</span>
-                <span className={styles.headingLine}>Tìm lại chính mình</span>
-              </MissionHeroMetallicSweep>
+              <span className={styles.headingLine}>Khai tâm mở lối</span>
+              <span className={styles.headingLine}>Tìm lại chính mình</span>
             </h1>
           </HeroLineMaskReveal>
 

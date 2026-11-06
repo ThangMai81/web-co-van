@@ -1,7 +1,7 @@
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 88px 24px 80px;
+  padding: 64px 24px 48px;
   background: var(--color-blue);
   isolation: isolate;
 }
@@ -48,7 +48,7 @@
 }
 
 .layout {
-  padding: clamp(42px, 6vh, 72px) 24px 0;
+  padding: clamp(24px, 4vh, 40px) 24px 0;
 }
 
 .copy {
@@ -62,11 +62,8 @@
   width: fit-content;
   max-width: 100%;
   margin: 0 auto;
-  color: var(--color-yellow);
-  font-family:
-    "Palatino Linotype",
-    "Times New Roman",
-    serif;
+  color: #fffaf0;
+  font-family: var(--font-sans-raw), sans-serif;
   font-size: clamp(2.1rem, 8.8vw, 4.5rem);
   font-weight: 500;
   letter-spacing: -0.015em;
@@ -92,7 +89,7 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  margin: 28px auto 0;
+  margin: 20px auto 0;
   padding: 13px 20px 14px;
   border: 1px solid rgba(255, 245, 207, 0.78);
   border-radius: 999px;
@@ -179,7 +176,7 @@
   justify-content: center;
   gap: clamp(28px, 4vw, 56px);
   width: min(100%, 900px);
-  margin: 72px auto 0;
+  margin: 32px auto 0;
 }
 
 .supportPortrait {
@@ -270,7 +267,7 @@
   }
 
   .tagline {
-    margin-top: 58px;
+    margin-top: 24px;
   }
 }
 
