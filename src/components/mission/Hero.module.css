@@ -64,17 +64,16 @@
   margin: 0 auto;
   color: var(--color-yellow);
   font-family:
-    "Bodoni MT",
-    Didot,
     "Baskerville Old Face",
     "Palatino Linotype",
     "Book Antiqua",
     Palatino,
+    "Bodoni MT",
     Georgia,
     serif;
   font-size: clamp(2.1rem, 8.8vw, 4.5rem);
-  font-weight: 500;
-  letter-spacing: -0.015em;
+  font-weight: 400;
+  letter-spacing: -0.005em;
   line-height: 0.96;
   text-align: center;
   text-wrap: balance;
@@ -267,7 +266,7 @@
 @media (min-width: 1024px) {
   .heading {
     font-size: clamp(3.75rem, 8.2vw, 8rem);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.005em;
   }
 
   .headingLine {
@@ -490,7 +489,7 @@
 
   .heading {
     font-size: clamp(2.1rem, 8.8vw, 3.3rem);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.005em;
     line-height: 1.02;
   }
 
