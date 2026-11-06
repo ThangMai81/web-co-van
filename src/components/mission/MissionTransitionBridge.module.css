@@ -1,0 +1,9 @@
+.transitionBridge {
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-blue) 5%, var(--color-cream)),
+    var(--color-yellow) 72px
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 72px;
+}

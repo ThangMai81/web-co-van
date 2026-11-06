@@ -1,10 +1,14 @@
 import { Reveal } from "@/components/animation/Reveal";
+import styles from "./MissionTransitionBridge.module.css";
 import { MissionStatementGravity } from "./MissionStatementGravity";
 import { MissionSunrayDraw } from "./MissionSunrayDraw";
 
 export function Mission() {
   return (
-    <section id="mission" className="relative scroll-mt-24 overflow-hidden bg-yellow px-6 py-16 md:py-20">
+    <section
+      id="mission"
+      className={`relative scroll-mt-24 overflow-hidden bg-yellow px-6 py-16 md:py-20 ${styles.transitionBridge}`}
+    >
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-blue/10 blur-3xl" />
 
