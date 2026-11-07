@@ -83,8 +83,14 @@ export default function CourseReviews({
           onSubmit={handleSubmit}
           className="mt-4 rounded-lg border border-blue/15 p-4"
         >
-          <p className="mb-2 text-sm font-bold text-blue">Đánh giá của bạn</p>
+          <label
+            htmlFor={`course-review-rating-${courseId}`}
+            className="mb-2 block text-sm font-bold text-blue"
+          >
+            Đánh giá của bạn
+          </label>
           <select
+            id={`course-review-rating-${courseId}`}
             value={rating}
             onChange={(e) => setRating(Number(e.target.value))}
             className="mb-2 rounded border border-blue/20 px-3 py-1.5 text-sm font-medium text-blue"
