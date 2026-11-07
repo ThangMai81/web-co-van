@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { Chapter } from "@/types/course";
+import type { Chapter, Lesson } from "@/types/course";
 import styles from "./CourseCurriculum.module.css";
 import panelStyles from "./CourseCurriculumPanelTransition.module.css";
 
@@ -25,10 +25,41 @@ export default function CourseCurriculum({
   totalDurationLabel?: string;
 }) {
   const totalLessons = curriculum.reduce((sum, c) => sum + c.lessons.length, 0);
+  const onlineLessonCount = curriculum.reduce(
+    (sum, chapter) =>
+      sum + chapter.lessons.filter((lesson) => lesson.format === "online").length,
+    0,
+  );
+  const offlineLessonCount = totalLessons - onlineLessonCount;
+  const hasMixedFormats = onlineLessonCount > 0 && offlineLessonCount > 0;
+  const [formatFilter, setFormatFilter] = useState<Lesson["format"] | "all">(
+    "all",
+  );
+  const [openChapterIndices, setOpenChapterIndices] = useState<Set<number>>(
+    () => new Set([0]),
+  );
+  const visibleChapters = curriculum.flatMap((chapter, chapterIndex) => {
+    const lessons = chapter.lessons
+      .map((lesson, lessonIndex) => ({ lesson, lessonIndex }))
+      .filter(
+        ({ lesson }) =>
+          formatFilter === "all" || lesson.format === formatFilter,
+      );
+    return formatFilter === "all" || lessons.length > 0
+      ? [{ chapter, chapterIndex, lessons }]
+      : [];
+  });
+  const firstVisibleChapterIndexRef = useRef<number | null>(
+    visibleChapters[0]?.chapterIndex ?? null,
+  );
+  firstVisibleChapterIndexRef.current = visibleChapters[0]?.chapterIndex ?? null;
+  const visibleLessonCount = visibleChapters.reduce(
+    (sum, chapter) => sum + chapter.lessons.length,
+    0,
+  );
   const pathname = usePathname();
   const [entryAnimationPending, setEntryAnimationPending] = useState(false);
   const entryAnimationPendingRef = useRef(false);
-  const firstChapterRef = useRef<HTMLDetailsElement | null>(null);
   const previousPathnameRef = useRef<string | null>(null);
   const courseRouteWasLeftRef = useRef(false);
   const entryAnimationFrameRef = useRef<number | null>(null);
@@ -48,7 +79,11 @@ export default function CourseCurriculum({
     }
     previousPathnameRef.current = pathname;
     const isNewCourseEntry = isCourseDetailPath && previousPathname !== pathname;
-    if (isNewCourseEntry) courseRouteWasLeftRef.current = false;
+    if (isNewCourseEntry) {
+      courseRouteWasLeftRef.current = false;
+      setFormatFilter("all");
+      setOpenChapterIndices(new Set([0]));
+    }
 
     const scheduleEntryOpen = () => {
       if (typeof window.requestAnimationFrame !== "function") {
@@ -80,8 +115,6 @@ export default function CourseCurriculum({
         }
       };
     }
-
-    if (firstChapterRef.current) firstChapterRef.current.open = true;
 
     let reducedMotion = true;
     try {
@@ -120,7 +153,14 @@ export default function CourseCurriculum({
 
       if (entryAnimationPendingRef.current) return;
 
-      if (firstChapterRef.current) firstChapterRef.current.open = true;
+      const firstVisibleChapterIndex = firstVisibleChapterIndexRef.current;
+      if (firstVisibleChapterIndex !== null) {
+        setOpenChapterIndices((current) =>
+          current.has(firstVisibleChapterIndex)
+            ? current
+            : new Set(current).add(firstVisibleChapterIndex),
+        );
+      }
 
       let reducedMotion = true;
       try {
@@ -213,50 +253,102 @@ export default function CourseCurriculum({
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-xl bg-blue px-5 py-3 text-white">
         <h2 className="font-bold">Nội dung chương trình</h2>
         <span className="text-sm font-medium">
-          {curriculum.length} Chương • {totalLessons} Bài giảng
-          {totalDurationLabel ? ` • ${totalDurationLabel}` : ""}
+          {visibleChapters.length} Chương • {visibleLessonCount} Bài giảng
+          {formatFilter === "all" && totalDurationLabel
+            ? ` • ${totalDurationLabel}`
+            : ""}
         </span>
       </div>
 
+      {hasMixedFormats && (
+        <div className="flex flex-wrap items-center gap-3 border-x border-blue/15 bg-white px-5 py-3">
+          <span className="text-sm font-bold text-blue">Hình thức</span>
+          <div
+            role="group"
+            aria-label="Lọc bài giảng theo hình thức"
+            className="flex flex-wrap gap-2"
+          >
+            {[
+              { value: "all" as const, label: "Tất cả", count: totalLessons },
+              {
+                value: "online" as const,
+                label: "Trực tuyến",
+                count: onlineLessonCount,
+              },
+              {
+                value: "offline" as const,
+                label: "Trực tiếp",
+                count: offlineLessonCount,
+              },
+            ].map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                aria-pressed={formatFilter === option.value}
+                onClick={() => setFormatFilter(option.value)}
+                className={`min-h-10 rounded-full border px-4 py-2 text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 ${formatFilter === option.value ? "border-blue bg-blue text-white" : "border-blue/20 bg-white text-blue hover:border-yellow hover:bg-yellow/10"}`}
+              >
+                {option.label} ({option.count})
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="divide-y divide-blue/10 rounded-b-xl border border-blue/15">
-        {curriculum.map((chapter, idx) => (
+        {visibleChapters.map(({ chapter, chapterIndex, lessons }, idx) => (
           <details
-            key={idx}
-            ref={idx === 0 ? firstChapterRef : undefined}
-            open={idx === 0}
+            key={chapterIndex}
+            open={openChapterIndices.has(chapterIndex)}
+            onToggle={(event) => {
+              const isOpen = event.currentTarget.open;
+              setOpenChapterIndices((current) => {
+                if (current.has(chapterIndex) === isOpen) return current;
+                const next = new Set(current);
+                if (isOpen) next.add(chapterIndex);
+                else next.delete(chapterIndex);
+                return next;
+              });
+            }}
             data-route-entry-pending={idx === 0 && entryAnimationPending ? "true" : undefined}
             className={panelStyles.panelTransition}
           >
             <summary
               className={`${styles.summary} cursor-pointer list-none bg-blue/5 pl-5 pr-12 py-3 font-bold text-blue`}
             >
-              Chương {idx + 1}: {chapter.title}
+              Chương {chapterIndex + 1}: {chapter.title}
               <span className="ml-2 whitespace-nowrap text-xs font-medium text-blue/60">
-                {chapter.lessons.length} bài giảng
+                {lessons.length} bài giảng
               </span>
             </summary>
             <div className="divide-y divide-blue/10">
-              {chapter.lessons.map((lesson, lIdx) => (
-                <div
-                  key={lIdx}
-                  className="flex flex-wrap items-center gap-3 px-5 py-3"
-                >
-                  <span className="font-bold text-blue">
-                    Bài giảng {lIdx + 1}: {lesson.title}
-                  </span>
-                  <span className="rounded-full bg-blue px-2 py-0.5 text-xs font-bold text-white">
-                    {lesson.format === "online" ? "Trực tuyến" : "Trực tiếp"}
-                  </span>
-                  {lesson.scheduledAt && (
-                    <span className="text-sm font-medium text-blue/60">
-                      {formatDate(lesson.scheduledAt)}
-                      {lesson.durationHours
-                        ? ` - ${lesson.durationHours} tiếng`
-                        : ""}
+              {chapter.lessons.length === 0 ? (
+                <p className="px-5 py-3 text-sm font-medium text-blue/60">
+                  Chương này chưa có bài giảng.
+                </p>
+              ) : (
+                lessons.map(({ lesson, lessonIndex }) => (
+                  <div
+                    key={lessonIndex}
+                    className="flex flex-wrap items-center gap-3 px-5 py-3"
+                  >
+                    <span className="font-bold text-blue">
+                      Bài giảng {lessonIndex + 1}: {lesson.title}
                     </span>
-                  )}
-                </div>
-              ))}
+                    <span className="rounded-full bg-blue px-2 py-0.5 text-xs font-bold text-white">
+                      {lesson.format === "online" ? "Trực tuyến" : "Trực tiếp"}
+                    </span>
+                    {lesson.scheduledAt && (
+                      <span className="text-sm font-medium text-blue/60">
+                        {formatDate(lesson.scheduledAt)}
+                        {lesson.durationHours
+                          ? ` - ${lesson.durationHours} tiếng`
+                          : ""}
+                      </span>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </details>
         ))}

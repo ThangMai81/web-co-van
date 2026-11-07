@@ -18,13 +18,14 @@ export default function CourseMedia({
       <CourseMediaApertureImage
         src={thumbnail}
         alt={title}
-        sizes="(min-width: 944px) 896px, calc(100vw - 4rem)"
+        sizes="(min-width: 1536px) 46rem, (min-width: 1024px) 52vw, calc(100vw - 3rem)"
       />
       {detail.videoUrl && (
         <a
           href={detail.videoUrl}
           target="_blank"
           rel="noreferrer"
+          aria-label={`Mở video giới thiệu khóa học ${title} trong thẻ mới`}
           className="absolute inset-0 flex items-center justify-center bg-blue/30 transition hover:bg-blue/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
         >
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow text-2xl text-blue shadow">

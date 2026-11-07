@@ -10,6 +10,16 @@ export default function CourseHeader({
   course: Course;
   detail: CourseDetail | null;
 }) {
+  const facts = [
+    course.format.trim() ? { label: "Hình thức", value: course.format } : null,
+    course.schedule?.trim()
+      ? { label: "Lịch học", value: course.schedule }
+      : null,
+    detail?.durationLabel?.trim()
+      ? { label: "Thời lượng", value: detail.durationLabel }
+      : null,
+  ].filter((fact): fact is { label: string; value: string } => fact !== null);
+
   return (
     <div>
       <Breadcrumb
@@ -24,8 +34,34 @@ export default function CourseHeader({
         <p className="mt-1 font-medium italic text-blue/70">{course.slogan}</p>
       )}
 
+      {(facts.length > 0 || course.targetAudience?.trim()) && (
+        <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+          {facts.map((fact) => (
+            <div
+              key={fact.label}
+              className="rounded-xl border border-blue/10 bg-blue/5 px-4 py-3"
+            >
+              <dt className="text-xs font-bold uppercase tracking-wide text-blue/55">
+                {fact.label}
+              </dt>
+              <dd className="mt-1 font-semibold text-blue">{fact.value}</dd>
+            </div>
+          ))}
+          {course.targetAudience?.trim() && (
+            <div className="rounded-xl border border-blue/10 bg-blue/5 px-4 py-3 sm:col-span-2">
+              <dt className="text-xs font-bold uppercase tracking-wide text-blue/55">
+                Đối tượng
+              </dt>
+              <dd className="mt-1 font-medium leading-relaxed text-blue/90">
+                {course.targetAudience}
+              </dd>
+            </div>
+          )}
+        </dl>
+      )}
+
       {detail?.instructor?.name && (
-        <div className="mt-3 flex items-center gap-3">
+        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-blue/10 pt-4">
           {detail.instructor.avatar && (
             <Image
               src={detail.instructor.avatar}

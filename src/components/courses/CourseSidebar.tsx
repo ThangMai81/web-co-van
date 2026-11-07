@@ -12,13 +12,7 @@ export default function CourseSidebar({
   if (!detail) return null;
 
   return (
-    <div className="h-fit rounded-xl border border-blue/15 bg-white p-5 shadow-md shadow-blue/5">
-      {detail.durationLabel && (
-        <div className="mb-4 rounded-lg bg-blue px-4 py-2 text-center text-sm font-bold text-white">
-          {detail.durationLabel}
-        </div>
-      )}
-
+    <div className="mt-5 border-t border-blue/10 pt-5">
       <button
         type="button"
         onClick={() => alert(`Đăng ký khóa học ${courseId} (demo)`)}
