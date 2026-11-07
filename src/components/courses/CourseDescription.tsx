@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { Course, CourseDetail } from "@/types/course";
+import styles from "./CourseDescription.module.css";
 
 export default function CourseDescription({
   course,
@@ -11,8 +12,9 @@ export default function CourseDescription({
   detail: CourseDetail | null;
 }) {
   const bullets = detail?.descriptionBullets ?? [];
+  const extraBullets = bullets.slice(2);
+  const extraBulletsId = useId();
   const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? bullets : bullets.slice(0, 2);
 
   return (
     <section>
@@ -23,16 +25,34 @@ export default function CourseDescription({
 
         {bullets.length > 0 && (
           <ul className="list-disc space-y-2 pl-5 font-medium text-blue/90">
-            {visible.map((line, idx) => (
+            {bullets.slice(0, 2).map((line, idx) => (
               <li key={idx}>{line}</li>
             ))}
           </ul>
         )}
 
-        {bullets.length > 2 && (
+        {extraBullets.length > 0 && (
+          <div
+            id={extraBulletsId}
+            aria-hidden={!expanded}
+            className={`${styles.extraBullets} ${expanded ? styles.expanded : ""}`}
+          >
+            <ul
+              className={`${styles.extraBulletsInner} list-disc space-y-2 pl-5 font-medium text-blue/90`}
+            >
+              {extraBullets.map((line, idx) => (
+                <li key={idx + 2}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {extraBullets.length > 0 && (
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            aria-controls={extraBulletsId}
             className="mt-3 text-sm font-bold text-blue underline decoration-yellow decoration-2 underline-offset-4 hover:text-yellow"
           >
             {expanded ? "Ẩn bớt" : "Xem thêm"}
