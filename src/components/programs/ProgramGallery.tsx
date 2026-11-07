@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import ProgramGalleryImageViewer from "./ProgramGalleryImageViewer";
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -38,10 +39,12 @@ function subscribeToMotionPreference(
 }
 
 export default function ProgramGallery({
+  programTitle,
   images,
   revealAccent = false,
   revealEntries = false,
 }: {
+  programTitle: string;
   images: string[];
   revealAccent?: boolean;
   revealEntries?: boolean;
@@ -51,11 +54,22 @@ export default function ProgramGallery({
   const [imageEntryStates, setImageEntryStates] = useState<
     Record<number, "pending" | "revealing" | "focused" | "visible">
   >({});
+  const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
   const accentRef = useRef<HTMLSpanElement>(null);
-  const imageLinksRef = useRef<Map<number, HTMLAnchorElement>>(new Map());
+  const imageTriggersRef = useRef<Map<number, HTMLButtonElement>>(new Map());
+  const viewerOriginIndexRef = useRef<number | null>(null);
   const imageEntryObserverRef = useRef<IntersectionObserver | null>(null);
   const completedImageIndexesRef = useRef<Set<number>>(new Set());
   const isLocalPreview = process.env.NODE_ENV !== "production";
+  const displayImages = images.map((src, index) => {
+    const fallbackSrc = PREVIEW_FALLBACKS[index];
+    return isLocalPreview && failedSources[`${index}:${src}`] && fallbackSrc
+      ? fallbackSrc
+      : src;
+  });
+  const placeholderImages = displayImages.map(
+    (displaySrc, index) => displaySrc !== images[index],
+  );
   const supportingImages = images.slice(1);
   const supportingColumns =
     supportingImages.length >= 3
@@ -69,6 +83,11 @@ export default function ProgramGallery({
       : supportingImages.length === 2
         ? "lg:grid-cols-1 lg:grid-rows-2"
         : "lg:grid-cols-1";
+
+  const openImageViewer = (index: number) => {
+    viewerOriginIndexRef.current = index;
+    setActiveImageIndex(index);
+  };
 
   useEffect(() => {
     if (!revealAccent) {
@@ -116,7 +135,7 @@ export default function ProgramGallery({
   }, [revealAccent]);
 
   useIsomorphicLayoutEffect(() => {
-    const imageLinks = Array.from(imageLinksRef.current.entries());
+    const imageLinks = Array.from(imageTriggersRef.current.entries());
     if (!revealEntries || imageLinks.length === 0) return;
 
     let observer: IntersectionObserver | null = null;
@@ -266,10 +285,13 @@ export default function ProgramGallery({
     supportingClassName = "",
   ) => {
     const failedSourceKey = `${index}:${src}`;
-    const showingFallback =
-      isLocalPreview && failedSources[failedSourceKey] === true;
     const fallbackSrc = PREVIEW_FALLBACKS[index];
-    const displaySrc = showingFallback && fallbackSrc ? fallbackSrc : src;
+    const displaySrc =
+      isLocalPreview && failedSources[failedSourceKey] && fallbackSrc
+        ? fallbackSrc
+        : src;
+    const showingFallback = displaySrc !== src;
+    const imageLabel = `${programTitle} — ${showingFallback ? "ảnh minh họa" : "ảnh"} ${index + 1}`;
     const imageEntryState = imageEntryStates[index];
     const imageEntryDelay = `${Math.min(index * 50, 150)}ms`;
     const imageEntryStyle =
@@ -299,77 +321,104 @@ export default function ProgramGallery({
               : undefined;
 
     return (
-      <a
+      <figure
         key={failedSourceKey}
-        ref={(link) => {
-          if (link) imageLinksRef.current.set(index, link);
-          else imageLinksRef.current.delete(index);
-        }}
-        data-gallery-image-index={index}
-        href={displaySrc}
-        target="_blank"
-        rel="noreferrer"
-        onFocus={() => {
-          if (!revealEntries) return;
-          completedImageIndexesRef.current.add(index);
-          try {
-            const link = imageLinksRef.current.get(index);
-            if (link) imageEntryObserverRef.current?.unobserve(link);
-          } catch {
-            // Focus remains available if observer cleanup fails.
-          }
-          setImageEntryStates((current) => ({ ...current, [index]: "focused" }));
-        }}
-        onBlur={() => {
-          setImageEntryStates((current) =>
-            current[index] === "focused"
-              ? { ...current, [index]: "visible" }
-              : current,
-          );
-        }}
-        className={`group relative block overflow-hidden rounded-2xl border border-blue/15 bg-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+        className={`group relative overflow-hidden rounded-2xl border border-blue/15 bg-white shadow-sm ${
           featured
             ? "col-span-1 aspect-[16/9] sm:aspect-[16/10] lg:aspect-[4/3]"
             : "aspect-[4/3] lg:aspect-auto"
         } ${supportingClassName}`}
       >
-        <Image
-          src={displaySrc}
-          alt={`Ảnh ${index + 1}`}
-          fill
-          sizes={
-            featured
-              ? "(min-width: 1024px) 38vw, 90vw"
-              : "(min-width: 1024px) 29vw, (min-width: 640px) 30vw, 40vw"
-          }
-          className={`object-cover object-center ${
-            revealEntries
-              ? "motion-safe:transition-[clip-path,transform]"
-              : "motion-safe:transition-transform"
-          } motion-safe:duration-300 motion-safe:ease-out motion-safe:group-hover:scale-[1.025]`}
-          style={imageEntryStyle}
-          onTransitionEnd={(event) => {
-            if (
-              event.propertyName !== "clip-path" ||
-              imageEntryStates[index] !== "revealing"
-            ) {
-              return;
+        <button
+          ref={(button) => {
+            if (button) imageTriggersRef.current.set(index, button);
+            else imageTriggersRef.current.delete(index);
+          }}
+          type="button"
+          data-gallery-image-index={index}
+          aria-label={`${showingFallback ? "Mở ảnh minh họa" : "Phóng to ảnh"} ${index + 1} của chương trình ${programTitle}`}
+          onClick={() => openImageViewer(index)}
+          onFocus={() => {
+            if (!revealEntries) return;
+            completedImageIndexesRef.current.add(index);
+            try {
+              const button = imageTriggersRef.current.get(index);
+              if (button) imageEntryObserverRef.current?.unobserve(button);
+            } catch {
+              // Focus remains available if observer cleanup fails.
             }
+            setImageEntryStates((current) => ({ ...current, [index]: "focused" }));
+          }}
+          onBlur={() => {
             setImageEntryStates((current) =>
-              current[index] === "revealing"
+              current[index] === "focused"
                 ? { ...current, [index]: "visible" }
                 : current,
             );
           }}
-          onError={() => {
-            if (!isLocalPreview || showingFallback || !fallbackSrc) return;
-            setFailedSources((current) => ({
-              ...current,
-              [failedSourceKey]: true,
-            }));
-          }}
-        />
-      </a>
+          className="absolute inset-0 h-full w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue"
+        >
+          <Image
+            src={displaySrc}
+            alt={imageLabel}
+            fill
+            sizes={
+              featured
+                ? "(min-width: 1024px) 38vw, 90vw"
+                : "(min-width: 1024px) 29vw, (min-width: 640px) 30vw, 40vw"
+            }
+            className={`object-cover object-center ${
+              revealEntries
+                ? "motion-safe:transition-[clip-path,transform]"
+                : "motion-safe:transition-transform"
+            } motion-safe:duration-300 motion-safe:ease-out motion-safe:group-hover:scale-[1.025]`}
+            style={imageEntryStyle}
+            onTransitionEnd={(event) => {
+              if (
+                event.propertyName !== "clip-path" ||
+                imageEntryStates[index] !== "revealing"
+              ) {
+                return;
+              }
+              setImageEntryStates((current) =>
+                current[index] === "revealing"
+                  ? { ...current, [index]: "visible" }
+                  : current,
+              );
+            }}
+            onError={() => {
+              if (!isLocalPreview || showingFallback || !fallbackSrc) return;
+              setFailedSources((current) => ({
+                ...current,
+                [failedSourceKey]: true,
+              }));
+            }}
+          />
+        </button>
+        <figcaption
+          className={`absolute inset-x-2 bottom-2 z-10 flex items-center gap-2 ${
+            showingFallback ? "justify-between" : "justify-end"
+          }`}
+        >
+          {showingFallback && (
+            <span
+              aria-hidden="true"
+              className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-blue shadow"
+            >
+              Ảnh minh họa
+            </span>
+          )}
+          <a
+            href={src}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Mở ảnh gốc ${index + 1} của chương trình ${programTitle} trong thẻ mới`}
+            className="inline-flex min-h-9 items-center rounded-full bg-blue/90 px-3 py-1.5 text-xs font-bold text-white shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
+          >
+            Ảnh gốc
+          </a>
+        </figcaption>
+      </figure>
     );
   };
 
@@ -414,6 +463,17 @@ export default function ProgramGallery({
           </div>
         )}
       </div>
+      <ProgramGalleryImageViewer
+        programTitle={programTitle}
+        images={displayImages}
+        originalImages={images}
+        placeholderImages={placeholderImages}
+        activeIndex={activeImageIndex}
+        onClose={() => setActiveImageIndex(null)}
+        onSelect={(index) => setActiveImageIndex(index)}
+        triggerRefs={imageTriggersRef}
+        originIndexRef={viewerOriginIndexRef}
+      />
     </section>
   );
 }

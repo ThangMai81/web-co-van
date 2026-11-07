@@ -7,6 +7,7 @@ import ProgramGallery from "./ProgramGallery";
 import ProgramRegistration from "./ProgramRegistration";
 import type { Program } from "@/types/program";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
+import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 
@@ -32,6 +33,30 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
       : "/images/Sunshine_banner.jpg"
     : program.coverImage;
   const displayProgram = { ...program, coverImage };
+  const videoUrl = program.videoUrl?.trim() || undefined;
+  const description = program.description.trim();
+  const stats = program.stats.filter(
+    (stat) => stat.label.trim() && stat.value.trim(),
+  );
+  const highlights = program.highlights.filter((highlight) => highlight.trim());
+  const galleryImages = program.gallery.filter((image) => image.trim());
+  const hasRegistration = program.registration?.isOpen === true;
+  const sectionItems = [
+    ...(videoUrl ? [{ id: "program-video", label: "Video" }] : []),
+    ...(hasRegistration
+      ? [{ id: "program-registration", label: "Đăng ký" }]
+      : []),
+    ...(description ? [{ id: "program-description", label: "Giới thiệu" }] : []),
+    ...(stats.length > 0
+      ? [{ id: "program-stats", label: "Thông tin" }]
+      : []),
+    ...(highlights.length > 0
+      ? [{ id: "program-highlights", label: "Điểm nổi bật" }]
+      : []),
+    ...(galleryImages.length > 0
+      ? [{ id: "program-gallery", label: "Thư viện ảnh" }]
+      : []),
+  ];
 
   return (
     <div className="min-h-svh bg-white">
@@ -43,31 +68,90 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
           viewerEnabled={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
         />
 
-        <div className="mx-auto max-w-4xl px-6 pb-10">
-          {program.videoUrl && <ProgramVideo url={program.videoUrl} />}
+        <div className="mx-auto max-w-[var(--page-w)] px-6 pb-10">
+          <DetailSectionNav
+            items={sectionItems}
+            label="Điều hướng nội dung chương trình"
+          />
 
-          {program.registration?.isOpen && (
-            <ProgramRegistration registration={program.registration} image={coverImage} title={program.title} />
-          )}
+          <div className="mx-auto max-w-4xl">
+            {videoUrl && (
+              <div id="program-video" className="scroll-mt-28 md:scroll-mt-32">
+                <ProgramVideo url={videoUrl} />
+              </div>
+            )}
 
-          <p className="mt-8 text-center text-lg font-medium leading-relaxed text-blue/90">
-            {program.description}
-          </p>
+            {hasRegistration && program.registration && (
+              <div
+                id="program-registration"
+                className="scroll-mt-28 md:scroll-mt-32"
+              >
+                <ProgramRegistration
+                  registration={program.registration}
+                  image={coverImage}
+                  title={program.title}
+                />
+              </div>
+            )}
 
-          {program.stats.length > 0 && <ProgramStats stats={program.stats} />}
+            {description && (
+              <section
+                id="program-description"
+                aria-labelledby="program-description-heading"
+                className="mt-8 scroll-mt-28 md:scroll-mt-32"
+              >
+                <h2
+                  id="program-description-heading"
+                  className="mb-3 text-xl font-bold text-blue"
+                >
+                  Giới thiệu
+                </h2>
+                <p className="text-lg font-medium leading-relaxed text-blue/90">
+                  {description}
+                </p>
+              </section>
+            )}
 
-          {program.highlights.length > 0 && (
-            <ProgramHighlights highlights={program.highlights} />
-          )}
+            {stats.length > 0 && (
+              <section
+                id="program-stats"
+                aria-labelledby="program-stats-heading"
+                className="mt-8 scroll-mt-28 md:scroll-mt-32"
+              >
+                <h2
+                  id="program-stats-heading"
+                  className="mb-3 text-xl font-bold text-blue"
+                >
+                  Thông tin chương trình
+                </h2>
+                <ProgramStats stats={stats} />
+              </section>
+            )}
 
-          {program.gallery.length > 0 && (
-            <ProgramGallery
-              key={slug}
-              images={program.gallery}
-              revealAccent={slug === "chinh-phuc-fansipan-noc-nha-dong-duong"}
-              revealEntries={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
-            />
-          )}
+            {highlights.length > 0 && (
+              <div
+                id="program-highlights"
+                className="scroll-mt-28 md:scroll-mt-32"
+              >
+                <ProgramHighlights highlights={highlights} />
+              </div>
+            )}
+
+            {galleryImages.length > 0 && (
+              <div
+                id="program-gallery"
+                className="scroll-mt-28 md:scroll-mt-32"
+              >
+                <ProgramGallery
+                  key={slug}
+                  programTitle={program.title}
+                  images={galleryImages}
+                  revealAccent={slug === "chinh-phuc-fansipan-noc-nha-dong-duong"}
+                  revealEntries={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </main>
       <SiteFooter />

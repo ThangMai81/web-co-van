@@ -23,21 +23,7 @@ export default function ProgramHero({ program, viewerEnabled }: { program: Progr
           ]}
         />
 
-        {coverImage && (
-          <div
-            className={`${styles.coverWipeFrame} relative mx-auto aspect-[4/3] w-full overflow-hidden rounded-2xl border border-blue/10 bg-white`}
-          >
-            <ProgramHeroImageViewer
-              src={coverImage}
-              alt={program.title}
-              priority
-              sizes="(max-width: 90rem) calc(100vw - 3rem), 87rem"
-              viewerEnabled={viewerEnabled}
-            />
-          </div>
-        )}
-
-        <div className="mt-6 rounded-2xl bg-blue p-6 text-white shadow-md shadow-blue/10 sm:p-8">
+        <div className="mt-5 rounded-2xl bg-blue p-5 text-white shadow-md shadow-blue/10 sm:p-7">
           <div className="mb-3 flex flex-wrap gap-2">
             <span className="flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-sm font-bold text-blue">
               <CategoryIcon category={program.category} size={14} />
@@ -51,27 +37,72 @@ export default function ProgramHero({ program, viewerEnabled }: { program: Progr
           <div className="lg:grid lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-end lg:gap-8">
             <div>
               <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
-                {program.theme || program.title}
+                {program.title}
               </h1>
               {program.theme && (
                 <p className="mt-2 text-lg font-semibold text-white/90">
-                  {program.title}
+                  {program.theme}
                 </p>
               )}
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm font-bold text-yellow lg:mt-0">
+            <dl className="mt-4 grid gap-3 text-sm font-bold lg:mt-0 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              <div className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
+                <dt className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                  Hình thức
+                </dt>
+                <dd className="mt-1 flex items-center gap-1.5 text-yellow">
+                  {program.format === "online" ? "Trực tuyến" : "Trực tiếp"}
+                </dd>
+              </div>
               {program.location && (
-                <span className="flex items-center gap-1.5">
-                  <MapPin size={15} /> {program.location}
-                </span>
+                <div className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                    Địa điểm
+                  </dt>
+                  <dd className="mt-1 flex items-center gap-1.5 text-yellow">
+                    <MapPin size={15} /> {program.location}
+                  </dd>
+                </div>
               )}
-              <span className="flex items-center gap-1.5">
-                <Calendar size={15} /> {program.schedule}
-              </span>
-            </div>
+              {program.schedule?.trim() && (
+                <div className="rounded-xl border border-white/15 bg-white/5 px-4 py-3 sm:col-span-2 lg:col-span-1 xl:col-span-2">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                    Lịch trình
+                  </dt>
+                  <dd className="mt-1 flex items-center gap-1.5 text-yellow">
+                    <Calendar size={15} /> {program.schedule}
+                  </dd>
+                </div>
+              )}
+            </dl>
           </div>
+
+          {program.registration?.isOpen && (
+            <div className="mt-5 border-t border-white/15 pt-4">
+              <a
+                href="#program-registration"
+                className="inline-flex min-h-11 items-center rounded-full bg-yellow px-6 py-3 font-bold text-blue transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
+              >
+                Đăng ký tham gia
+              </a>
+            </div>
+          )}
         </div>
+
+        {coverImage && (
+          <div
+            className={`${styles.coverWipeFrame} relative mt-5 aspect-[21/9] w-full overflow-hidden rounded-2xl border border-blue/10 bg-white`}
+          >
+            <ProgramHeroImageViewer
+              src={coverImage}
+              alt={program.title}
+              priority
+              sizes="(max-width: 90rem) calc(100vw - 3rem), 87rem"
+              viewerEnabled={viewerEnabled}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
