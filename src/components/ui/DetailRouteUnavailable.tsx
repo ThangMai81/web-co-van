@@ -16,6 +16,7 @@ export default function DetailRouteUnavailable({
         </h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-7 text-blue/75">
           Trang này tạm thời chưa tải được. Bạn có thể thử lại hoặc về trang chủ.
+          Nếu thử lại vẫn chưa tải được, bạn vui lòng chờ một lúc rồi thử lại.
         </p>
         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
