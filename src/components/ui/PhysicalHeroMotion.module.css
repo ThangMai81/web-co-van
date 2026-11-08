@@ -86,6 +86,18 @@
   }
 }
 
+@media (min-width: 1280px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .journeyCurveSequenced {
+    opacity: 1;
+  }
+
+  .journeyPathDrawing,
+  .journeyPathComplete {
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 2px rgb(246 194 65 / 42%));
+  }
+}
+
 .journeyPath {
   fill: none;
   stroke: currentColor;

@@ -179,6 +179,7 @@ export default async function ProgramsPage({
                   title="Sắp diễn ra"
                   dotClassName="bg-yellow"
                   items={upcoming}
+                  journeyBridgeTarget={upcoming.length > 0}
                 />
               )}
               {past.length > 0 && (
@@ -186,11 +187,12 @@ export default async function ProgramsPage({
                   title="Đã diễn ra"
                   dotClassName="bg-blue/30"
                   items={past}
+                  journeyBridgeTarget={upcoming.length === 0}
                 />
               )}
             </div>
           ) : (
-            <ProgramGrid items={programs} />
+            <ProgramGrid items={programs} journeyBridgeTarget />
           )}
         </div>
       </section>
@@ -203,10 +205,12 @@ function ProgramGroup({
   title,
   dotClassName,
   items,
+  journeyBridgeTarget = false,
 }: {
   title: string;
   dotClassName: string;
   items: Program[];
+  journeyBridgeTarget?: boolean;
 }) {
   return (
     <section aria-labelledby={`group-${title}`}>
@@ -219,7 +223,7 @@ function ProgramGroup({
           {items.length}
         </span>
       </div>
-      <ProgramGrid items={items} />
+      <ProgramGrid items={items} journeyBridgeTarget={journeyBridgeTarget} />
     </section>
   );
 }
