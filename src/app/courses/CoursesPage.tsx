@@ -1,29 +1,49 @@
 import CourseGrid from "@/components/courses/CourseGrid";
 import CourseFilterBar from "@/components/courses/CourseFilterBar";
+import CatalogListUnavailable from "@/components/ui/CatalogListUnavailable";
 import HeroSection from "@/components/ui/HeroSection";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import heroMotionStyles from "@/components/ui/HeroSection.module.css";
 import type { CourseListItem } from "@/types/course";
 
+type CatalogListResult<T> =
+  | { kind: "loaded"; items: T[] }
+  | { kind: "unavailable" };
+
 async function getCourses(
   category?: string,
   sort?: string,
   search?: string,
-): Promise<CourseListItem[]> {
+): Promise<CatalogListResult<CourseListItem>> {
   const query = new URLSearchParams();
   if (category) query.set("category", category);
   if (sort) query.set("sort", sort);
   if (search) query.set("search", search);
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/courses?${query.toString()}`,
-    {
-      cache: "no-store",
-    },
-  );
-  const json = await res.json();
-  return json.data ?? [];
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/courses?${query.toString()}`,
+      {
+        cache: "no-store",
+      },
+    );
+    if (!res.ok || res.status !== 200) return { kind: "unavailable" };
+
+    const json: unknown = await res.json();
+    if (
+      typeof json !== "object" ||
+      json === null ||
+      !("data" in json) ||
+      !Array.isArray(json.data)
+    ) {
+      return { kind: "unavailable" };
+    }
+
+    return { kind: "loaded", items: json.data as CourseListItem[] };
+  } catch {
+    return { kind: "unavailable" };
+  }
 }
 
 export default async function CoursesPage({
@@ -35,7 +55,9 @@ export default async function CoursesPage({
   sort?: string;
   search?: string;
 }) {
-  const courses = await getCourses(category, sort, search);
+  const result = await getCourses(category, sort, search);
+  const isLoaded = result.kind === "loaded";
+  const courses = isLoaded ? result.items : [];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -50,10 +72,12 @@ export default async function CoursesPage({
 
   return (
     <main className="min-h-svh bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {isLoaded && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
 
       {/* === VÙNG 1: GIỚI THIỆU === */}
       <HeroSection
@@ -97,19 +121,21 @@ export default async function CoursesPage({
           điều phù hợp với bạn hoặc con bạn ngay bây giờ.
         </p>
 
-        <div
-          className={[
-            heroMotionStyles.coursesCount,
-            "mt-8 flex gap-8 border-t border-white/15 pt-6",
-          ].join(" ")}
-        >
-          <div>
-            <div className="text-2xl font-extrabold text-yellow">
-              {courses.length}
+        {isLoaded && (
+          <div
+            className={[
+              heroMotionStyles.coursesCount,
+              "mt-8 flex gap-8 border-t border-white/15 pt-6",
+            ].join(" ")}
+          >
+            <div>
+              <div className="text-2xl font-extrabold text-yellow">
+                {courses.length}
+              </div>
+              <div className="text-xs font-medium text-white/60">Khóa học</div>
             </div>
-            <div className="text-xs font-medium text-white/60">Khóa học</div>
           </div>
-        </div>
+        )}
       </HeroSection>
 
       {/* === VÙNG 2: BỘ LỌC === */}
@@ -132,7 +158,9 @@ export default async function CoursesPage({
         className="bg-blue/[0.025] py-10 md:py-14"
       >
         <div className="mx-auto max-w-[var(--page-w)] px-6">
-          {courses.length === 0 ? (
+          {!isLoaded ? (
+            <CatalogListUnavailable />
+          ) : courses.length === 0 ? (
             <p className="font-medium text-blue">
               Không tìm thấy khóa học phù hợp.
             </p>

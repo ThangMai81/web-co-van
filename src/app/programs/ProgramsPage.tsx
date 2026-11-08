@@ -6,26 +6,46 @@ import {
 } from "@/components/programs/ProgramJourneySequence";
 import ProgramFilterBar from "@/components/programs/ProgramFilterBar";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import CatalogListUnavailable from "@/components/ui/CatalogListUnavailable";
 import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import motionStyles from "@/components/ui/PhysicalHeroMotion.module.css";
 import type { Program } from "@/types/program";
+
+type CatalogListResult<T> =
+  | { kind: "loaded"; items: T[] }
+  | { kind: "unavailable" };
 
 async function getPrograms(
   category?: string,
   status?: string,
   sort?: string,
-): Promise<Program[]> {
+): Promise<CatalogListResult<Program>> {
   const query = new URLSearchParams();
   if (category) query.set("category", category);
   if (status) query.set("status", status);
   if (sort) query.set("sort", sort);
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/programs?${query.toString()}`,
-    { cache: "no-store" },
-  );
-  const json = await res.json();
-  return json.data ?? [];
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/programs?${query.toString()}`,
+      { cache: "no-store" },
+    );
+    if (!res.ok || res.status !== 200) return { kind: "unavailable" };
+
+    const json: unknown = await res.json();
+    if (
+      typeof json !== "object" ||
+      json === null ||
+      !("data" in json) ||
+      !Array.isArray(json.data)
+    ) {
+      return { kind: "unavailable" };
+    }
+
+    return { kind: "loaded", items: json.data as Program[] };
+  } catch {
+    return { kind: "unavailable" };
+  }
 }
 
 export default async function ProgramsPage({
@@ -37,7 +57,9 @@ export default async function ProgramsPage({
   status?: string;
   sort?: string;
 }) {
-  const programs = await getPrograms(category, status, sort);
+  const result = await getPrograms(category, status, sort);
+  const isLoaded = result.kind === "loaded";
+  const programs = isLoaded ? result.items : [];
 
   const showSplit = !status && !sort;
   const upcoming = programs.filter((p) => p.status === "upcoming");
@@ -56,17 +78,30 @@ export default async function ProgramsPage({
   };
 
   return (
-    <ProgramJourneySequenceProvider hasPrograms={journeyPrograms.length > 0}>
+    <ProgramJourneySequenceProvider
+      hasPrograms={isLoaded && journeyPrograms.length > 0}
+    >
       <main className="min-h-svh bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {isLoaded && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
 
       <header className="relative overflow-hidden bg-blue pb-12 pt-[88px] sm:pb-14">
         <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-yellow/20 blur-3xl" />
-        <ProgramJourneyCurve items={journeyPrograms} />
-        <div className="relative z-10 mx-auto grid max-w-[var(--page-w)] gap-8 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.68fr)] lg:items-end">
+        {isLoaded && <ProgramJourneyCurve items={journeyPrograms} />}
+        <div
+          className={[
+            "relative z-10 mx-auto grid max-w-[var(--page-w)] gap-8 px-6",
+            isLoaded
+              ? "lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.68fr)] lg:items-end"
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           <div className="min-w-0">
             <Breadcrumb
               className={motionStyles.programsBreadcrumb}
@@ -107,10 +142,12 @@ export default async function ProgramsPage({
             </p>
           </div>
 
-          <ProgramJourneyStats
-            total={programs.length}
-            upcoming={upcoming.length}
-          />
+          {isLoaded && (
+            <ProgramJourneyStats
+              total={programs.length}
+              upcoming={upcoming.length}
+            />
+          )}
         </div>
       </header>
 
@@ -129,7 +166,9 @@ export default async function ProgramsPage({
 
       <section aria-label="Danh sách chương trình" className="bg-blue/[0.025] py-10 md:py-14">
         <div className="mx-auto max-w-[var(--page-w)] px-6">
-          {programs.length === 0 ? (
+          {!isLoaded ? (
+            <CatalogListUnavailable />
+          ) : programs.length === 0 ? (
             <p className="font-medium text-blue/50">
               Chưa có chương trình nào phù hợp với bộ lọc.
             </p>

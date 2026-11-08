@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/navigation/SiteHeader";
 import { Hero } from "@/components/home-page/Hero";
+import { CourseProgramChoice } from "@/components/home-page/CourseProgramChoice";
 import { VideoGallery } from "@/components/home-page/VideoGallery";
 import { AboutSection } from "@/components/home-page/AboutSection";
 import { VoicesSection } from "@/components/home-page/VoiceSection";
@@ -13,6 +14,7 @@ export function HomePage() {
     <main className="min-h-screen">
       <SiteHeader />
       <Hero />
+      <CourseProgramChoice />
       <TestimonialsCollage />
       <VideoGallery />
       <AboutSection />

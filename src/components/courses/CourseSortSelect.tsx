@@ -25,6 +25,7 @@ export default function CourseSortSelect({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const current =
     SORT_OPTIONS.find((o) => o.value === (sort || "newest")) ?? SORT_OPTIONS[0];
@@ -48,8 +49,18 @@ export default function CourseSortSelect({
   }
 
   return (
-    <div className="relative" ref={ref}>
+    <div
+      className="relative"
+      ref={ref}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape" || !open) return;
+        event.preventDefault();
+        setOpen(false);
+        triggerRef.current?.focus();
+      }}
+    >
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
