@@ -158,6 +158,7 @@ export default function ProgramGrid({
 
       markProgramJourneyCardCompleted(slug);
     },
+    [],
   );
 
   return (
