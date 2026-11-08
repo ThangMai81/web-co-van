@@ -20,6 +20,85 @@ const MAX_ATTEMPTS = 4;
 const TOTAL_BUDGET_MS = 30_000;
 const PER_ATTEMPT_TIMEOUT_MS = 8_000;
 const ATTEMPT_START_OFFSETS_MS = [0, 1_000, 5_000, 20_000] as const;
+const DETAIL_429_PASSIVE_PATH =
+  "/api/programs/chinh-phuc-fansipan-noc-nha-dong-duong";
+const DETAIL_429_PASSIVE_MAX_DURATION_MS = 4 * 60 * 60 * 1000;
+const DETAIL_429_PASSIVE_MAX_RECORDS = 3;
+const DETAIL_429_PASSIVE_RNDR_ID_PATTERN =
+  /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+let detail429PassiveRecords = 0;
+
+function parseDetail429PassiveUtc(value: string | undefined): number | null {
+  if (!value || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(value)) {
+    return null;
+  }
+
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return null;
+
+  const canonical = new Date(timestamp).toISOString().replace(/\.000Z$/, "Z");
+  return canonical === value ? timestamp : null;
+}
+
+function readDetail429PassiveWindow() {
+  if (process.env.DETAIL_429_PASSIVE_TARGET !== "fansipan") return null;
+
+  const startAt = parseDetail429PassiveUtc(
+    process.env.DETAIL_429_PASSIVE_START_UTC,
+  );
+  const endAt = parseDetail429PassiveUtc(
+    process.env.DETAIL_429_PASSIVE_END_UTC,
+  );
+
+  if (
+    startAt === null ||
+    endAt === null ||
+    endAt <= startAt ||
+    endAt - startAt > DETAIL_429_PASSIVE_MAX_DURATION_MS
+  ) {
+    return null;
+  }
+
+  return { startAt, endAt };
+}
+
+function validatedDetail429PassiveRndrId(value: string | null) {
+  if (value === null) return null;
+
+  const trimmed = value.replace(/^[\t ]+|[\t ]+$/g, "");
+  if (
+    trimmed.length === 0 ||
+    trimmed.length > 128 ||
+    /[\u0000-\u001f\u007f]/.test(trimmed) ||
+    !DETAIL_429_PASSIVE_RNDR_ID_PATTERN.test(trimmed)
+  ) {
+    return "invalid";
+  }
+
+  return trimmed.toLowerCase();
+}
+
+function recordPassiveDetail429(path: string, response: Response, attempt: number) {
+  if (path !== DETAIL_429_PASSIVE_PATH || response.status !== 429) return;
+
+  const window = readDetail429PassiveWindow();
+  if (!window || detail429PassiveRecords >= DETAIL_429_PASSIVE_MAX_RECORDS) {
+    return;
+  }
+
+  const capturedAt = Date.now();
+  if (capturedAt < window.startAt || capturedAt >= window.endAt) return;
+
+  detail429PassiveRecords += 1;
+  console.warn("[detail-429-passive]", {
+    timeUtc: new Date(capturedAt).toISOString(),
+    path: DETAIL_429_PASSIVE_PATH,
+    method: "GET",
+    attempt,
+    status: 429,
+    rndrId: validatedDetail429PassiveRndrId(response.headers.get("Rndr-Id")),
+  });
+}
 
 class DetailRouteFetchError extends Error {
   constructor(readonly failure: Failure) {
@@ -114,6 +193,8 @@ export async function fetchDetailRouteData<T>(
         cache: "no-store",
         signal: controller.signal,
       });
+
+      recordPassiveDetail429(path, response, attempt);
 
       if (timedOut || Date.now() >= deadlineAt) {
         retryableFailure = { kind: "timeout" };
