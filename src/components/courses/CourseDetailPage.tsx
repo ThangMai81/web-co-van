@@ -7,26 +7,150 @@ import CourseCurriculum from "./CourseCurriculum";
 import CourseReviews from "./CourseReviews";
 import RelatedCourses from "./RelatedCourses";
 import type { CourseDetailResponse } from "@/types/course";
+import { fetchDetailRouteData } from "@/lib/detailRouteFetch";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
 import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function isOptionalString(value: unknown): boolean {
+  return value === undefined || typeof value === "string";
+}
+
+function isOptionalNumber(value: unknown): boolean {
+  return value === undefined || isFiniteNumber(value);
+}
+
+function hasOptionalStringFields(
+  value: unknown,
+  fields: string[],
+): boolean {
+  return (
+    value === undefined ||
+    value === null ||
+    (isRecord(value) && fields.every((field) => isOptionalString(value[field])))
+  );
+}
+
+function isLesson(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value.title === "string" &&
+    (value.format === "online" || value.format === "offline") &&
+    isOptionalString(value.scheduledAt) &&
+    isOptionalNumber(value.durationHours)
+  );
+}
+
+function isChapter(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value.title === "string" &&
+    Array.isArray(value.lessons) &&
+    value.lessons.every(isLesson)
+  );
+}
+
+function isReview(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value._id === "string" &&
+    isRecord(value.user) &&
+    typeof value.user.name === "string" &&
+    isOptionalString(value.user.avatarUrl) &&
+    isFiniteNumber(value.rating) &&
+    typeof value.createdAt === "string" &&
+    isOptionalString(value.comment)
+  );
+}
+
+function isRatingBreakdownItem(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    isFiniteNumber(value.star) &&
+    isFiniteNumber(value.count)
+  );
+}
+
+function isRelatedCourse(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value._id === "string" &&
+    typeof value.title === "string" &&
+    typeof value.slug === "string" &&
+    typeof value.format === "string" &&
+    isOptionalString(value.thumbnail) &&
+    isFiniteNumber(value.price) &&
+    isFiniteNumber(value.ratingAverage) &&
+    isFiniteNumber(value.ratingCount) &&
+    hasOptionalStringFields(value.instructor, ["name"])
+  );
+}
+
+function isCourseDetailResponseData(
+  value: unknown,
+): value is CourseDetailResponse {
+  if (!isRecord(value) || !isRecord(value.course)) return false;
+
+  const course = value.course;
+  const detail = value.detail;
+  const validDetail =
+    detail === null ||
+    (isRecord(detail) &&
+      isFiniteNumber(detail.price) &&
+      isFiniteNumber(detail.ratingAverage) &&
+      isFiniteNumber(detail.ratingCount) &&
+      isOptionalNumber(detail.originalPrice) &&
+      isOptionalString(detail.thumbnail) &&
+      isOptionalString(detail.videoUrl) &&
+      isOptionalString(detail.durationLabel) &&
+      isOptionalString(detail.totalDurationLabel) &&
+      hasOptionalStringFields(detail.instructor, ["name", "title", "avatar"]) &&
+      isStringArray(detail.descriptionBullets) &&
+      isStringArray(detail.benefits) &&
+      Array.isArray(detail.curriculum) &&
+      detail.curriculum.every(isChapter));
+
+  return (
+    typeof course._id === "string" &&
+    typeof course.title === "string" &&
+    typeof course.slug === "string" &&
+    typeof course.format === "string" &&
+    isStringArray(course.highlights) &&
+    isOptionalString(course.description) &&
+    isOptionalString(course.schedule) &&
+    isOptionalString(course.targetAudience) &&
+    isOptionalString(course.slogan) &&
+    hasOptionalStringFields(course.contact, ["name", "phone", "fanpage"]) &&
+    validDetail &&
+    Array.isArray(value.reviews) &&
+    value.reviews.every(isReview) &&
+    Array.isArray(value.ratingBreakdown) &&
+    value.ratingBreakdown.every(isRatingBreakdownItem) &&
+    Array.isArray(value.relatedCourses) &&
+    value.relatedCourses.every(isRelatedCourse)
+  );
+}
+
 async function getCourseDetail(
   slug: string,
 ): Promise<CourseDetailResponse | null> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${slug}`,
-    {
-      cache: "no-store",
-    },
+  return fetchDetailRouteData(
+    (process.env.NEXT_PUBLIC_API_URL ?? "") + "/api/courses/" + slug,
+    isCourseDetailResponseData,
   );
-
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error("Không thể tải khóa học");
-
-  const json = await res.json();
-  return json.data as CourseDetailResponse;
 }
 
 export default async function CourseDetailPage({ slug }: { slug: string }) {

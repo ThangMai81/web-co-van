@@ -6,22 +6,63 @@ import ProgramHighlights from "./ProgramHighlights";
 import ProgramGallery from "./ProgramGallery";
 import ProgramRegistration from "./ProgramRegistration";
 import type { Program } from "@/types/program";
+import { fetchDetailRouteData } from "@/lib/detailRouteFetch";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
 import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 
-async function getProgram(slug: string): Promise<Program | null> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/programs/${slug}`,
-    {
-      cache: "no-store",
-    },
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function isProgramDetailData(value: unknown): value is Program {
+  if (!isRecord(value)) return false;
+
+  const validStats =
+    Array.isArray(value.stats) &&
+    value.stats.every(
+      (stat) =>
+        isRecord(stat) &&
+        typeof stat.label === "string" &&
+        typeof stat.value === "string",
+    );
+  const registration = value.registration;
+  const validRegistration =
+    registration === undefined ||
+    (isRecord(registration) && typeof registration.isOpen === "boolean");
+
+  return (
+    typeof value._id === "string" &&
+    typeof value.title === "string" &&
+    typeof value.slug === "string" &&
+    (value.category === "trai-he" ||
+      value.category === "leo-nui" ||
+      value.category === "workshop" ||
+      value.category === "off-chua-lanh") &&
+    (value.status === "upcoming" || value.status === "past") &&
+    (value.format === "online" || value.format === "offline") &&
+    typeof value.schedule === "string" &&
+    typeof value.description === "string" &&
+    typeof value.featured === "boolean" &&
+    isStringArray(value.highlights) &&
+    isStringArray(value.gallery) &&
+    validStats &&
+    validRegistration &&
+    (value.coverImage === undefined || typeof value.coverImage === "string") &&
+    (value.videoUrl === undefined || typeof value.videoUrl === "string")
   );
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error("Không thể tải chương trình");
-  const json = await res.json();
-  return json.data as Program;
+}
+
+async function getProgram(slug: string): Promise<Program | null> {
+  return fetchDetailRouteData(
+    (process.env.NEXT_PUBLIC_API_URL ?? "") + "/api/programs/" + slug,
+    isProgramDetailData,
+  );
 }
 
 export default async function ProgramDetailPage({ slug }: { slug: string }) {
