@@ -131,6 +131,7 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
                   registration={program.registration}
                   image={coverImage}
                   title={program.title}
+                  hideRepeatedImage={slug === "workshop-khai-phong-noi-tam"}
                 />
               </div>
             )}

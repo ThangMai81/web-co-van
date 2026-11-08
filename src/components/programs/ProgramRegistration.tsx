@@ -7,10 +7,12 @@ export default function ProgramRegistration({
   registration,
   image,
   title,
+  hideRepeatedImage = false,
 }: {
   registration: Registration;
   image: string;
   title: string;
+  hideRepeatedImage?: boolean;
 }) {
   const seatsLeft =
     registration.seatsTotal != null
@@ -19,15 +21,17 @@ export default function ProgramRegistration({
 
   return (
     <div className="mt-8 overflow-hidden rounded-2xl border-2 border-yellow bg-blue text-white shadow-xl shadow-blue/15">
-      <div className="relative aspect-[3/1] w-full bg-blue/5">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          sizes="(min-width: 896px) 848px, calc(100vw - 3rem)"
-          className="object-contain object-center"
-        />
-      </div>
+      {!hideRepeatedImage && (
+        <div className="relative aspect-[3/1] w-full bg-blue/5">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            sizes="(min-width: 896px) 848px, calc(100vw - 3rem)"
+            className="object-contain object-center"
+          />
+        </div>
+      )}
       <div className="p-6 sm:p-8">
         <h2 className="mb-3 text-2xl font-bold">Đăng ký tham gia</h2>
 
