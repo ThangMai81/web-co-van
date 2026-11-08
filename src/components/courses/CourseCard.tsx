@@ -26,7 +26,7 @@ import {
 type CourseCardRevealPhase = "static" | "opening" | "settled";
 
 const IMAGE_READINESS_TIMEOUT_MS = 700;
-const PANEL_SEQUENCE_WATCHDOG_MS = 1_500;
+const PAGE_OPENING_WATCHDOG_MS = 1_500;
 const completedCourseCardReveals = new Set<string>();
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -88,10 +88,11 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
 
     try {
       if (
-        !window.CSS.supports("transform", "translateY(-105%)") ||
+        !window.CSS.supports("transform", "rotateY(-58deg)") ||
+        !window.CSS.supports("perspective", "1000px") ||
         !window.CSS.supports(
           "animation",
-          "course-card-panel-retract 440ms ease-out",
+          "course-card-page-opening 760ms ease-out",
         )
       ) {
         return;
@@ -119,13 +120,14 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
       finePointerQuery.matches &&
       !reducedMotionQuery.matches;
 
-    if (!isEligible()) return;
-
     let disposed = false;
     let observer: IntersectionObserver | null = null;
+    let observationStarted = false;
+    let sequenceAttempted = false;
     let imageReadinessTimeout: number | null = null;
     let removeImageReadinessListeners: (() => void) | null = null;
     let isDecoding = false;
+    let startObservation: () => void = () => undefined;
     const mediaQueryCleanups: Array<() => void> = [];
 
     const clearImageReadinessWait = () => {
@@ -176,24 +178,7 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
       updateRevealPhase("static");
     };
 
-    const handleEligibilityChange = () => {
-      if (!isEligible()) failOpen();
-    };
-
-    for (const query of [
-      desktopQuery,
-      finePointerQuery,
-      reducedMotionQuery,
-    ]) {
-      const cleanup = subscribeToMediaQuery(query, handleEligibilityChange);
-      if (!cleanup) {
-        clearMediaQueryListeners();
-        return;
-      }
-      mediaQueryCleanups.push(cleanup);
-    }
-
-    const startPanelSequence = () => {
+    const startPageOpening = () => {
       if (
         disposed ||
         revealCancelledRef.current ||
@@ -208,7 +193,7 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
       try {
         sequenceWatchdogRef.current = window.setTimeout(() => {
           if (revealPhaseRef.current === "opening") failOpen();
-        }, PANEL_SEQUENCE_WATCHDOG_MS);
+        }, PAGE_OPENING_WATCHDOG_MS);
       } catch {
         failOpen();
       }
@@ -259,7 +244,7 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
       }
 
       if (typeof image.decode !== "function") {
-        startPanelSequence();
+        startPageOpening();
         return;
       }
 
@@ -287,39 +272,92 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
         () => {
           if (disposed || revealCancelledRef.current) return;
           clearImageReadinessWait();
-          startPanelSequence();
+          startPageOpening();
         },
         () => failOpen(),
       );
     };
 
-    try {
-      observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries.find((candidate) => candidate.target === frame);
-          if (
-            !entry ||
-            !entry.isIntersecting ||
-            entry.intersectionRatio < 0.15
-          ) {
-            return;
-          }
+    startObservation = () => {
+      if (
+        disposed ||
+        !isEligible() ||
+        observationStarted ||
+        sequenceAttempted ||
+        revealCancelledRef.current ||
+        revealStartedRef.current
+      ) {
+        return;
+      }
 
-          try {
-            observer?.disconnect();
-          } catch {
-            failOpen();
-            return;
-          }
-          prepareImage();
-        },
-        { threshold: [0, 0.15] },
-      );
-      observer.observe(frame);
-    } catch {
-      failOpen();
-      return;
+      observationStarted = true;
+      try {
+        observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries.find(
+              (candidate) => candidate.target === frame,
+            );
+            if (
+              !entry ||
+              !entry.isIntersecting ||
+              entry.intersectionRatio < 0.15
+            ) {
+              return;
+            }
+
+            sequenceAttempted = true;
+            try {
+              observer?.disconnect();
+              observer = null;
+            } catch {
+              failOpen();
+              return;
+            }
+            prepareImage();
+          },
+          { threshold: [0, 0.15] },
+        );
+        observer.observe(frame);
+      } catch {
+        failOpen();
+      }
+    };
+
+    const handleEligibilityChange = () => {
+      if (isEligible()) {
+        startObservation();
+        return;
+      }
+
+      if (sequenceAttempted || revealStartedRef.current) {
+        failOpen();
+        return;
+      }
+
+      try {
+        observer?.disconnect();
+      } catch {
+        failOpen();
+        return;
+      }
+      observer = null;
+      observationStarted = false;
+    };
+
+    for (const query of [
+      desktopQuery,
+      finePointerQuery,
+      reducedMotionQuery,
+    ]) {
+      const cleanup = subscribeToMediaQuery(query, handleEligibilityChange);
+      if (!cleanup) {
+        clearMediaQueryListeners();
+        return;
+      }
+      mediaQueryCleanups.push(cleanup);
     }
+
+    if (isEligible()) startObservation();
 
     return () => {
       disposed = true;
@@ -354,10 +392,9 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
     updateRevealPhase("static");
   };
 
-  const finishPanelSequence = (event: AnimationEvent<HTMLSpanElement>) => {
+  const finishPageOpening = (event: AnimationEvent<HTMLAnchorElement>) => {
     if (
       event.target !== event.currentTarget ||
-      event.currentTarget.dataset.panelIndex !== "2" ||
       revealCancelledRef.current ||
       revealPhaseRef.current !== "opening"
     ) {
@@ -368,7 +405,7 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
       try {
         window.clearTimeout(sequenceWatchdogRef.current);
       } catch {
-        // Text reveal continues even if the watchdog cannot be cleared.
+        // The card still settles if the watchdog cannot be cleared.
       }
       sequenceWatchdogRef.current = null;
     }
@@ -384,82 +421,84 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
         : "";
 
   return (
-    <Link
-      href={`/courses/${course.slug}`}
-      onFocusCapture={cancelRevealForFocus}
-      className={`flex h-full scroll-mt-[22rem] flex-col overflow-hidden rounded-2xl border border-blue/10 bg-white shadow-sm shadow-blue/5 transition-[border-color,box-shadow] duration-200 hover:border-blue/25 hover:shadow-md hover:shadow-blue/10 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white md:scroll-mt-[16rem] lg:scroll-mt-[11rem] ${styles.cardLink} ${cardMotionClass}`}
-    >
-      {thumbnail && (
-        <div
-          ref={thumbnailFrameRef}
-          className={`relative aspect-[var(--thumbnail-aspect-ratio)] w-full shrink-0 overflow-hidden bg-blue/[0.035] ${styles.thumbnailFrame}`}
-          style={
-            {
-              "--thumbnail-aspect-ratio": thumbnailAspectRatio,
-            } as CSSProperties
-          }
-        >
-          <Image
-            ref={thumbnailImageRef}
-            src={thumbnail}
-            alt={course.title}
-            fill
-            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 84vw"
-            className="object-contain object-center"
-          />
-          <div className={styles.panelLayer} aria-hidden="true">
-            <span className={`${styles.panel} ${styles.panelFirst}`} />
-            <span className={`${styles.panel} ${styles.panelSecond}`} />
-            <span
-              className={`${styles.panel} ${styles.panelThird}`}
-              data-panel-index="2"
-              onAnimationEnd={finishPanelSequence}
+    <div className={`${styles.cardStage} ${cardMotionClass}`}>
+      <span
+        className={`${styles.pageBackplate} ${styles.pageBackplateFirst}`}
+        aria-hidden="true"
+      />
+      <span
+        className={`${styles.pageBackplate} ${styles.pageBackplateSecond}`}
+        aria-hidden="true"
+      />
+      <Link
+        href={`/courses/${course.slug}`}
+        onFocusCapture={cancelRevealForFocus}
+        onAnimationEnd={finishPageOpening}
+        className={`relative z-10 flex h-full w-full scroll-mt-[22rem] flex-col overflow-hidden rounded-2xl border border-blue/10 bg-white shadow-sm shadow-blue/5 transition-[border-color,box-shadow] duration-200 hover:border-blue/25 hover:shadow-md hover:shadow-blue/10 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white md:scroll-mt-[16rem] lg:scroll-mt-[11rem] ${styles.cardLink}`}
+      >
+        {thumbnail && (
+          <div
+            ref={thumbnailFrameRef}
+            className={`relative aspect-[var(--thumbnail-aspect-ratio)] w-full shrink-0 overflow-hidden bg-blue/[0.035] ${styles.thumbnailFrame}`}
+            style={
+              {
+                "--thumbnail-aspect-ratio": thumbnailAspectRatio,
+              } as CSSProperties
+            }
+          >
+            <Image
+              ref={thumbnailImageRef}
+              src={thumbnail}
+              alt={course.title}
+              fill
+              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 84vw"
+              className="object-contain object-center"
             />
           </div>
-        </div>
-      )}
-
-      <div className={`flex flex-1 flex-col gap-2.5 p-5 md:p-6 ${styles.cardCopy}`}>
-        <h3 className="min-h-[3.5rem] text-lg font-bold leading-snug text-blue">
-          {course.title}
-        </h3>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {course.category && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue px-3 py-1 text-xs font-bold text-white">
-              <CourseCategoryIcon category={course.category} size={13} />
-              {COURSE_CATEGORY_LABELS[course.category] || course.category}
-            </span>
-          )}
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">
-            {course.format}
-          </span>
-        </div>
-
-        {course.instructor?.name && (
-          <p className="line-clamp-1 text-sm font-medium text-blue/75">
-            <span className="text-blue/50">Giảng viên · </span>{course.instructor.name}
-          </p>
         )}
 
-        {course.ratingCount > 0 && (
-          <div className="flex items-center gap-1.5">
-            <StarRating value={course.ratingAverage} size={14} />
-            <span className="text-xs font-bold text-blue/60">
-              ({course.ratingCount})
+        <div className={`flex flex-1 flex-col gap-2.5 p-5 md:p-6 ${styles.cardCopy}`}>
+          <h3 className="min-h-[3.5rem] text-lg font-bold leading-snug text-blue">
+            {course.title}
+          </h3>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {course.category && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue px-3 py-1 text-xs font-bold text-white">
+                <CourseCategoryIcon category={course.category} size={13} />
+                {COURSE_CATEGORY_LABELS[course.category] || course.category}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-xs font-bold text-blue">
+              {course.format}
             </span>
           </div>
-        )}
 
-        <p className="flex min-w-0 items-start gap-2 border-t border-blue/10 pt-3 text-sm font-semibold leading-5 text-blue">
-          <Calendar size={15} className="mt-0.5 shrink-0 text-blue/60" />
-          <span className="min-w-0 break-words"><span className="font-medium text-blue/55">Lịch học · </span>{course.schedule}</span>
-        </p>
+          {course.instructor?.name && (
+            <p className="line-clamp-1 text-sm font-medium text-blue/75">
+              <span className="text-blue/50">Giảng viên · </span>{course.instructor.name}
+            </p>
+          )}
 
-        <div className="mt-auto pt-0">
-          <ViewDetailLabel />
+          {course.ratingCount > 0 && (
+            <div className="flex items-center gap-1.5">
+              <StarRating value={course.ratingAverage} size={14} />
+              <span className="text-xs font-bold text-blue/60">
+                ({course.ratingCount})
+              </span>
+            </div>
+          )}
+
+          <p className="flex min-w-0 items-start gap-2 border-t border-blue/10 pt-3 text-sm font-semibold leading-5 text-blue">
+            <Calendar size={15} className="mt-0.5 shrink-0 text-blue/60" />
+            <span className="min-w-0 break-words"><span className="font-medium text-blue/55">Lịch học · </span>{course.schedule}</span>
+          </p>
+
+          <div className="mt-auto pt-0">
+            <ViewDetailLabel />
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

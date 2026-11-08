@@ -1,96 +1,73 @@
-.cardLink {
+.cardStage {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
   isolation: isolate;
+  perspective: 1100px;
+}
+
+.cardLink {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  isolation: isolate;
+  transform-origin: left center;
+  backface-visibility: hidden;
 }
 
 .thumbnailFrame {
   isolation: isolate;
 }
 
-.panelLayer {
+.pageBackplate {
   position: absolute;
-  z-index: 2;
+  z-index: 0;
   inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.panel {
-  position: absolute;
-  top: -1px;
-  bottom: -1px;
-  display: none;
-  width: calc(33.3334% + 1px);
-  border-right: 1px solid rgb(222 181 80 / 72%);
-  background: linear-gradient(
-    145deg,
-    rgb(250 251 253 / 98%) 0%,
-    rgb(235 241 249 / 96%) 58%,
-    rgb(224 233 245 / 98%) 100%
-  );
+  border: 1px solid rgb(222 181 80 / 78%);
+  border-radius: 1rem;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 90%),
-    0 3px 12px rgb(13 38 78 / 12%);
-  backface-visibility: hidden;
+    0 10px 24px rgb(13 38 78 / 14%),
+    inset 0 1px 0 rgb(255 255 255 / 90%);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: left center;
 }
 
-.panel::after {
-  position: absolute;
-  inset: 0;
-  border-left: 1px solid rgb(255 255 255 / 50%);
-  background: linear-gradient(
-    115deg,
-    rgb(255 255 255 / 40%),
-    transparent 52%,
-    rgb(226 181 80 / 12%)
-  );
-  content: "";
-}
-
-.panelFirst {
-  left: 0;
-  --panel-exit-y: -104%;
-  --panel-exit-angle: -1deg;
-}
-
-.panelSecond {
-  left: 33.3333%;
-  --panel-exit-y: 104%;
-  --panel-exit-angle: 1deg;
+.pageBackplateFirst {
   background: linear-gradient(
     145deg,
-    rgb(246 249 253 / 98%) 0%,
-    rgb(230 238 248 / 96%) 58%,
-    rgb(219 230 244 / 98%) 100%
+    rgb(248 250 253 / 98%) 0%,
+    rgb(229 237 248 / 98%) 68%,
+    rgb(218 230 246 / 98%) 100%
   );
 }
 
-.panelThird {
-  right: 0;
-  left: 66.6666%;
-  width: auto;
-  border-right: 0;
-  --panel-exit-y: -104%;
-  --panel-exit-angle: -0.8deg;
+.pageBackplateSecond {
+  border-color: rgb(246 194 65 / 88%);
+  background: linear-gradient(
+    145deg,
+    rgb(255 255 255 / 99%) 0%,
+    rgb(239 244 251 / 98%) 70%,
+    rgb(225 235 247 / 98%) 100%
+  );
 }
 
-.opening .panel {
-  display: block;
-  animation-name: course-card-panel-retract;
-  animation-duration: 440ms;
-  animation-timing-function: cubic-bezier(0.22, 0.7, 0.2, 1);
-  animation-fill-mode: forwards;
+.opening .cardLink {
+  animation: course-card-page-opening 760ms
+    cubic-bezier(0.2, 0.82, 0.22, 1) both;
 }
 
-.opening .panelFirst {
-  animation-delay: 0ms;
+.opening .pageBackplateFirst {
+  animation: course-card-backplate-first 760ms
+    cubic-bezier(0.2, 0.82, 0.22, 1) both;
 }
 
-.opening .panelSecond {
-  animation-delay: 160ms;
-}
-
-.opening .panelThird {
-  animation-delay: 320ms;
+.opening .pageBackplateSecond {
+  animation: course-card-backplate-second 760ms
+    cubic-bezier(0.2, 0.82, 0.22, 1) both;
 }
 
 .opening .cardCopy {
@@ -99,29 +76,82 @@
 
 .settled .cardCopy {
   opacity: 1;
-  transition: opacity 360ms ease-out;
+  transition: opacity 260ms ease-out;
 }
 
-.cardLink:focus-within .panelLayer {
+.cardStage:focus-within .pageBackplate {
   display: none !important;
 }
 
-.cardLink:focus-within .cardCopy {
+.cardStage:focus-within .cardLink {
+  animation: none !important;
+  transform: none !important;
+}
+
+.cardStage:focus-within .cardCopy {
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
 }
 
-@keyframes course-card-panel-retract {
-  to {
-    transform: translate3d(0, var(--panel-exit-y), 0)
-      rotate(var(--panel-exit-angle));
+@keyframes course-card-page-opening {
+  0% {
+    transform: rotateY(-58deg);
+  }
+
+  66% {
+    transform: rotateY(5deg);
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes course-card-backplate-first {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+
+  24% {
+    opacity: 0.98;
+    transform: translate3d(10px, 4px, 0);
+  }
+
+  70% {
+    opacity: 0.92;
+    transform: translate3d(7px, 3px, 0);
+  }
+}
+
+@keyframes course-card-backplate-second {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+
+  18% {
+    opacity: 0.96;
+    transform: translate3d(6px, 2px, 0);
+  }
+
+  66% {
+    opacity: 0.9;
+    transform: translate3d(4px, 1px, 0);
   }
 }
 
 @media (max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .panelLayer {
+  .pageBackplate {
     display: none !important;
+  }
+
+  .opening .cardLink {
+    animation: none !important;
+    transform: none !important;
   }
 
   .opening .cardCopy,
@@ -132,9 +162,18 @@
   }
 }
 
-@supports not (animation: course-card-panel-retract 440ms ease-out) {
-  .panelLayer {
+@supports not (
+  (transform: rotateY(-58deg)) and
+  (perspective: 1000px) and
+  (animation: course-card-page-opening 760ms ease-out)
+) {
+  .pageBackplate {
     display: none !important;
+  }
+
+  .opening .cardLink {
+    animation: none !important;
+    transform: none !important;
   }
 
   .opening .cardCopy,
