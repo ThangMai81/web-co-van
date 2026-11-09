@@ -82,11 +82,12 @@ function CourseMediaApertureEntry({
   const [phase, setPhase] = useState<RevealPhase>(active ? "waiting" : "visible");
 
   useIsomorphicLayoutEffect(() => {
-    const image = imageRef.current;
-    if (!active || phase === "visible" || !image) {
+    const imageCandidate = imageRef.current;
+    if (!active || phase === "visible" || !imageCandidate) {
       if (!active) setPhase("visible");
       return;
     }
+    const image: HTMLImageElement = imageCandidate;
 
     if (typeof window.matchMedia !== "function") {
       setPhase("visible");
