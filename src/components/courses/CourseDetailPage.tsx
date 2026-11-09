@@ -165,6 +165,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
       detail?.benefits.some((item) => item.trim()),
   );
   const hasCurriculum = Boolean(detail && detail.curriculum.length > 0);
+  const hasLearningContent = hasOverview || hasCurriculum;
   const sectionItems = [
     ...(hasOverview ? [{ id: "course-overview", label: "Mô tả" }] : []),
     ...(hasCurriculum
@@ -180,61 +181,103 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
     <div className="min-h-svh bg-white">
       <DetailRouteScrollReset />
       <SiteHeader />
-      <div className="route-detail-enter mx-auto max-w-[var(--page-w)] px-6 pb-10 pt-[88px] md:pt-[128px] lg:pt-[88px]">
-        <div
-          className={`grid gap-6 ${detail?.thumbnail ? "items-center lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10" : ""}`}
-        >
-          <div
-            className={`order-1 rounded-2xl border border-blue/10 bg-white p-5 shadow-sm shadow-blue/5 sm:p-6 ${detail?.thumbnail ? "lg:order-2" : "max-w-3xl"}`}
-          >
-            <CourseHeader course={course} detail={detail} />
-            {detail && (
-              <CourseSidebar courseId={course._id} detail={detail} />
-            )}
+      <main className="route-detail-enter">
+        <section className="bg-[#fff8e8]">
+          <div className="mx-auto max-w-[var(--page-w)] px-6 pb-10 pt-[88px] md:pb-12 md:pt-[128px] lg:pt-[88px]">
+            <div
+              className={`grid gap-6 ${detail?.thumbnail ? "items-center lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10" : ""}`}
+            >
+              <div
+                className={`order-1 rounded-2xl border border-blue/10 bg-white p-5 shadow-sm shadow-blue/5 sm:p-6 ${detail?.thumbnail ? "lg:order-2" : "max-w-3xl"}`}
+              >
+                <CourseHeader course={course} detail={detail} />
+                {detail && (
+                  <CourseSidebar courseId={course._id} detail={detail} />
+                )}
+              </div>
+              {detail?.thumbnail && (
+                <div className="order-2 lg:order-1">
+                  <CourseMedia detail={detail} title={course.title} slug={slug} />
+                </div>
+              )}
+            </div>
           </div>
-          {detail?.thumbnail && (
-            <div className="order-2 lg:order-1">
-              <CourseMedia detail={detail} title={course.title} />
-            </div>
-          )}
-        </div>
+        </section>
 
-        <DetailSectionNav
-          items={sectionItems}
-          label="Điều hướng nội dung khóa học"
-        />
-
-        <div className="mt-8 space-y-8">
-          {hasOverview && (
-            <div id="course-overview" className="scroll-mt-28 md:scroll-mt-32">
-              <CourseDescription course={course} detail={detail} />
-            </div>
-          )}
-          {hasCurriculum && detail && (
-            <div id="course-curriculum" className="scroll-mt-28 md:scroll-mt-32">
-              <CourseCurriculum
-                curriculum={detail.curriculum}
-                totalDurationLabel={detail.totalDurationLabel}
+        {hasLearningContent && (
+          <section className="bg-[#edf5fb]">
+            <div className="mx-auto max-w-[var(--page-w)] px-6 pb-12">
+              <DetailSectionNav
+                items={sectionItems}
+                label="Điều hướng nội dung khóa học"
               />
-            </div>
-          )}
-          <div id="course-reviews" className="scroll-mt-28 md:scroll-mt-32">
-            <CourseReviews
-              courseId={course._id}
-              ratingAverage={detail?.ratingAverage ?? 0}
-              ratingCount={detail?.ratingCount ?? 0}
-              breakdown={ratingBreakdown}
-              reviews={reviews}
-            />
-          </div>
-        </div>
 
-        {relatedCourses.length > 0 && (
-          <div id="related-courses" className="scroll-mt-28 md:scroll-mt-32">
-            <RelatedCourses courses={relatedCourses} />
-          </div>
+              <div className="mx-auto mt-8 max-w-4xl space-y-8">
+                {hasOverview && (
+                  <div
+                    id="course-overview"
+                    className="scroll-mt-28 md:scroll-mt-32"
+                  >
+                    <CourseDescription course={course} detail={detail} />
+                  </div>
+                )}
+                {hasCurriculum && detail && (
+                  <div
+                    id="course-curriculum"
+                    className="scroll-mt-28 md:scroll-mt-32"
+                  >
+                    <CourseCurriculum
+                      curriculum={detail.curriculum}
+                      totalDurationLabel={detail.totalDurationLabel}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
         )}
-      </div>
+
+        <section className="bg-blue">
+          <div className="mx-auto max-w-[var(--page-w)] px-6 py-10 md:py-12">
+            {!hasLearningContent && (
+              <div className="rounded-xl bg-white px-4">
+                <DetailSectionNav
+                  items={sectionItems}
+                  label="Điều hướng nội dung khóa học"
+                />
+              </div>
+            )}
+
+            <div
+              className={`mx-auto max-w-4xl space-y-8 ${
+                hasLearningContent ? "" : "mt-8"
+              }`}
+            >
+              <div
+                id="course-reviews"
+                className="scroll-mt-28 md:scroll-mt-32 rounded-xl bg-white p-5 sm:p-6"
+              >
+                <CourseReviews
+                  courseId={course._id}
+                  ratingAverage={detail?.ratingAverage ?? 0}
+                  ratingCount={detail?.ratingCount ?? 0}
+                  breakdown={ratingBreakdown}
+                  reviews={reviews}
+                />
+              </div>
+
+              {relatedCourses.length > 0 && (
+                <div
+                  id="related-courses"
+                  className="scroll-mt-28 md:scroll-mt-32 rounded-xl bg-white p-5 sm:p-6"
+                >
+                  <RelatedCourses courses={relatedCourses} />
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
       <SiteFooter />
     </div>
   );

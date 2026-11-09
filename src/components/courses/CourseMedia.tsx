@@ -4,9 +4,11 @@ import { CourseMediaApertureImage } from "./CourseMediaApertureImage";
 export default function CourseMedia({
   detail,
   title,
+  slug,
 }: {
   detail: CourseDetail | null;
   title: string;
+  slug: string;
 }) {
   if (!detail?.thumbnail) return null;
   const thumbnail = detail.thumbnail.includes("res.cloudinary.com/demo")
@@ -16,6 +18,7 @@ export default function CourseMedia({
   return (
     <div className="relative mx-auto aspect-[4/3] w-full max-w-4xl overflow-hidden rounded-xl border border-blue/10 bg-blue">
       <CourseMediaApertureImage
+        slug={slug}
         src={thumbnail}
         alt={title}
         sizes="(min-width: 1536px) 46rem, (min-width: 1024px) 52vw, calc(100vw - 3rem)"
@@ -26,7 +29,7 @@ export default function CourseMedia({
           target="_blank"
           rel="noreferrer"
           aria-label={`Mở video giới thiệu khóa học ${title} trong thẻ mới`}
-          className="absolute inset-0 flex items-center justify-center bg-blue/30 transition hover:bg-blue/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
+          className="absolute inset-0 flex items-center justify-center bg-blue/30 transition hover:bg-blue/40 focus-visible:z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
         >
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-yellow text-2xl text-blue shadow">
             ▶

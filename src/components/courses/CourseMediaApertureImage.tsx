@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./CourseMediaApertureImage.module.css";
 
@@ -8,211 +9,277 @@ const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const IMAGE_READINESS_TIMEOUT_MS = 500;
+const REVEAL_SETTLE_WATCHDOG_MS = 950;
 
-type RevealPhase = "visible" | "waiting" | "revealing";
+type RevealPhase = "visible" | "waiting";
+type CssMotionState = "running" | "finished";
+
+function normalizePath(path: string) {
+  return path.replace(/\/+$/, "") || "/";
+}
+
+function getCssMotionState(image: HTMLImageElement): CssMotionState {
+  try {
+    if (typeof image.getAnimations === "function") {
+      const animation = image.getAnimations()[0];
+      if (animation) {
+        return animation.playState === "finished" || animation.playState === "idle"
+          ? "finished"
+          : "running";
+      }
+    }
+
+    const computedStyle = window.getComputedStyle(image);
+    return computedStyle.animationName !== "none" && computedStyle.transform !== "none"
+      ? "running"
+      : "finished";
+  } catch {
+    return "finished";
+  }
+}
 
 export function CourseMediaApertureImage({
+  slug,
   src,
   alt,
   sizes,
 }: {
+  slug: string;
+  src: string;
+  alt: string;
+  sizes: string;
+}) {
+  const pathname = usePathname();
+  const expectedPath = normalizePath(`/courses/${slug}`);
+  const routeKey = pathname ? normalizePath(pathname) : expectedPath;
+
+  return (
+    <CourseMediaApertureEntry
+      key={routeKey}
+      active={routeKey === expectedPath}
+      slug={slug}
+      src={src}
+      alt={alt}
+      sizes={sizes}
+    />
+  );
+}
+
+function CourseMediaApertureEntry({
+  active,
+  slug,
+  src,
+  alt,
+  sizes,
+}: {
+  active: boolean;
+  slug: string;
   src: string;
   alt: string;
   sizes: string;
 }) {
   const imageRef = useRef<HTMLImageElement>(null);
-  const [phase, setPhase] = useState<RevealPhase>("visible");
+  const [phase, setPhase] = useState<RevealPhase>(active ? "waiting" : "visible");
 
   useIsomorphicLayoutEffect(() => {
     const image = imageRef.current;
-    if (!image) return;
-
-    const desktopQuery = window.matchMedia("(min-width: 1024px)");
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: no-preference)");
-    if (
-      !desktopQuery.matches ||
-      !motionQuery.matches ||
-      typeof IntersectionObserver === "undefined"
-    ) {
+    if (!active || phase === "visible" || !image) {
+      if (!active) setPhase("visible");
       return;
     }
 
-    let observer: IntersectionObserver | null = null;
-    let animationFrame = 0;
-    let readinessTimeoutId: number | null = null;
-    let removeReadinessListeners: (() => void) | null = null;
-    let cancelled = false;
-    let didReveal = false;
+    if (typeof window.matchMedia !== "function") {
+      setPhase("visible");
+      return;
+    }
 
-    const clearReadinessWait = () => {
-      if (readinessTimeoutId !== null) {
+    let desktopQuery: MediaQueryList;
+    let finePointerQuery: MediaQueryList;
+    let reducedMotionQuery: MediaQueryList;
+    try {
+      desktopQuery = window.matchMedia("(min-width: 1024px)");
+      finePointerQuery = window.matchMedia("(pointer: fine)");
+      reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    } catch {
+      setPhase("visible");
+      return;
+    }
+
+    const isEligible = () =>
+      desktopQuery.matches && finePointerQuery.matches && !reducedMotionQuery.matches;
+    if (
+      !isEligible() ||
+      typeof desktopQuery.addEventListener !== "function" ||
+      typeof finePointerQuery.addEventListener !== "function" ||
+      typeof reducedMotionQuery.addEventListener !== "function"
+    ) {
+      setPhase("visible");
+      return;
+    }
+
+    let readinessSettled = false;
+    let motionSettled = false;
+    let readinessTimeoutId: number | null = null;
+    let motionWatchdogId: number | null = null;
+    let decoding = false;
+
+    const clearReadinessTimeout = () => {
+      if (readinessTimeoutId === null) return;
+      try {
         window.clearTimeout(readinessTimeoutId);
-        readinessTimeoutId = null;
+      } catch {
+        // A timer cleanup failure must not block the static image fallback.
       }
-      removeReadinessListeners?.();
-      removeReadinessListeners = null;
+      readinessTimeoutId = null;
     };
 
-    const showFullImage = () => {
-      cancelled = true;
-      observer?.disconnect();
-      clearReadinessWait();
-      window.cancelAnimationFrame(animationFrame);
+    const finishVisible = () => {
+      if (motionSettled) return;
+      motionSettled = true;
+      if (motionWatchdogId !== null) {
+        try {
+          window.clearTimeout(motionWatchdogId);
+        } catch {
+          // The image is still made visible below.
+        }
+        motionWatchdogId = null;
+      }
       setPhase("visible");
     };
 
+    const failOpen = () => {
+      if (readinessSettled) return;
+      readinessSettled = true;
+      clearReadinessTimeout();
+      finishVisible();
+    };
+
+    const onAnimationEnd = (event: AnimationEvent) => {
+      if (event.target === image) finishVisible();
+    };
+    const onAnimationCancel = (event: AnimationEvent) => {
+      if (event.target === image) finishVisible();
+    };
+
+    const adoptCurrentAnimation = () => {
+      if (readinessSettled) return;
+      readinessSettled = true;
+      clearReadinessTimeout();
+      try {
+        image.removeEventListener("load", checkImageReadiness);
+        image.removeEventListener("error", failOpen);
+      } catch {
+        // A stale readiness listener cannot restart the animation.
+      }
+
+      if (!isEligible() || getCssMotionState(image) === "finished") {
+        finishVisible();
+        return;
+      }
+
+      try {
+        image.addEventListener("animationend", onAnimationEnd);
+        image.addEventListener("animationcancel", onAnimationCancel);
+        motionWatchdogId = window.setTimeout(finishVisible, REVEAL_SETTLE_WATCHDOG_MS);
+
+        // The CSS animation may finish between the first state read and listener setup.
+        if (getCssMotionState(image) === "finished") finishVisible();
+      } catch {
+        finishVisible();
+      }
+    };
+
+    function checkImageReadiness() {
+      if (readinessSettled || decoding || !image.complete) return;
+      if (image.naturalWidth <= 0) {
+        failOpen();
+        return;
+      }
+      if (typeof image.decode !== "function") {
+        adoptCurrentAnimation();
+        return;
+      }
+
+      decoding = true;
+      let decodePromise: Promise<void>;
+      try {
+        decodePromise = image.decode();
+      } catch {
+        failOpen();
+        return;
+      }
+      decodePromise.then(
+        () => {
+          decoding = false;
+          if (!image.complete || image.naturalWidth <= 0) failOpen();
+          else adoptCurrentAnimation();
+        },
+        failOpen,
+      );
+    }
+
     const onEligibilityChange = () => {
-      if (!desktopQuery.matches || !motionQuery.matches) showFullImage();
-    };
-
-    const startReveal = () => {
-      if (cancelled || didReveal) return;
-      didReveal = true;
-      observer?.disconnect();
-
-      const deadline = window.performance.now() + IMAGE_READINESS_TIMEOUT_MS;
-      let readinessSettled = false;
-      let isDecoding = false;
-
-      const finishReadiness = (ready: boolean) => {
-        if (cancelled || readinessSettled) return;
+      if (!isEligible()) {
         readinessSettled = true;
-        clearReadinessWait();
-
-        if (
-          !ready ||
-          window.performance.now() >= deadline ||
-          !image.complete ||
-          image.naturalWidth <= 0
-        ) {
-          cancelled = true;
-          setPhase("visible");
-          return;
-        }
-
-        setPhase("waiting");
-        animationFrame = window.requestAnimationFrame(() => {
-          if (!cancelled) setPhase("revealing");
-        });
-      };
-
-      const checkImageReadiness = () => {
-        if (cancelled || readinessSettled || isDecoding || !image.complete) {
-          return;
-        }
-        if (image.naturalWidth <= 0) {
-          finishReadiness(false);
-          return;
-        }
-        if (typeof image.decode !== "function") {
-          finishReadiness(true);
-          return;
-        }
-
-        isDecoding = true;
-        let decodePromise: Promise<void>;
-        try {
-          decodePromise = image.decode();
-        } catch {
-          finishReadiness(false);
-          return;
-        }
-
-        decodePromise.then(
-          () => {
-            isDecoding = false;
-            finishReadiness(true);
-          },
-          () => {
-            isDecoding = false;
-            finishReadiness(false);
-          },
-        );
-      };
-
-      const onImageLoad = () => checkImageReadiness();
-      const onImageError = () => finishReadiness(false);
-      image.addEventListener("load", onImageLoad);
-      image.addEventListener("error", onImageError);
-      removeReadinessListeners = () => {
-        image.removeEventListener("load", onImageLoad);
-        image.removeEventListener("error", onImageError);
-      };
-      readinessTimeoutId = window.setTimeout(
-        () => finishReadiness(false),
-        IMAGE_READINESS_TIMEOUT_MS,
-      );
-
-      checkImageReadiness();
-    };
-
-    const getVisibleRatio = () => {
-      const bounds = image.getBoundingClientRect();
-      const visibleWidth = Math.max(
-        0,
-        Math.min(bounds.right, window.innerWidth) - Math.max(bounds.left, 0),
-      );
-      const visibleHeight = Math.max(
-        0,
-        Math.min(bounds.bottom, window.innerHeight) - Math.max(bounds.top, 0),
-      );
-      const imageArea = bounds.width * bounds.height;
-      return imageArea > 0 ? (visibleWidth * visibleHeight) / imageArea : 0;
+        clearReadinessTimeout();
+        finishVisible();
+      }
     };
 
     try {
-      if (getVisibleRatio() >= 0.15) {
-        startReveal();
-      } else {
-        observer = new IntersectionObserver(
-          (entries) => {
-            if (
-              entries.some(
-                (entry) =>
-                  entry.target === image &&
-                  entry.isIntersecting &&
-                  entry.intersectionRatio >= 0.15,
-              )
-            ) {
-              startReveal();
-            }
-          },
-          { threshold: [0, 0.15] },
-        );
-        observer.observe(image);
-      }
-
+      image.addEventListener("load", checkImageReadiness);
+      image.addEventListener("error", failOpen);
       desktopQuery.addEventListener("change", onEligibilityChange);
-      motionQuery.addEventListener("change", onEligibilityChange);
+      finePointerQuery.addEventListener("change", onEligibilityChange);
+      reducedMotionQuery.addEventListener("change", onEligibilityChange);
+      readinessTimeoutId = window.setTimeout(failOpen, IMAGE_READINESS_TIMEOUT_MS);
+      checkImageReadiness();
     } catch {
-      showFullImage();
+      failOpen();
     }
 
     return () => {
-      cancelled = true;
-      observer?.disconnect();
-      clearReadinessWait();
-      window.cancelAnimationFrame(animationFrame);
-      desktopQuery.removeEventListener("change", onEligibilityChange);
-      motionQuery.removeEventListener("change", onEligibilityChange);
+      readinessSettled = true;
+      motionSettled = true;
+      clearReadinessTimeout();
+      if (motionWatchdogId !== null) {
+        try {
+          window.clearTimeout(motionWatchdogId);
+        } catch {
+          // Cleanup must not interrupt route changes.
+        }
+      }
+      try {
+        image.removeEventListener("load", checkImageReadiness);
+        image.removeEventListener("error", failOpen);
+        image.removeEventListener("animationend", onAnimationEnd);
+        image.removeEventListener("animationcancel", onAnimationCancel);
+        desktopQuery.removeEventListener("change", onEligibilityChange);
+        finePointerQuery.removeEventListener("change", onEligibilityChange);
+        reducedMotionQuery.removeEventListener("change", onEligibilityChange);
+      } catch {
+        // Cleanup errors must not block the route transition.
+      }
     };
-  }, []);
+  }, [active, phase, slug, src]);
 
-  const revealClass =
-    phase === "waiting"
-      ? styles.waiting
-      : phase === "revealing"
-        ? styles.revealing
-        : "";
+  const revealClass = phase === "waiting" ? styles.waiting : "";
 
   return (
-    <Image
-      ref={imageRef}
-      src={src}
-      alt={alt}
-      fill
-      sizes={sizes}
-      className={`object-contain ${revealClass}`}
-    />
+    <>
+      <Image
+        ref={imageRef}
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes}
+        className={`object-contain ${revealClass}`}
+      />
+      <span
+        aria-hidden="true"
+        className={styles.pageEdge}
+        data-phase={phase}
+      />
+    </>
   );
 }

@@ -10,7 +10,7 @@ export default function RelatedCourses({
   const hasSingleCourse = courses.length === 1;
 
   return (
-    <section className="mt-12">
+    <section>
       <h2 className="mb-4 text-xl font-bold text-blue">
         Chương Trình Tương Tự
       </h2>
