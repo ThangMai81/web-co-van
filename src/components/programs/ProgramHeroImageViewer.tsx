@@ -430,7 +430,7 @@ function InteractiveProgramHeroImageViewer({
         }
         title={viewerUnavailable ? "Trình xem ảnh hiện không khả dụng" : "Phóng to ảnh"}
         disabled={viewerUnavailable}
-        className="absolute inset-0 h-full w-full cursor-zoom-in rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-yellow disabled:cursor-default"
+        className="absolute inset-0 h-full w-full cursor-zoom-in rounded-2xl focus-visible:z-20 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-yellow disabled:cursor-default"
         onClick={() => {
           setImageLoaded(false);
           setImageFailed(false);

@@ -1,31 +1,53 @@
-.coverWipeFrame {
+.coverFrame {
   isolation: isolate;
 }
 
-.coverWipeFrame::after {
+.warmSweep {
   position: absolute;
-  inset: 0;
+  inset-block: 0;
+  left: 0;
   z-index: 1;
-  border-left: 2px solid var(--color-yellow);
-  background-color: var(--color-blue);
-  content: "";
+  width: 42%;
+  opacity: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgb(255 223 135 / 0.18) 27%,
+    rgb(255 250 224 / 0.6) 50%,
+    rgb(255 197 86 / 0.22) 70%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
   pointer-events: none;
-  transform: translateX(100%);
-  animation: coverWipe 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform: translate3d(-140%, 0, 0);
 }
 
-@keyframes coverWipe {
+.warmSweep[data-running="true"] {
+  animation: warmLightSweep 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes warmLightSweep {
   from {
-    transform: translateX(0);
+    opacity: 0;
+    transform: translate3d(-140%, 0, 0);
+  }
+
+  18% {
+    opacity: 0.82;
+  }
+
+  82% {
+    opacity: 0.74;
   }
 
   to {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translate3d(270%, 0, 0);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .coverWipeFrame::after {
-    animation: none;
+@media (max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .warmSweep {
+    display: none;
   }
 }
