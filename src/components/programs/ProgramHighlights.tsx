@@ -1,48 +1,93 @@
-type PracticalFact = { label: string; value: string };
+import type { ProgramStat } from "@/types/program";
+import ProgramStats from "./ProgramStats";
+import styles from "./ProgramHighlights.module.css";
 
 export default function ProgramHighlights({
   highlights,
-  facts,
+  stats,
+  contactPhone,
 }: {
   highlights: string[];
-  facts: PracticalFact[];
+  stats: ProgramStat[];
+  contactPhone?: string;
 }) {
+  const hasHighlights = highlights.length > 0;
+  const hasStats = stats.length > 0;
+  const hasBothColumns = hasHighlights && hasStats;
+
   return (
     <div
       className={`grid gap-8 ${
-        facts.length > 0
+        hasBothColumns
           ? "lg:grid-cols-[minmax(0,1.5fr)_minmax(16rem,0.72fr)] lg:gap-14"
           : ""
       }`}
     >
-      <div className="min-w-0">
-        <h2 className="mb-5 border-l-4 border-yellow pl-4 text-2xl font-bold text-white md:text-3xl">
-          ✨ Điểm nổi bật
-        </h2>
-        <ul className="list-disc space-y-2 pl-5 font-medium text-white/90">
-          {highlights.map((item, idx) => (
-            <li key={idx}>{item}</li>
-          ))}
-        </ul>
-      </div>
-
-      {facts.length > 0 && (
-        <aside className="border-t border-white/20 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-          <h3 className="font-bold text-yellow">Thông tin thực tế</h3>
-          <dl className="mt-4 grid gap-4">
-            {facts.map((fact) => (
-              <div key={fact.label} className="min-w-0">
-                <dt className="text-xs font-semibold uppercase tracking-wide text-white/65">
-                  {fact.label}
-                </dt>
-                <dd className="mt-1 break-words font-medium leading-relaxed text-white/90">
-                  {fact.value}
-                </dd>
-              </div>
+      {hasHighlights && (
+        <section
+          id="program-highlights"
+          aria-labelledby="program-highlights-heading"
+          className="min-w-0 scroll-mt-28 md:scroll-mt-32"
+        >
+          <h2
+            id="program-highlights-heading"
+            className="mb-5 border-l-4 border-yellow pl-4 text-2xl font-bold text-white md:text-3xl"
+          >
+            ✨ Điểm nổi bật
+          </h2>
+          <ul className="list-disc space-y-2 pl-5 font-medium text-white/90">
+            {highlights.map((item, idx) => (
+              <li key={idx}>{item}</li>
             ))}
-          </dl>
-        </aside>
+          </ul>
+        </section>
       )}
+
+      {hasStats && (
+        <section
+          id="program-stats"
+          aria-labelledby="program-stats-heading"
+          className={`min-w-0 scroll-mt-28 ${
+            hasHighlights
+              ? "border-t border-white/20 pt-6 lg:scroll-mt-32 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
+              : "lg:scroll-mt-32"
+          }`}
+        >
+          <h2
+            id="program-stats-heading"
+            className="border-l-4 border-yellow pl-4 text-xl font-bold text-white"
+          >
+            Thông tin chương trình
+          </h2>
+          <div
+            className={`${styles.statsOnNavy} ${
+              hasHighlights ? styles.statsRail : styles.statsWide
+            }`}
+          >
+            <ProgramStats stats={stats} />
+          </div>
+        </section>
+      )}
+
+      <div
+        className={`grid gap-4 border-t border-white/20 pt-6 ${
+          hasBothColumns ? "lg:col-span-2" : ""
+        }`}
+      >
+        <p className="border-l-4 border-yellow pl-4 text-base leading-relaxed text-white/90">
+          Trước khi chọn chương trình, hãy xác định điều bạn muốn tìm hiểu hoặc ưu tiên cá nhân. Xem các thông tin sẵn có ở phần đầu trang để đối chiếu với kế hoạch của bạn.
+        </p>
+        {contactPhone && (
+          <p className="border-l-4 border-transparent pl-4 text-base leading-relaxed text-white/90">
+            <a
+              href={`tel:${contactPhone}`}
+              className="underline decoration-yellow underline-offset-4 hover:text-yellow focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Nếu còn câu hỏi chưa được giải đáp, hãy liên hệ Sunshine Center qua nút liên hệ của chương trình.
+            </a>
+          </p>
+        )}
+      </div>
     </div>
   );
 }

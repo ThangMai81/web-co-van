@@ -1,0 +1,29 @@
+.statsOnNavy :global([data-program-statistics]) {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 1rem;
+}
+
+.statsOnNavy :global([data-program-statistics] > div) {
+  border-color: rgb(255 255 255 / 0.2);
+  background-color: rgb(255 255 255 / 0.06);
+}
+
+.statsOnNavy :global([data-program-statistics] > div > div:first-child) {
+  color: #fff;
+}
+
+.statsOnNavy :global([data-program-statistics] > div > div:last-child) {
+  color: rgb(255 255 255 / 0.72);
+}
+
+@media (min-width: 40rem) {
+  .statsWide :global([data-program-statistics]) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .statsWide :global([data-program-statistics]) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

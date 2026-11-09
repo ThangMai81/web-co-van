@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import ProgramHero from "./ProgramHero";
 import ProgramVideo from "./ProgramVideo";
-import ProgramStats from "./ProgramStats";
 import ProgramHighlights from "./ProgramHighlights";
 import ProgramGallery from "./ProgramGallery";
 import ProgramRegistration from "./ProgramRegistration";
@@ -82,22 +81,19 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
   const highlights = program.highlights.filter((highlight) => highlight.trim());
   const galleryImages = program.gallery.filter((image) => image.trim());
   const hasHighlights = highlights.length > 0;
+  const hasStats = stats.length > 0;
+  const hasStructuredContent = hasHighlights || hasStats;
   const hasGallery = galleryImages.length > 0;
-  const practicalFacts: { label: string; value: string }[] = [];
-  if (program.format === "online") {
-    practicalFacts.push({ label: "Hình thức", value: "Trực tuyến" });
-  } else if (program.format === "offline") {
-    practicalFacts.push({ label: "Hình thức", value: "Trực tiếp" });
-  }
-  if (typeof program.schedule === "string" && program.schedule.trim()) {
-    practicalFacts.push({ label: "Lịch trình", value: program.schedule });
-  }
-  if (typeof program.location === "string" && program.location.trim()) {
-    practicalFacts.push({ label: "Địa điểm", value: program.location });
-  }
   const hasRegistration = program.registration?.isOpen === true;
+  const contactPhone = program.registration?.contactPhone;
+  const contactPhoneForGuide =
+    hasRegistration &&
+    typeof contactPhone === "string" &&
+    contactPhone.trim().length > 0
+      ? contactPhone.trim()
+      : undefined;
   const hasInformationSections = Boolean(
-    videoUrl || hasRegistration || description || stats.length > 0,
+    videoUrl || hasRegistration || description,
   );
   const sectionItems = [
     ...(videoUrl ? [{ id: "program-video", label: "Video" }] : []),
@@ -105,11 +101,11 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
       ? [{ id: "program-registration", label: "Đăng ký" }]
       : []),
     ...(description ? [{ id: "program-description", label: "Giới thiệu" }] : []),
-    ...(stats.length > 0
-      ? [{ id: "program-stats", label: "Thông tin" }]
-      : []),
     ...(highlights.length > 0
       ? [{ id: "program-highlights", label: "Điểm nổi bật" }]
+      : []),
+    ...(stats.length > 0
+      ? [{ id: "program-stats", label: "Thông tin" }]
       : []),
     ...(galleryImages.length > 0
       ? [{ id: "program-gallery", label: "Thư viện ảnh" }]
@@ -173,27 +169,12 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
                   </section>
                 )}
 
-                {stats.length > 0 && (
-                  <section
-                    id="program-stats"
-                    aria-labelledby="program-stats-heading"
-                    className="mt-8 scroll-mt-28 md:scroll-mt-32"
-                  >
-                    <h2
-                      id="program-stats-heading"
-                      className="mb-3 text-xl font-bold text-blue"
-                    >
-                      Thông tin chương trình
-                    </h2>
-                    <ProgramStats stats={stats} />
-                  </section>
-                )}
               </div>
             </div>
           </section>
         )}
 
-        {hasHighlights && (
+        {hasStructuredContent && (
           <section className="bg-blue text-white">
             <div
               className={`mx-auto max-w-[var(--page-w)] px-6 pb-12 ${
@@ -206,15 +187,11 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
                   label="Điều hướng nội dung chương trình"
                 />
               )}
-              <div
-                id="program-highlights"
-                className="scroll-mt-28 md:scroll-mt-32"
-              >
-                <ProgramHighlights
-                  highlights={highlights}
-                  facts={practicalFacts}
-                />
-              </div>
+              <ProgramHighlights
+                highlights={highlights}
+                stats={stats}
+                contactPhone={contactPhoneForGuide}
+              />
             </div>
           </section>
         )}
@@ -223,10 +200,10 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
           <section className="bg-[#edf5fb]">
             <div
               className={`mx-auto max-w-[var(--page-w)] px-6 pb-12 ${
-                hasInformationSections || hasHighlights ? "pt-8" : "pt-2"
+                hasInformationSections || hasStructuredContent ? "pt-8" : "pt-2"
               }`}
             >
-              {!hasInformationSections && !hasHighlights && (
+              {!hasInformationSections && !hasStructuredContent && (
                 <DetailSectionNav
                   items={sectionItems}
                   label="Điều hướng nội dung chương trình"
