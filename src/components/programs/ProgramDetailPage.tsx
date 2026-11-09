@@ -81,11 +81,24 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
   );
   const highlights = program.highlights.filter((highlight) => highlight.trim());
   const galleryImages = program.gallery.filter((image) => image.trim());
+  const hasHighlights = highlights.length > 0;
+  const hasGallery = galleryImages.length > 0;
+  const practicalFacts: { label: string; value: string }[] = [];
+  if (program.format === "online") {
+    practicalFacts.push({ label: "Hình thức", value: "Trực tuyến" });
+  } else if (program.format === "offline") {
+    practicalFacts.push({ label: "Hình thức", value: "Trực tiếp" });
+  }
+  if (typeof program.schedule === "string" && program.schedule.trim()) {
+    practicalFacts.push({ label: "Lịch trình", value: program.schedule });
+  }
+  if (typeof program.location === "string" && program.location.trim()) {
+    practicalFacts.push({ label: "Địa điểm", value: program.location });
+  }
   const hasRegistration = program.registration?.isOpen === true;
   const hasInformationSections = Boolean(
     videoUrl || hasRegistration || description || stats.length > 0,
   );
-  const hasWarmSections = highlights.length > 0 || galleryImages.length > 0;
   const sectionItems = [
     ...(videoUrl ? [{ id: "program-video", label: "Video" }] : []),
     ...(hasRegistration
@@ -180,8 +193,8 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
           </section>
         )}
 
-        {hasWarmSections && (
-          <section className="bg-[#fff7e8]">
+        {hasHighlights && (
+          <section className="bg-blue text-white">
             <div
               className={`mx-auto max-w-[var(--page-w)] px-6 pb-12 ${
                 hasInformationSections ? "pt-8" : "pt-2"
@@ -193,31 +206,43 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
                   label="Điều hướng nội dung chương trình"
                 />
               )}
+              <div
+                id="program-highlights"
+                className="scroll-mt-28 md:scroll-mt-32"
+              >
+                <ProgramHighlights
+                  highlights={highlights}
+                  facts={practicalFacts}
+                />
+              </div>
+            </div>
+          </section>
+        )}
 
-              <div className="mx-auto max-w-4xl">
-                {highlights.length > 0 && (
-                  <div
-                    id="program-highlights"
-                    className="scroll-mt-28 md:scroll-mt-32"
-                  >
-                    <ProgramHighlights highlights={highlights} />
-                  </div>
-                )}
-
-                {galleryImages.length > 0 && (
-                  <div
-                    id="program-gallery"
-                    className="scroll-mt-28 md:scroll-mt-32"
-                  >
-                    <ProgramGallery
-                      key={slug}
-                      programTitle={program.title}
-                      images={galleryImages}
-                      revealAccent={slug === "chinh-phuc-fansipan-noc-nha-dong-duong"}
-                      revealEntries={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
-                    />
-                  </div>
-                )}
+        {hasGallery && (
+          <section className="bg-[#edf5fb]">
+            <div
+              className={`mx-auto max-w-[var(--page-w)] px-6 pb-12 ${
+                hasInformationSections || hasHighlights ? "pt-8" : "pt-2"
+              }`}
+            >
+              {!hasInformationSections && !hasHighlights && (
+                <DetailSectionNav
+                  items={sectionItems}
+                  label="Điều hướng nội dung chương trình"
+                />
+              )}
+              <div
+                id="program-gallery"
+                className="mx-auto max-w-4xl scroll-mt-28 md:scroll-mt-32"
+              >
+                <ProgramGallery
+                  key={slug}
+                  programTitle={program.title}
+                  images={galleryImages}
+                  revealAccent={slug === "chinh-phuc-fansipan-noc-nha-dong-duong"}
+                  revealEntries={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
+                />
               </div>
             </div>
           </section>
