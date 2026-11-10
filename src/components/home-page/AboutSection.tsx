@@ -27,6 +27,24 @@ const COMPANY_INFO = [
   },
 ];
 
+const ABOUT_CARDS = [
+  {
+    icon: "🌅",
+    title: "Xuất phát từ trái tim",
+    desc: "Sunshine Center được thành lập năm 2025 với một niềm tin đơn giản: mỗi người đều có ánh sáng riêng bên trong — và đôi khi chỉ cần một môi trường an toàn để ánh sáng đó được nhìn thấy.",
+  },
+  {
+    icon: "🏔️",
+    title: "Trải nghiệm thực, chuyển hóa thật",
+    desc: "Từ những buổi leo núi chinh phục Fansipan đến workshop khai phóng nội tâm — chúng tôi tin rằng sự thay đổi đến từ những khoảnh khắc được sống trọn vẹn, không phải từ lý thuyết.",
+  },
+  {
+    icon: "🤲",
+    title: "Cộng đồng lan tỏa",
+    desc: "Sunshine không chỉ là nơi học — mà là một cộng đồng những người cùng chọn sống tỉnh thức, cùng nâng đỡ nhau và lan tỏa ánh sáng ra thế giới xung quanh.",
+  },
+];
+
 export function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
@@ -34,6 +52,14 @@ export function AboutSection() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    // Respect prefers-reduced-motion
+    let prefersReduced = false;
+    try {
+      prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch { /* noop */ }
+    if (prefersReduced) { setVisible(true); return; }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -41,7 +67,7 @@ export function AboutSection() {
           observer.unobserve(section);
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.1 },
     );
     observer.observe(section);
     return () => observer.disconnect();
@@ -50,28 +76,57 @@ export function AboutSection() {
   return (
     <section ref={sectionRef} id="about" className="bg-white py-24 md:py-28">
       <div className="mx-auto max-w-[var(--page-w)] px-6">
+
+        {/* Phần giới thiệu ý nghĩa */}
         <div
-          className={`mb-10 transition-all duration-700 ease-out ${
+          className={`mb-14 transition-all duration-700 ease-out ${
             visible ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
           }`}
         >
           <div className="mb-3 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">
             <span className="h-px w-5 bg-yellow" />
-            Thông tin doanh nghiệp
+            Về chúng tôi
           </div>
           <h2 className="font-display text-2xl font-bold text-blue md:text-3xl">
-            CÔNG TY TNHH MẶT TRỜI TỎA SÁNG THE SUNSHINE
+            Sunshine Center — Nơi ánh sáng bắt đầu
           </h2>
-          <p className="mt-2 max-w-[60ch] text-sm font-medium text-blue/55">
-            Thông tin đăng ký và hoạt động của doanh nghiệp.
-          </p>
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            {ABOUT_CARDS.map((card, i) => (
+              <div
+                key={card.title}
+                className={`rounded-2xl border border-blue/10 bg-blue/5 p-6 transition-all duration-700 ease-out ${
+                  visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                }`}
+                style={{ transitionDelay: `${80 + i * 80}ms` }}
+              >
+                <div className="mb-3 text-2xl" aria-hidden="true">{card.icon}</div>
+                <h3 className="mb-2 font-bold text-blue">{card.title}</h3>
+                <p className="text-sm leading-relaxed text-blue/70">{card.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
+        {/* Label bảng đăng ký */}
+        <div
+          className={`mb-4 transition-all duration-700 ease-out ${
+            visible ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ transitionDelay: "320ms" }}
+        >
+          <div className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-blue/40">
+            <span className="h-px w-5 bg-blue/20" />
+            Thông tin đăng ký doanh nghiệp
+          </div>
+        </div>
+
+        {/* Bảng thông tin doanh nghiệp */}
         <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl border-2 border-blue/10 bg-blue/5">
           <div
-            className={`flex flex-col items-center border-b-2 border-blue/10 bg-blue px-6 py-8 text-center transition-all delay-100 duration-700 ease-out sm:py-10 ${
+            className={`flex flex-col items-center border-b-2 border-blue/10 bg-blue px-6 py-8 text-center transition-all duration-700 ease-out sm:py-10 ${
               visible ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
             }`}
+            style={{ transitionDelay: "380ms" }}
           >
             <div className="relative mb-4 h-20 w-48 rounded-lg bg-white/90 p-2 sm:h-24 sm:w-56">
               <Image
@@ -97,11 +152,9 @@ export function AboutSection() {
               <div
                 key={item.label}
                 className={`grid grid-cols-1 gap-1 px-5 py-4 transition-all duration-700 ease-out sm:grid-cols-[190px_1fr] sm:gap-8 sm:px-7 ${
-                  index !== COMPANY_INFO.length - 1
-                    ? "border-b border-blue/10"
-                    : ""
+                  index !== COMPANY_INFO.length - 1 ? "border-b border-blue/10" : ""
                 } ${visible ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0"}`}
-                style={{ transitionDelay: `${150 + index * 70}ms` }}
+                style={{ transitionDelay: `${420 + index * 50}ms` }}
               >
                 <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-blue">
                   {item.label}
