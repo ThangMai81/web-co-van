@@ -159,15 +159,21 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
                     aria-labelledby="program-description-heading"
                     className="mt-8 scroll-mt-28 md:scroll-mt-32"
                   >
-                    <h2
-                      id="program-description-heading"
-                      className="mb-3 text-xl font-bold text-blue"
-                    >
-                      Giới thiệu
-                    </h2>
-                    <p className="text-lg font-medium leading-relaxed text-blue/90">
-                      {description}
-                    </p>
+                    <div className="relative overflow-hidden rounded-3xl border border-blue/10 bg-white p-7 shadow-xl shadow-blue/5 md:p-10">
+                      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-yellow to-yellow/20" />
+                      <svg aria-hidden="true" viewBox="0 0 120 96" className="pointer-events-none absolute right-6 top-6 h-16 w-20 text-yellow/15">
+                        <path fill="currentColor" d="M0 96V58C0 26 15 7 46 0l6 13C35 19 27 30 26 48h22v48H0Zm66 0V58C66 26 81 7 112 0l6 13c-17 6-25 17-26 35h22v48H66Z" />
+                      </svg>
+                      <h2
+                        id="program-description-heading"
+                        className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.2em] text-blue/55"
+                      >
+                        Giới thiệu chương trình
+                      </h2>
+                      <p className="relative max-w-[62ch] font-display text-xl font-medium leading-relaxed text-blue md:text-2xl md:leading-relaxed">
+                        {description}
+                      </p>
+                    </div>
                   </section>
                 )}
 
