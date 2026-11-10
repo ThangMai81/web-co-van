@@ -1,0 +1,21 @@
+{
+  "name": "web-covan-github",
+  "interface": {
+    "displayName": "Web Cố Vấn"
+  },
+  "plugins": [
+    {
+      "name": "mobbin",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/mobbin/skills.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Design"
+    }
+  ]
+}

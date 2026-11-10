@@ -1,11 +1,12 @@
 import { Reveal } from "../animation/Reveal";
 import { TripRegistrationDialog } from "./TripRegistrationDialog";
+import { CalendarDays, Compass, Flag, Mountain, type LucideIcon } from "lucide-react";
 
-const TRIP_HIGHLIGHTS = [
-  { icon: "🏔️", label: "3.143m", desc: "Độ cao đỉnh Fansipan" },
-  { icon: "👥", label: "15 người", desc: "Quy mô nhóm nhỏ" },
-  { icon: "📅", label: "6 ngày", desc: "3 Th12 — 8 Th12, 2026" },
-  { icon: "🧭", label: "Có hướng dẫn", desc: "Coach đồng hành xuyên suốt" },
+const TRIP_HIGHLIGHTS: { icon: LucideIcon; label: string; desc: string }[] = [
+  { icon: Mountain, label: "3.143m", desc: "Độ cao đỉnh Fansipan" },
+  { icon: Flag, label: "Lần thứ 3", desc: "Hành trình leo núi của Sunshine" },
+  { icon: CalendarDays, label: "6 ngày", desc: "3 Th12 — 8 Th12, 2026" },
+  { icon: Compass, label: "Đồng hành", desc: "Cùng Coach Yến Lê" },
 ];
 
 export function NextTripSection() {
@@ -41,9 +42,14 @@ export function NextTripSection() {
                   {TRIP_HIGHLIGHTS.map((h) => (
                     <div
                       key={h.label}
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-4 text-center"
+                      className="group rounded-xl border border-white/10 bg-white/5 px-3 py-4 text-center transition-colors duration-300 hover:border-yellow/50 hover:bg-white/10"
                     >
-                      <div className="mb-1 text-xl" aria-hidden="true">{h.icon}</div>
+                      <h.icon
+                        size={22}
+                        strokeWidth={1.7}
+                        aria-hidden="true"
+                        className="mx-auto mb-2 text-yellow transition-transform duration-500 group-hover:-translate-y-1"
+                      />
                       <div className="font-display text-sm font-bold text-yellow">{h.label}</div>
                       <div className="mt-0.5 text-xs font-medium text-white/60">{h.desc}</div>
                     </div>

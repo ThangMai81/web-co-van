@@ -1,84 +1,264 @@
 /*
  * WhySection — "Vì sao chọn Sunshine Center"
- * Nền navy, stat counter fade-in, reason cards slide-up khi scroll vào
+ * Trạng thái hiển thị điều khiển bởi [data-why-visible="true"] trên section.
+ * Chuyển động cố ý chậm, rõ (700–1600ms) — desktop là ưu tiên.
  */
 
-/* ── Stat items — fade + rise khi data-visible="true" ───────── */
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
 
-.statItem {
+/* Quầng sáng nền */
+.section::before,
+.section::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(80px);
+}
+
+.section::before {
+  top: -10rem;
+  right: -8rem;
+  width: 32rem;
+  height: 32rem;
+  background: radial-gradient(circle, rgb(254 206 1 / 0.16), transparent 70%);
+}
+
+.section::after {
+  bottom: -12rem;
+  left: -10rem;
+  width: 36rem;
+  height: 36rem;
+  background: radial-gradient(circle, rgb(36 64 122 / 0.9), transparent 70%);
+}
+
+/* Tia nắng xoay chậm phía sau */
+.sunRays {
+  position: absolute;
+  z-index: -1;
+  top: -14rem;
+  right: -14rem;
+  width: 44rem;
+  height: 44rem;
+  color: rgb(254 206 1 / 0.07);
+  pointer-events: none;
+  animation: why-rays-spin 90s linear infinite;
+}
+
+@keyframes why-rays-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Reveal chung ───────────────────────────────────────────── */
+
+.rise {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
+  transform: translate3d(0, 28px, 0);
   transition:
-    opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--stat-delay, 0ms);
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
 }
 
-[data-why-visible="true"] .statItem {
+[data-why-visible="true"] .rise {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: none;
 }
 
-/* ── Reason cards — slide từ dưới lên ──────────────────────── */
+/* Chữ vàng trong tiêu đề: gạch chân vẽ ra */
+.highlight {
+  position: relative;
+  color: var(--color-yellow);
+  white-space: nowrap;
+}
 
-.reasonCard {
+.highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.08em;
+  height: 0.12em;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-yellow), rgb(255 232 120));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1) 700ms;
+}
+
+[data-why-visible="true"] .highlight::after {
+  transform: scaleX(1);
+}
+
+/* ── Stats ──────────────────────────────────────────────────── */
+
+.stat {
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.statBar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: rgb(255 255 255 / 0.12);
+  overflow: hidden;
+}
+
+.statBar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--color-yellow), rgb(255 232 120 / 0.4));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1600ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-why-visible="true"] .statBar::after {
+  transform: scaleX(1);
+}
+
+/* ── Chapter cards ──────────────────────────────────────────── */
+
+.card {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  overflow: hidden;
   opacity: 0;
-  transform: translate3d(0, 24px, 0);
+  transform: translate3d(48px, 0, 0);
   transition:
-    opacity 480ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reason-delay, 0ms);
+    opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 300ms ease,
+    background-color 300ms ease;
+  transition-delay: var(--d, 0ms), var(--d, 0ms), 0ms, 0ms;
 }
 
-[data-why-visible="true"] .reasonCard {
+[data-why-visible="true"] .card {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: none;
 }
 
-/* ── Section heading ─────────────────────────────────────────── */
-
-.heading {
+/* Ánh sáng theo con trỏ */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    22rem circle at var(--mx) var(--my),
+    rgb(254 206 1 / 0.14),
+    transparent 60%
+  );
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
-  transition:
-    opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 300ms ease;
+  pointer-events: none;
 }
 
-[data-why-visible="true"] .heading {
+.card:hover::before {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
 }
 
-/* ── Stat number glow pulse khi vào ─────────────────────────── */
-
-@keyframes stat-number-glow {
-  0%   { text-shadow: 0 0 0 transparent; }
-  40%  { text-shadow: 0 0 24px rgb(216 167 61 / 0.6); }
-  100% { text-shadow: 0 0 0 transparent; }
+.card:hover {
+  border-color: rgb(254 206 1 / 0.45);
+  background-color: rgb(255 255 255 / 0.07);
 }
 
-.statNumber {
-  display: inline-block;
+/* Đường viền vàng chạy dọc cạnh trái */
+.cardEdge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--color-yellow), rgb(254 206 1 / 0));
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--d, 0ms) + 400ms);
 }
 
-[data-why-visible="true"] .statNumber {
-  animation: stat-number-glow 1200ms ease-out both;
-  animation-delay: var(--stat-delay, 0ms);
+[data-why-visible="true"] .cardEdge {
+  transform: scaleY(1);
 }
 
-/* ── Reduced-motion ─────────────────────────────────────────── */
+/* Số lớn viền rỗng */
+.chapterNumber {
+  position: absolute;
+  right: 1.25rem;
+  top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 5.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(254 206 1 / 0.22);
+  pointer-events: none;
+  transition: -webkit-text-stroke-color 300ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover .chapterNumber {
+  -webkit-text-stroke-color: rgb(254 206 1 / 0.5);
+  transform: translate3d(-6px, 4px, 0);
+}
+
+/* Khung icon */
+.iconRing {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  background: rgb(254 206 1 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(254 206 1 / 0.3);
+  transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1), background-color 300ms ease;
+}
+
+.card:hover .iconRing {
+  transform: rotate(-6deg) scale(1.08);
+  background: rgb(254 206 1 / 0.16);
+}
+
+/* Nét icon tự vẽ */
+.iconPath {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1600ms cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: calc(var(--d, 0ms) + 300ms);
+}
+
+[data-why-visible="true"] .iconPath {
+  stroke-dashoffset: 0;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .statItem,
-  .reasonCard,
-  .heading {
+  .sunRays {
+    animation: none;
+  }
+
+  .rise,
+  .card,
+  .highlight::after,
+  .statBar::after,
+  .cardEdge,
+  .iconPath {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
-  }
-
-  .statNumber {
-    animation: none !important;
+    stroke-dashoffset: 0 !important;
   }
 }

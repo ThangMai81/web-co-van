@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Building2 } from "@/lib/icons";
+import { HeartHandshake, Mountain, Sunrise, type LucideIcon } from "lucide-react";
 
 const COMPANY_INFO = [
   { label: "Mã số thuế", value: "0402276590" },
@@ -27,19 +28,19 @@ const COMPANY_INFO = [
   },
 ];
 
-const ABOUT_CARDS = [
+const ABOUT_CARDS: { icon: LucideIcon; title: string; desc: string }[] = [
   {
-    icon: "🌅",
+    icon: Sunrise,
     title: "Xuất phát từ trái tim",
     desc: "Sunshine Center được thành lập năm 2025 với một niềm tin đơn giản: mỗi người đều có ánh sáng riêng bên trong — và đôi khi chỉ cần một môi trường an toàn để ánh sáng đó được nhìn thấy.",
   },
   {
-    icon: "🏔️",
+    icon: Mountain,
     title: "Trải nghiệm thực, chuyển hóa thật",
     desc: "Từ những buổi leo núi chinh phục Fansipan đến workshop khai phóng nội tâm — chúng tôi tin rằng sự thay đổi đến từ những khoảnh khắc được sống trọn vẹn, không phải từ lý thuyết.",
   },
   {
-    icon: "🤲",
+    icon: HeartHandshake,
     title: "Cộng đồng lan tỏa",
     desc: "Sunshine không chỉ là nơi học — mà là một cộng đồng những người cùng chọn sống tỉnh thức, cùng nâng đỡ nhau và lan tỏa ánh sáng ra thế giới xung quanh.",
   },
@@ -94,13 +95,15 @@ export function AboutSection() {
             {ABOUT_CARDS.map((card, i) => (
               <div
                 key={card.title}
-                className={`rounded-2xl border border-blue/10 bg-blue/5 p-6 transition-all duration-700 ease-out ${
+                className={`group rounded-2xl border border-blue/10 bg-blue/5 p-6 transition-all duration-700 ease-out hover:border-yellow/60 hover:bg-white hover:shadow-lg hover:shadow-blue/10 ${
                   visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
                 style={{ transitionDelay: `${80 + i * 80}ms` }}
               >
-                <div className="mb-3 text-2xl" aria-hidden="true">{card.icon}</div>
-                <h3 className="mb-2 font-bold text-blue">{card.title}</h3>
+                <div className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-blue text-yellow shadow-md shadow-blue/20 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+                  <card.icon size={22} strokeWidth={1.7} aria-hidden="true" />
+                </div>
+                <h3 className="mb-2 font-display text-lg font-bold text-blue">{card.title}</h3>
                 <p className="text-sm leading-relaxed text-blue/70">{card.desc}</p>
               </div>
             ))}
