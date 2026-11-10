@@ -48,13 +48,16 @@ export async function TestimonialsCollage() {
             <Reveal key={t._id} direction="up" delay={(i % 3) * 100}>
               <Link
                 href="/stories"
-                className="block h-full rounded-xl border-2 border-blue/10 bg-blue/5 p-7 transition hover:border-yellow hover:shadow-md"
+                className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-blue/10 bg-white p-8 shadow-lg shadow-blue/5 transition-all duration-500 hover:-translate-y-1.5 hover:border-yellow/70 hover:shadow-2xl hover:shadow-blue/15"
               >
-                <Quote size={28} className="mb-4 text-yellow" />
-                <p className="mb-6 text-sm font-medium leading-relaxed text-blue/90">
+                <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-yellow to-yellow/0 transition-transform duration-700 group-hover:scale-x-100" />
+                <span className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-blue text-yellow transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+                  <Quote size={22} aria-hidden="true" />
+                </span>
+                <p className="mb-6 flex-1 text-base font-medium leading-relaxed text-blue/85">
                   {t.quote}
                 </p>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 border-t border-blue/10 pt-5">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow font-mono text-sm font-bold text-blue">
                     {t.name.charAt(0).toUpperCase()}
                   </div>
