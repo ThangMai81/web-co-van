@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Reveal } from "@/components/animation/Reveal";
 import { TestimonialCard } from "./TestimonialCard";
 
@@ -46,6 +47,20 @@ export async function StoriesList() {
               Mỗi lời chia sẻ là một minh chứng cho hành trình chữa lành, tìm
               lại chính mình và kiến tạo cuộc đời ý nghĩa hơn.
             </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/#lien-he"
+                className="rounded-full bg-yellow px-7 py-3.5 text-sm font-bold text-blue shadow-lg shadow-yellow/20 transition hover:-translate-y-0.5 hover:brightness-95"
+              >
+                Bắt đầu hành trình của bạn
+              </Link>
+              <Link
+                href="/programs"
+                className="rounded-full border border-white/40 px-7 py-3.5 text-sm font-bold text-white transition hover:border-yellow hover:text-yellow"
+              >
+                Xem các chương trình
+              </Link>
+            </div>
           </Reveal>
         </div>
       </section>
