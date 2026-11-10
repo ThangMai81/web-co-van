@@ -31,16 +31,13 @@ export default function CourseReviews({
     e.preventDefault();
     setError("");
     setSubmitting(true);
-
     try {
       const res = await apiFetch(`/api/courses/${courseId}/reviews`, {
         method: "POST",
         body: JSON.stringify({ rating, comment }),
       });
-
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Có lỗi xảy ra");
-
       setLocalReviews((prev) => [json.data, ...prev]);
       setComment("");
     } catch (err) {
@@ -52,99 +49,126 @@ export default function CourseReviews({
 
   return (
     <section>
-      <h2 className="mb-3 text-xl font-bold text-blue">Đánh giá</h2>
+      <h2 className="mb-4 text-xl font-bold text-blue">Đánh giá</h2>
 
+      {/* Tổng quan rating */}
       <div className="rounded-xl border border-blue/10 bg-blue/5 p-5">
-        <div className="flex flex-wrap items-center gap-6">
-          <div className="text-center">
-            <div className="text-4xl font-extrabold text-blue">
-              <StarRating value={ratingAverage} size={14} />
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="font-display text-4xl font-extrabold text-blue">
+              {ratingAverage.toFixed(1)}
+            </span>
+            <div>
+              <StarRating value={ratingAverage} size={16} />
+              <div className="mt-0.5 text-xs font-medium text-blue/50">
+                {ratingCount} lượt đánh giá
+              </div>
             </div>
-            <div className="text-sm font-medium text-blue/60">/5</div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {breakdown.map((b) => (
-              <span
-                key={b.star}
-                className="rounded-full border border-blue/20 bg-white px-3 py-1 text-sm font-bold text-blue"
-              >
-                {b.star} sao ({b.count})
-              </span>
-            ))}
-          </div>
-          <span className="rounded-full bg-yellow px-3 py-1 text-sm font-bold text-blue">
-            {ratingCount} lượt đánh giá
-          </span>
+
+          {breakdown.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {breakdown
+                .slice()
+                .sort((a, b) => b.star - a.star)
+                .map((b) => (
+                  <span
+                    key={b.star}
+                    className="inline-flex items-center gap-1 rounded-full border border-blue/15 bg-white px-3 py-1 text-xs font-bold text-blue"
+                  >
+                    {"★".repeat(b.star)}
+                    <span className="font-normal text-blue/50">({b.count})</span>
+                  </span>
+                ))}
+            </div>
+          )}
         </div>
       </div>
 
+      {/* Form gửi đánh giá */}
       {user ? (
         <form
           onSubmit={handleSubmit}
-          className="mt-4 rounded-lg border border-blue/15 p-4"
+          className="mt-5 rounded-xl border border-blue/15 bg-white p-5"
         >
-          <label
-            htmlFor={`course-review-rating-${courseId}`}
-            className="mb-2 block text-sm font-bold text-blue"
-          >
-            Đánh giá của bạn
-          </label>
-          <select
-            id={`course-review-rating-${courseId}`}
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-            className="mb-2 rounded border border-blue/20 px-3 py-1.5 text-sm font-medium text-blue"
-          >
-            {[5, 4, 3, 2, 1].map((n) => (
-              <option key={n} value={n}>
-                {n} sao
-              </option>
-            ))}
-          </select>
+          <h3 className="mb-3 font-bold text-blue">Viết đánh giá của bạn</h3>
+          <div className="mb-3">
+            <label
+              htmlFor={`course-review-rating-${courseId}`}
+              className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-blue/60"
+            >
+              Số sao
+            </label>
+            <select
+              id={`course-review-rating-${courseId}`}
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+              className="rounded-xl border-2 border-blue/15 bg-blue/5 px-4 py-2 text-sm font-bold text-blue outline-none focus:border-blue"
+            >
+              {[5, 4, 3, 2, 1].map((n) => (
+                <option key={n} value={n}>
+                  {"★".repeat(n)} — {["Xuất sắc", "Tốt", "Khá", "Trung bình", "Kém"][5 - n]}
+                </option>
+              ))}
+            </select>
+          </div>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Chia sẻ cảm nhận của bạn..."
+            placeholder="Chia sẻ cảm nhận của bạn về khóa học này..."
             rows={3}
-            className="w-full rounded border border-blue/20 p-2 text-sm font-medium text-blue"
+            className="w-full rounded-xl border-2 border-blue/15 bg-blue/5 p-3 text-sm font-medium text-blue outline-none focus:border-blue"
           />
           {error && (
-            <p className="mt-1 text-sm font-bold text-red-500">{error}</p>
+            <p className="mt-2 text-sm font-bold text-red-500">{error}</p>
           )}
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 rounded-lg bg-yellow px-4 py-2 text-sm font-bold text-blue hover:brightness-95 disabled:opacity-50"
+            className="mt-3 rounded-full bg-yellow px-6 py-2.5 text-sm font-bold text-blue transition hover:brightness-95 disabled:opacity-50"
           >
             {submitting ? "Đang gửi..." : "Gửi đánh giá"}
           </button>
         </form>
       ) : (
-        <p className="mt-4 text-sm font-medium text-blue/60">
+        <p className="mt-4 rounded-xl border border-blue/10 bg-blue/5 px-5 py-4 text-sm font-medium text-blue/60">
           Bạn cần đăng nhập để gửi đánh giá cho khóa học này.
         </p>
       )}
 
-      <div className="mt-4 space-y-3">
+      {/* Danh sách review */}
+      <div className="mt-5 space-y-3">
         {localReviews.length === 0 ? (
-          <p className="font-medium text-blue/50">Chưa có đánh giá nào.</p>
+          <p className="rounded-xl border border-blue/10 bg-blue/5 px-5 py-8 text-center font-medium text-blue/40">
+            Chưa có đánh giá nào. Hãy là người đầu tiên!
+          </p>
         ) : (
-          localReviews.map((review) => (
+          localReviews.map((review, i) => (
             <div
               key={review._id}
-              className="rounded-lg border border-blue/10 p-4"
+              className="rounded-xl border border-blue/10 bg-white p-4 sm:p-5"
+              style={{
+                animation: `review-enter 350ms cubic-bezier(0.22,1,0.36,1) ${i * 40}ms both`,
+              }}
             >
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-blue">{review.user.name}</span>
-                <span className="text-sm font-medium text-blue/50">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-yellow font-mono text-sm font-bold text-blue">
+                    {review.user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <span className="font-bold text-blue">{review.user.name}</span>
+                    <div className="mt-0.5">
+                      <StarRating value={review.rating} size={12} />
+                    </div>
+                  </div>
+                </div>
+                <span className="shrink-0 text-xs font-medium text-blue/40">
                   {new Date(review.createdAt).toLocaleDateString("vi-VN")}
                 </span>
               </div>
-              <div className="mt-1 text-yellow">
-                <StarRating value={review.rating} size={14} />
-              </div>
               {review.comment && (
-                <p className="mt-2 font-medium text-blue/90">
+                <p className="mt-3 text-sm font-medium leading-relaxed text-blue/80">
                   {review.comment}
                 </p>
               )}
@@ -152,6 +176,16 @@ export default function CourseReviews({
           ))
         )}
       </div>
+
+      <style>{`
+        @keyframes review-enter {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="review-enter"] { animation: none !important; }
+        }
+      `}</style>
     </section>
   );
 }

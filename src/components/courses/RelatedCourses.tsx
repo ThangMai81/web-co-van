@@ -12,7 +12,7 @@ export default function RelatedCourses({
   return (
     <section>
       <h2 className="mb-4 text-xl font-bold text-blue">
-        Chương Trình Tương Tự
+        Khóa học tương tự
       </h2>
       <div
         className={`grid grid-cols-1 gap-6 sm:grid-cols-2 ${hasSingleCourse ? "lg:grid-cols-1" : "lg:grid-cols-3"}`}
