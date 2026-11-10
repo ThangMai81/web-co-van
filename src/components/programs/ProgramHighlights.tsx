@@ -1,6 +1,9 @@
+import type { CSSProperties } from "react";
 import type { ProgramStat } from "@/types/program";
 import ProgramStats from "./ProgramStats";
 import styles from "./ProgramHighlights.module.css";
+import revealStyles from "./ProgramHighlightsReveal.module.css";
+import ProgramHighlightsRevealWrapper from "./ProgramHighlightsRevealWrapper";
 
 const preparationSteps = [
   "Xác định điều bạn muốn ưu tiên khi cân nhắc chương trình.",
@@ -27,23 +30,29 @@ export default function ProgramHighlights({
   if (!hasHighlights && !hasStats) return null;
 
   const highlightsSection = hasHighlights ? (
-    <section
+    <ProgramHighlightsRevealWrapper
+      as="section"
       id="program-highlights"
       aria-labelledby="program-highlights-heading"
       className="min-w-0 scroll-mt-28 md:scroll-mt-32"
     >
       <h2
         id="program-highlights-heading"
-        className="mb-5 border-l-4 border-yellow pl-4 text-2xl font-bold text-white md:text-3xl"
+        className={`mb-5 border-l-4 border-yellow pl-4 text-2xl font-bold text-white md:text-3xl ${revealStyles.headingReveal}`}
       >
         ✨ Điểm nổi bật
       </h2>
-      <ul className="list-disc space-y-2 pl-5 font-medium text-white/90">
+      <ul className={`list-disc space-y-2 pl-5 font-medium text-white/90 ${revealStyles.highlightsList}`}>
         {highlights.map((item, idx) => (
-          <li key={idx}>{item}</li>
+          <li
+            key={idx}
+            style={{ "--item-delay": `${80 + idx * 60}ms` } as CSSProperties}
+          >
+            {item}
+          </li>
         ))}
       </ul>
-    </section>
+    </ProgramHighlightsRevealWrapper>
   ) : null;
 
   const statsSection = hasStats ? (

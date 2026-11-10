@@ -1,0 +1,41 @@
+/*
+ * ProgramHighlightsReveal — scroll-triggered stagger cho nền navy
+ * data-highlights-visible="true" set bởi ProgramHighlightsRevealWrapper khi vào viewport
+ */
+
+.headingReveal {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-highlights-visible="true"] .headingReveal {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.highlightsList > li {
+  opacity: 0;
+  transform: translate3d(-18px, 0, 0);
+  transition:
+    opacity 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--item-delay, 0ms);
+}
+
+[data-highlights-visible="true"] .highlightsList > li {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headingReveal,
+  .highlightsList > li {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0ms !important;
+  }
+}

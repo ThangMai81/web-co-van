@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Chapter, Lesson } from "@/types/course";
 import styles from "./CourseCurriculum.module.css";
-import panelStyles from "./CourseCurriculumPanelTransition.module.css";
+import CurriculumAccordionItem from "./CurriculumAccordionItem";
 
 function formatDate(dateStr?: string) {
   if (!dateStr) return "";
@@ -296,62 +296,65 @@ export default function CourseCurriculum({
       )}
 
       <div className="divide-y divide-blue/10 rounded-b-xl border border-blue/15">
-        {visibleChapters.map(({ chapter, chapterIndex, lessons }, idx) => (
-          <details
-            key={chapterIndex}
-            open={openChapterIndices.has(chapterIndex)}
-            onToggle={(event) => {
-              const isOpen = event.currentTarget.open;
-              setOpenChapterIndices((current) => {
-                if (current.has(chapterIndex) === isOpen) return current;
-                const next = new Set(current);
-                if (isOpen) next.add(chapterIndex);
-                else next.delete(chapterIndex);
-                return next;
-              });
-            }}
-            data-route-entry-pending={idx === 0 && entryAnimationPending ? "true" : undefined}
-            className={panelStyles.panelTransition}
-          >
-            <summary
-              className={`${styles.summary} cursor-pointer list-none bg-blue/5 pl-5 pr-12 py-3 font-bold text-blue`}
+        {visibleChapters.map(({ chapter, chapterIndex, lessons }, idx) => {
+          const headingId = `curriculum-chapter-${chapterIndex}`;
+          const regionId = `curriculum-panel-${chapterIndex}`;
+          return (
+            <CurriculumAccordionItem
+              key={chapterIndex}
+              headingId={headingId}
+              regionId={regionId}
+              isOpen={openChapterIndices.has(chapterIndex)}
+              isEntryPending={idx === 0 && entryAnimationPending}
+              onToggle={() =>
+                setOpenChapterIndices((current) => {
+                  const next = new Set(current);
+                  if (current.has(chapterIndex)) next.delete(chapterIndex);
+                  else next.add(chapterIndex);
+                  return next;
+                })
+              }
+              summary={
+                <span>
+                  Chương {chapterIndex + 1}: {chapter.title}
+                  <span className="ml-2 whitespace-nowrap text-xs font-medium text-blue/60">
+                    {lessons.length} bài giảng
+                  </span>
+                </span>
+              }
             >
-              Chương {chapterIndex + 1}: {chapter.title}
-              <span className="ml-2 whitespace-nowrap text-xs font-medium text-blue/60">
-                {lessons.length} bài giảng
-              </span>
-            </summary>
-            <div className="divide-y divide-blue/10">
-              {chapter.lessons.length === 0 ? (
-                <p className="px-5 py-3 text-sm font-medium text-blue/60">
-                  Chương này chưa có bài giảng.
-                </p>
-              ) : (
-                lessons.map(({ lesson, lessonIndex }) => (
-                  <div
-                    key={lessonIndex}
-                    className="flex flex-wrap items-center gap-3 px-5 py-3"
-                  >
-                    <span className="font-bold text-blue">
-                      Bài giảng {lessonIndex + 1}: {lesson.title}
-                    </span>
-                    <span className="rounded-full bg-blue px-2 py-0.5 text-xs font-bold text-white">
-                      {lesson.format === "online" ? "Trực tuyến" : "Trực tiếp"}
-                    </span>
-                    {lesson.scheduledAt && (
-                      <span className="text-sm font-medium text-blue/60">
-                        {formatDate(lesson.scheduledAt)}
-                        {lesson.durationHours
-                          ? ` - ${lesson.durationHours} tiếng`
-                          : ""}
+              <div className="divide-y divide-blue/10">
+                {chapter.lessons.length === 0 ? (
+                  <p className="px-5 py-3 text-sm font-medium text-blue/60">
+                    Chương này chưa có bài giảng.
+                  </p>
+                ) : (
+                  lessons.map(({ lesson, lessonIndex }) => (
+                    <div
+                      key={lessonIndex}
+                      className="flex flex-wrap items-center gap-3 px-5 py-3"
+                    >
+                      <span className="font-bold text-blue">
+                        Bài giảng {lessonIndex + 1}: {lesson.title}
                       </span>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </details>
-        ))}
+                      <span className="rounded-full bg-blue px-2 py-0.5 text-xs font-bold text-white">
+                        {lesson.format === "online" ? "Trực tuyến" : "Trực tiếp"}
+                      </span>
+                      {lesson.scheduledAt && (
+                        <span className="text-sm font-medium text-blue/60">
+                          {formatDate(lesson.scheduledAt)}
+                          {lesson.durationHours
+                            ? ` - ${lesson.durationHours} tiếng`
+                            : ""}
+                        </span>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </CurriculumAccordionItem>
+          );
+        })}
       </div>
     </section>
   );

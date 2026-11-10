@@ -3,8 +3,8 @@
   grid-template-rows: 0fr;
   margin-top: 0;
   transition:
-    grid-template-rows 250ms cubic-bezier(0.2, 0.75, 0.3, 1),
-    margin-top 250ms cubic-bezier(0.2, 0.75, 0.3, 1);
+    grid-template-rows 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .expanded {
@@ -15,10 +15,48 @@
 .extraBulletsInner {
   min-height: 0;
   overflow: hidden;
+  opacity: 0;
+  transform: translate3d(0, 6px, 0);
+  transition:
+    opacity 260ms cubic-bezier(0.22, 1, 0.36, 1) 60ms,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
+}
+
+.expanded .extraBulletsInner {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.toggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.toggleBtnChevron {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  margin-bottom: 1px;
+}
+
+.toggleBtnChevronOpen {
+  transform: rotate(225deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .extraBullets {
-    transition: none;
+  .extraBullets,
+  .extraBulletsInner,
+  .toggleBtnChevron {
+    transition: none !important;
+  }
+
+  .extraBulletsInner {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

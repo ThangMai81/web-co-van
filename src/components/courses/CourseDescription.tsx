@@ -71,9 +71,10 @@ export default function CourseDescription({
               onClick={() => setExpanded((v) => !v)}
               aria-expanded={expanded}
               aria-controls={extraBulletsId}
-              className="mt-3 text-sm font-bold text-blue underline decoration-yellow decoration-2 underline-offset-4 hover:text-yellow"
+              className={`mt-3 text-sm font-bold text-blue underline decoration-yellow decoration-2 underline-offset-4 hover:text-yellow ${styles.toggleBtn}`}
             >
               {expanded ? "Ẩn bớt" : "Xem thêm"}
+              <span aria-hidden="true" className={`${styles.toggleBtnChevron} ${expanded ? styles.toggleBtnChevronOpen : ""}`} />
             </button>
           )}
         </div>
@@ -110,9 +111,10 @@ export default function CourseDescription({
               onClick={() => setHighlightsExpanded((v) => !v)}
               aria-expanded={highlightsExpanded}
               aria-controls={extraHighlightsId}
-              className="mt-3 text-sm font-bold text-blue underline decoration-yellow decoration-2 underline-offset-4 hover:text-yellow"
+              className={`mt-3 text-sm font-bold text-blue underline decoration-yellow decoration-2 underline-offset-4 hover:text-yellow ${styles.toggleBtn}`}
             >
               {highlightsExpanded ? "Ẩn bớt" : "Xem thêm"}
+              <span aria-hidden="true" className={`${styles.toggleBtnChevron} ${highlightsExpanded ? styles.toggleBtnChevronOpen : ""}`} />
             </button>
           )}
         </div>
