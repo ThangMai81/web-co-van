@@ -173,7 +173,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
       : []),
     { id: "course-reviews", label: "Đánh giá" },
     ...(relatedCourses.length > 0
-      ? [{ id: "related-courses", label: "Chương trình tương tự" }]
+      ? [{ id: "related-courses", label: "Khóa học tương tự" }]
       : []),
   ];
 
@@ -182,13 +182,15 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
       <DetailRouteScrollReset />
       <SiteHeader />
       <main className="route-detail-enter">
-        <section className="bg-[#fff8e8]">
-          <div className="mx-auto max-w-[var(--page-w)] px-6 pb-10 pt-[88px] md:pb-12 md:pt-[128px] lg:pt-[88px]">
+        <section className="relative isolate overflow-hidden bg-blue">
+          <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 -z-10 h-[30rem] w-[30rem] rounded-full bg-yellow/15 blur-3xl" />
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 -left-24 -z-10 h-[26rem] w-[26rem] rounded-full bg-[#24407a] blur-3xl" />
+          <div className="mx-auto max-w-[var(--page-w)] px-6 pb-12 pt-[88px] md:pb-16 md:pt-[128px] lg:pt-[96px]">
             <div
               className={`grid gap-6 ${detail?.thumbnail ? "items-center lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10" : ""}`}
             >
               <div
-                className={`order-1 rounded-2xl border border-blue/10 bg-white p-5 shadow-sm shadow-blue/5 sm:p-6 ${detail?.thumbnail ? "lg:order-2" : "max-w-3xl"}`}
+                className={`order-1 rounded-3xl border border-white/20 bg-white p-6 shadow-2xl shadow-black/30 sm:p-8 ${detail?.thumbnail ? "lg:order-2" : "max-w-3xl"}`}
               >
                 <CourseHeader course={course} detail={detail} />
                 {detail && (
