@@ -194,7 +194,11 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
               >
                 <CourseHeader course={course} detail={detail} />
                 {detail && (
-                  <CourseSidebar courseId={course._id} detail={detail} />
+                  <CourseSidebar
+                    detail={detail}
+                    contactPhone={course.contact?.phone}
+                    contactName={course.contact?.name}
+                  />
                 )}
               </div>
               {detail?.thumbnail && (
