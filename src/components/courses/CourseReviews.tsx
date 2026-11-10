@@ -52,38 +52,52 @@ export default function CourseReviews({
       <h2 className="mb-4 text-xl font-bold text-blue">Đánh giá</h2>
 
       {/* Tổng quan rating */}
-      <div className="rounded-xl border border-blue/10 bg-blue/5 p-5">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-display text-4xl font-extrabold text-blue">
-              {ratingAverage.toFixed(1)}
-            </span>
-            <div>
-              <StarRating value={ratingAverage} size={16} />
-              <div className="mt-0.5 text-xs font-medium text-blue/50">
-                {ratingCount} lượt đánh giá
+      {ratingCount > 0 ? (
+        <div className="rounded-xl border border-blue/10 bg-blue/5 p-5">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-display text-4xl font-extrabold text-blue">
+                {ratingAverage.toFixed(1)}
+              </span>
+              <div>
+                <StarRating value={ratingAverage} size={16} />
+                <div className="mt-0.5 text-xs font-medium text-blue/50">
+                  {ratingCount} lượt đánh giá
+                </div>
               </div>
             </div>
-          </div>
 
-          {breakdown.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {breakdown
-                .slice()
-                .sort((a, b) => b.star - a.star)
-                .map((b) => (
-                  <span
-                    key={b.star}
-                    className="inline-flex items-center gap-1 rounded-full border border-blue/15 bg-white px-3 py-1 text-xs font-bold text-blue"
-                  >
-                    {"★".repeat(b.star)}
-                    <span className="font-normal text-blue/50">({b.count})</span>
-                  </span>
-                ))}
-            </div>
-          )}
+            {breakdown.some((b) => b.count > 0) && (
+              <div className="flex flex-wrap gap-2">
+                {breakdown
+                  .filter((b) => b.count > 0)
+                  .sort((a, b) => b.star - a.star)
+                  .map((b) => (
+                    <span
+                      key={b.star}
+                      className="inline-flex items-center gap-1 rounded-full border border-blue/15 bg-white px-3 py-1 text-xs font-bold text-blue"
+                    >
+                      {b.star} sao
+                      <span className="font-normal text-blue/50">({b.count})</span>
+                    </span>
+                  ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-4 rounded-xl border border-dashed border-blue/20 bg-blue/[0.03] p-5">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-yellow/20 text-2xl text-yellow" aria-hidden="true">
+            ★
+          </span>
+          <div>
+            <p className="font-bold text-blue">Chưa có đánh giá cho khóa học này</p>
+            <p className="mt-0.5 text-sm text-blue/60">
+              Nếu bạn đã tham gia, hãy chia sẻ cảm nhận để giúp người đến sau.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Form gửi đánh giá */}
       {user ? (
@@ -139,9 +153,7 @@ export default function CourseReviews({
       {/* Danh sách review */}
       <div className="mt-5 space-y-3">
         {localReviews.length === 0 ? (
-          <p className="rounded-xl border border-blue/10 bg-blue/5 px-5 py-8 text-center font-medium text-blue/40">
-            Chưa có đánh giá nào. Hãy là người đầu tiên!
-          </p>
+          null
         ) : (
           localReviews.map((review, i) => (
             <div

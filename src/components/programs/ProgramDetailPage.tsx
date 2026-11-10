@@ -7,6 +7,7 @@ import ProgramRegistration from "./ProgramRegistration";
 import type { Program } from "@/types/program";
 import { fetchDetailRouteData } from "@/lib/detailRouteFetch";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
+import { ReadingProgress } from "@/components/navigation/ReadingProgress";
 import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
@@ -116,6 +117,7 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
     <div className="min-h-svh bg-white">
       <DetailRouteScrollReset />
       <SiteHeader />
+      <ReadingProgress />
       <main className="route-detail-enter">
         <ProgramHero
           program={displayProgram}

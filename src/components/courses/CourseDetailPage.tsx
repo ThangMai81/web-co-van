@@ -9,6 +9,7 @@ import RelatedCourses from "./RelatedCourses";
 import type { CourseDetailResponse } from "@/types/course";
 import { fetchDetailRouteData } from "@/lib/detailRouteFetch";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
+import { ReadingProgress } from "@/components/navigation/ReadingProgress";
 import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
@@ -181,6 +182,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
     <div className="min-h-svh bg-white">
       <DetailRouteScrollReset />
       <SiteHeader />
+      <ReadingProgress />
       <main className="route-detail-enter">
         <section className="relative isolate overflow-hidden bg-blue">
           <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 -z-10 h-[30rem] w-[30rem] rounded-full bg-yellow/15 blur-3xl" />
