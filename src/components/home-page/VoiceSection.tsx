@@ -35,13 +35,31 @@ export function VoicesSection() {
       <div className="pointer-events-none absolute right-0 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-yellow/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-[var(--page-w)] px-6">
-        <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
-          <span className="block h-px w-6 bg-yellow" />
-          Những câu chuyện thật
-        </div>
-        <h2 className="mb-16 font-display text-4xl font-bold text-white">
-          Từ những người đã đi cùng
-        </h2>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 120 96"
+          className="pointer-events-none absolute -top-6 right-6 hidden h-48 w-60 text-yellow/10 md:block"
+        >
+          <path
+            fill="currentColor"
+            d="M0 96V58C0 26 15 7 46 0l6 13C35 19 27 30 26 48h22v48H0Zm66 0V58C66 26 81 7 112 0l6 13c-17 6-25 17-26 35h22v48H66Z"
+          />
+        </svg>
+        <Reveal direction="up">
+          <div className="mb-16 max-w-3xl">
+            <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">
+              <span className="block h-px w-8 bg-yellow" />
+              Những câu chuyện thật
+            </div>
+            <h2 className="font-display text-4xl font-bold leading-tight text-white md:text-5xl">
+              Từ những người <span className="text-yellow">đã đi cùng</span>
+            </h2>
+            <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-white/70">
+              Không phải lời quảng cáo — đây là những câu chuyện được chính học
+              viên viết ra sau hành trình cùng Sunshine Center.
+            </p>
+          </div>
+        </Reveal>
 
         {/* items-start: mở rộng một thẻ không kéo giãn thẻ còn lại */}
         <div className={`grid grid-cols-1 items-start gap-6 ${gridCols}`}>

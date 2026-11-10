@@ -38,7 +38,7 @@ export function VoiceCard({
   const toggleExpanded = () => setExpanded((prev) => !prev);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-white/15 bg-white/5">
+    <article className="group overflow-hidden rounded-3xl border border-white/15 bg-white/5 shadow-2xl shadow-black/20 transition-colors duration-300 hover:border-yellow/50 hover:bg-white/[0.08]">
       {image && (
         <div className="relative aspect-[4/3] w-full">
           <Image
@@ -46,7 +46,7 @@ export function VoiceCard({
             alt={`Ảnh của ${who}`}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-105"
             style={{ objectPosition: imagePosition }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-blue/90 via-blue/10 to-transparent" />
