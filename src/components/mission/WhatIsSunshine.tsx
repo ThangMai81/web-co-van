@@ -1,5 +1,12 @@
 import { Reveal } from "@/components/animation/Reveal";
 import { MissionOverviewGroupPhotoParallax } from "./MissionOverviewGroupPhotoParallax";
+import { Brain, Eye, Heart, type LucideIcon } from "lucide-react";
+
+const PILLARS: { icon: LucideIcon; title: string; body: string }[] = [
+  { icon: Eye, title: "Tỉnh thức", body: "Dừng lại, nhìn rõ mình đang ở đâu và điều gì thật sự quan trọng." },
+  { icon: Brain, title: "Trí tuệ", body: "Hiểu gốc rễ vấn đề để chọn hướng đi sáng suốt, không theo cảm tính." },
+  { icon: Heart, title: "Yêu thương", body: "Một không gian an toàn để chia sẻ — như trở về nhà." },
+];
 
 export function WhatIsSunshine() {
   return (
@@ -32,6 +39,20 @@ export function WhatIsSunshine() {
             </p>
           </div>
         </Reveal>
+
+        <div className="mx-auto mt-14 grid max-w-5xl gap-5 md:grid-cols-3">
+          {PILLARS.map((pillar, i) => (
+            <Reveal key={pillar.title} direction="up" delay={i * 150}>
+              <div className="group relative h-full overflow-hidden rounded-3xl border border-blue/10 bg-blue/[0.03] p-7 text-center transition-all duration-500 hover:-translate-y-1 hover:border-yellow/70 hover:bg-white hover:shadow-xl hover:shadow-blue/10">
+                <span className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full bg-blue text-yellow ring-8 ring-yellow/15 transition-transform duration-500 group-hover:scale-110">
+                  <pillar.icon size={26} strokeWidth={1.8} aria-hidden="true" />
+                </span>
+                <h3 className="font-display text-2xl font-bold text-blue">{pillar.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-blue/70">{pillar.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
