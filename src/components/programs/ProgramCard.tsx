@@ -18,7 +18,7 @@ export default function ProgramCard({ program }: { program: Program }) {
           : "border-yellow/60 shadow-blue/5 hover:border-yellow hover:shadow-blue/10"
       }`}
     >
-      <div className="relative h-48 w-full shrink-0 bg-blue/10 sm:h-52">
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-blue/10 sm:h-52">
         {program.coverImage && (
           <ProgramCardThumbnail
             src={program.coverImage}

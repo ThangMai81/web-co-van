@@ -31,10 +31,16 @@ export default function ProgramCardThumbnail({
             currentFailedSrc === src ? null : currentFailedSrc,
           )
         }
-        className={`object-cover ${isPast ? "grayscale-[35%]" : ""} ${
-          hasError ? "opacity-0" : ""
-        }`}
+        className={`object-cover transition-[transform,filter] duration-[1400ms] ease-out group-hover:scale-[1.07] motion-reduce:transition-none motion-reduce:group-hover:scale-100 ${
+          isPast ? "grayscale-[35%] group-hover:grayscale-0" : ""
+        } ${hasError ? "opacity-0" : ""}`}
       />
+      {!hasError && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-blue/45 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-100"
+        />
+      )}
       {hasError && (
         <div
           aria-hidden="true"
