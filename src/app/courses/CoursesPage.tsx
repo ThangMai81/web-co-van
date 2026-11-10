@@ -128,12 +128,28 @@ export default async function CoursesPage({
               "mt-8 flex gap-8 border-t border-white/15 pt-6",
             ].join(" ")}
           >
-            <div>
-              <div className="text-2xl font-extrabold text-yellow">
-                {courses.length}
-              </div>
-              <div className="text-xs font-medium text-white/60">Khóa học</div>
-            </div>
+            {[
+              { value: courses.length, label: "Khóa học" },
+              {
+                value: new Set(courses.map((c) => c.category).filter(Boolean)).size,
+                label: "Chủ đề",
+              },
+              {
+                value: courses.filter((c) => /online|trực tuyến/i.test(c.format)).length,
+                label: "Học trực tuyến",
+              },
+            ]
+              .filter((stat) => stat.value > 0)
+              .map((stat, i) => (
+                <div key={stat.label} className={i > 0 ? "border-l border-white/15 pl-8" : ""}>
+                  <div className="font-display text-3xl font-extrabold text-yellow">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
           </div>
         )}
       </HeroSection>
