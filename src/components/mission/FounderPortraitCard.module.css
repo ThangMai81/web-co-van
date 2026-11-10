@@ -1,31 +1,44 @@
+/*
+ * Chân dung nhà sáng lập — "màn che kéo mở" từ dưới lên + ảnh phóng chậm về vừa.
+ * Chạy MỘT chiều, cùng lúc khối Reveal cha bật data-visible="true".
+ * (Thay cho hiệu ứng cũ tụt 8px rồi bật về — trông như ảnh bị giật.)
+ */
+
 .portraitCard {
-  transform: translateY(0);
+  clip-path: inset(0 0 0 0 round 1rem);
+  transition: clip-path 1500ms cubic-bezier(0.77, 0, 0.18, 1) 120ms;
 }
 
-.settleActive {
-  animation: founder-portrait-card-settle 650ms
-    cubic-bezier(0.22, 1, 0.36, 1) both;
+.portraitCard :global(img) {
+  transform: scale(1);
+  transition: transform 2400ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
 }
 
-@keyframes founder-portrait-card-settle {
-  from {
-    transform: translateY(8px);
-    box-shadow:
-      0 22px 34px -14px rgba(4, 18, 42, 0.24),
-      0 8px 14px -10px rgba(4, 18, 42, 0.2);
-  }
-
-  to {
-    transform: translateY(0);
-    box-shadow:
-      var(--tw-ring-offset-shadow, 0 0 #0000),
-      var(--tw-ring-shadow, 0 0 #0000),
-      var(--tw-shadow, 0 0 #0000);
-  }
+/* Thanh vàng quét theo mép màn che */
+.portraitCard::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-yellow), transparent);
+  opacity: 0;
+  pointer-events: none;
 }
 
-@media (max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .settleActive {
-    animation: none;
+:global([data-visible="false"]) .portraitCard {
+  clip-path: inset(100% 0 0 0 round 1rem);
+}
+
+:global([data-visible="false"]) .portraitCard :global(img) {
+  transform: scale(1.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portraitCard,
+  .portraitCard :global(img) {
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

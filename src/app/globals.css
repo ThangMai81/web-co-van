@@ -209,11 +209,14 @@ body {
 }
 
 @keyframes coach-profile-portrait-settle {
+  /* Ảnh lộ dần từ dưới lên và trôi chậm về kích thước thật — một chiều */
   from {
-    transform: scale(1.08);
+    clip-path: inset(100% 0 0 0);
+    transform: scale(1.25);
   }
 
   to {
+    clip-path: inset(0 0 0 0);
     transform: scale(1);
   }
 }
@@ -270,6 +273,6 @@ h1[data-coach-name-kinetic="true"] .coach-profile-name-kinetic__word:nth-of-type
   }
 
   main > section:first-of-type > div > div.grid > [class~="max-w-md"][class~="rounded-[48%_48%_1.5rem_1.5rem]"] > :is(img, span) {
-    animation: coach-profile-portrait-settle 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: coach-profile-portrait-settle 1800ms cubic-bezier(0.77, 0, 0.18, 1) 150ms both;
   }
 }
