@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/animation/Reveal";
 import { CultureValuesOrbit } from "./CultureValuesOrbit";
+import { Gem, Sun } from "lucide-react";
 
 export function CultureAndValues() {
   return (
@@ -10,7 +11,11 @@ export function CultureAndValues() {
       <div className="relative mx-auto max-w-[var(--page-w)]">
         <div className="grid gap-5 lg:grid-cols-2 lg:gap-8">
           <Reveal direction="left" showOnObserverSetupError>
-            <div className="h-full rounded-2xl border border-white/15 bg-white/[0.04] p-6 sm:p-8">
+            <div className="group relative h-full overflow-hidden rounded-3xl border border-white/15 bg-white/[0.04] p-7 transition-colors duration-300 hover:border-yellow/50 hover:bg-white/[0.07] sm:p-10">
+              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-yellow to-yellow/0 transition-transform duration-700 group-hover:scale-x-100" />
+              <span className="mb-6 grid h-14 w-14 place-items-center rounded-2xl bg-yellow text-blue shadow-lg shadow-yellow/20 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+                <Sun size={26} strokeWidth={1.8} aria-hidden="true" />
+              </span>
               <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
                 <span className="block h-px w-6 bg-yellow" />
                 Văn hoá
@@ -24,7 +29,11 @@ export function CultureAndValues() {
           </Reveal>
 
           <Reveal direction="right" showOnObserverSetupError>
-            <div className="h-full rounded-2xl border border-white/15 bg-white/[0.04] p-6 sm:p-8">
+            <div className="group relative h-full overflow-hidden rounded-3xl border border-white/15 bg-white/[0.04] p-7 transition-colors duration-300 hover:border-yellow/50 hover:bg-white/[0.07] sm:p-10">
+              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-yellow to-yellow/0 transition-transform duration-700 group-hover:scale-x-100" />
+              <span className="mb-6 grid h-14 w-14 place-items-center rounded-2xl bg-yellow text-blue shadow-lg shadow-yellow/20 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+                <Gem size={26} strokeWidth={1.8} aria-hidden="true" />
+              </span>
               <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
                 <span className="block h-px w-6 bg-yellow" />
                 Giá trị cốt lõi
