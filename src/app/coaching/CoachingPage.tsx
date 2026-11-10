@@ -6,6 +6,7 @@ import { VideoDemo } from "@/components/coaching/VideoDemo";
 import { Process } from "@/components/coaching/Process";
 import { About } from "@/components/coaching/About";
 import { CTA } from "@/components/coaching/CTA";
+import { FAQ } from "@/components/coaching/FAQ";
 
 export function CoachingPage() {
   return (
@@ -16,6 +17,7 @@ export function CoachingPage() {
       <VideoDemo />
       <Process />
       <About />
+      <FAQ />
       <CTA />
       <SiteFooter />
     </main>
