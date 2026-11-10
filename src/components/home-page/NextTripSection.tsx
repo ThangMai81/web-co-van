@@ -1,5 +1,6 @@
 import { Reveal } from "../animation/Reveal";
 import { TripRegistrationDialog } from "./TripRegistrationDialog";
+import { TripCountdown } from "./TripCountdown";
 import { CalendarDays, Compass, Flag, Mountain, type LucideIcon } from "lucide-react";
 
 const TRIP_HIGHLIGHTS: { icon: LucideIcon; label: string; desc: string }[] = [
@@ -66,6 +67,12 @@ export function NextTripSection() {
                 </div>
                 <div className="my-3 font-display text-xl font-bold text-white">
                   Đăng ký đồng hành
+                </div>
+                <div className="mb-5">
+                  <div className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
+                    Còn lại đến ngày khởi hành
+                  </div>
+                  <TripCountdown />
                 </div>
                 <p className="mb-4 text-sm font-medium text-white/60">
                   Số chỗ có hạn — ưu tiên đăng ký sớm để giữ chỗ.
