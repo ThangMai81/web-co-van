@@ -38,20 +38,33 @@ export default function ProgramHighlights({
     >
       <h2
         id="program-highlights-heading"
-        className={`mb-5 border-l-4 border-yellow pl-4 text-2xl font-bold text-white md:text-3xl ${revealStyles.headingReveal}`}
+        className={`mb-6 border-l-4 border-yellow pl-4 font-display text-2xl font-bold text-white md:text-3xl ${revealStyles.headingReveal}`}
       >
-        ✨ Điểm nổi bật
+        Điểm nổi bật
       </h2>
-      <ul className={`list-disc space-y-2 pl-5 font-medium text-white/90 ${revealStyles.highlightsList}`}>
+      <ol className={`grid gap-4 ${revealStyles.highlightsList}`}>
         {highlights.map((item, idx) => (
           <li
             key={idx}
-            style={{ "--item-delay": `${80 + idx * 60}ms` } as CSSProperties}
+            className="group relative flex items-start gap-5 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] p-5 transition-colors duration-300 hover:border-yellow/50 hover:bg-white/[0.09] md:p-6"
+            style={{ "--item-delay": `${120 + idx * 140}ms` } as CSSProperties}
           >
-            {item}
+            <span
+              aria-hidden="true"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-yellow font-display text-base font-extrabold text-blue shadow-lg shadow-yellow/20 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110"
+            >
+              0{idx + 1}
+            </span>
+            <p className="pt-1.5 text-lg font-semibold leading-relaxed text-white md:text-xl">
+              {item}
+            </p>
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-yellow to-transparent transition-transform duration-700 group-hover:scale-x-100"
+            />
           </li>
         ))}
-      </ul>
+      </ol>
     </ProgramHighlightsRevealWrapper>
   ) : null;
 
@@ -100,12 +113,12 @@ export default function ProgramHighlights({
           >
             Gợi ý cân nhắc
           </h3>
-          <ol className="mt-5 grid gap-4">
+          <ol className="relative mt-5 grid gap-5 before:absolute before:bottom-3 before:left-[0.95rem] before:top-3 before:w-px before:bg-gradient-to-b before:from-yellow before:to-yellow/10">
             {preparationSteps.map((step, index) => (
-              <li key={step} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3">
+              <li key={step} className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4">
                 <span
                   aria-hidden="true"
-                  className="pt-0.5 text-sm font-bold tracking-wide text-yellow"
+                  className="relative z-10 grid h-8 w-8 place-items-center rounded-full border border-yellow/70 bg-blue text-xs font-bold text-yellow"
                 >
                   0{index + 1}
                 </span>
