@@ -22,7 +22,7 @@ export default function ProgramVideo({ url }: { url: string }) {
           rel="noreferrer"
           className="flex aspect-video w-full items-center justify-center bg-blue/5 font-bold text-blue hover:bg-blue/10"
         >
-          ▶ Xem video chương trình
+          Xem video chương trình →
         </a>
       )}
     </div>

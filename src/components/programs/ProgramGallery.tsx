@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ProgramGalleryImageViewer from "./ProgramGalleryImageViewer";
+import { Camera } from "lucide-react";
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -436,7 +437,7 @@ export default function ProgramGallery({
           aria-hidden="true"
           className={`h-5 w-1 rounded-full bg-yellow ${accentMotionClass}`}
         />
-        <span>📷 Thư viện ảnh</span>
+        <span className="inline-flex items-center gap-2"><Camera size={18} className="text-yellow" aria-hidden="true" />Thư viện ảnh</span>
       </h2>
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-stretch lg:gap-4">

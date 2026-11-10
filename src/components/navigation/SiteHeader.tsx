@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   getStoredUser,
@@ -210,9 +211,9 @@ export function SiteHeader() {
             aria-expanded={menuOpen}
             ref={menuTriggerRef}
             onClick={() => setMenuOpen(true)}
-            className="flex h-11 w-11 items-center justify-center text-2xl text-ink lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-blue/5 lg:hidden"
           >
-            ☰
+            <MenuIcon size={24} strokeWidth={2} aria-hidden="true" />
           </button>
         </div>
       </header>
@@ -244,7 +245,7 @@ export function SiteHeader() {
             onClick={() => closeMenu()}
             className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-2xl text-ink transition-colors hover:bg-blue/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
           >
-            ✕
+            <CloseIcon size={22} strokeWidth={2} aria-hidden="true" />
           </button>
 
           {user && (
