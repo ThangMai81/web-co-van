@@ -1,0 +1,131 @@
+/* CourseProgramChoice — 2 panel ảnh lớn, mở ra bằng clip-path khi cuộn tới */
+
+.panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  clip-path: inset(100% 0 0 0 round 1.5rem);
+  transition: clip-path 1200ms cubic-bezier(0.77, 0, 0.18, 1);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-choice-visible="true"] .panel {
+  clip-path: inset(0 0 0 0 round 1.5rem);
+}
+
+.panelImage {
+  transform: scale(1.18);
+  transition: transform 1800ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
+}
+
+[data-choice-visible="true"] .panelImage {
+  transform: scale(1);
+}
+
+.panel:hover .panelImage,
+.panel:focus-within .panelImage {
+  transform: scale(1.06);
+  transition-delay: 0ms;
+}
+
+/* Lớp phủ navy — đậm dần khi hover để chữ nổi */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgb(20 40 80 / 0.15) 0%, rgb(20 40 80 / 0.55) 45%, rgb(20 40 80 / 0.95) 100%);
+  transition: background-color 500ms ease;
+}
+
+.panel:hover .overlay {
+  background-color: rgb(20 40 80 / 0.15);
+}
+
+/* Nội dung trượt lên sau khi panel đã mở */
+.content {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  transition:
+    opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--d, 0ms) + 650ms);
+}
+
+[data-choice-visible="true"] .content {
+  opacity: 1;
+  transform: none;
+}
+
+/* Gạch vàng dài ra khi hover */
+.rule {
+  display: block;
+  height: 3px;
+  width: 3rem;
+  border-radius: 9999px;
+  background: var(--color-yellow);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panel:hover .rule,
+.panel:focus-within .rule {
+  width: 7rem;
+}
+
+/* Mô tả mở rộng khi hover (desktop) */
+.desc {
+  transition: opacity 500ms ease, max-height 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .desc {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  .panel:hover .desc,
+  .panel:focus-within .desc {
+    max-height: 10rem;
+    opacity: 1;
+  }
+}
+
+/* Mũi tên CTA */
+.arrow {
+  transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.panel:hover .arrow,
+.panel:focus-within .arrow {
+  transform: translateX(6px);
+}
+
+/* Heading */
+.headingRise {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-choice-visible="true"] .headingRise {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panelImage,
+  .content,
+  .headingRise,
+  .rule,
+  .arrow {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

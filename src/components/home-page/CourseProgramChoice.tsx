@@ -1,7 +1,31 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ArrowRight } from "@/lib/icons";
+import styles from "./CourseProgramChoice.module.css";
+
+const CHOICES = [
+  {
+    href: "/courses",
+    kicker: "01 · Học có lộ trình",
+    title: "Khóa học",
+    desc: "Học có hệ thống cùng giảng viên — phù hợp khi bạn muốn đi sâu vào một chủ đề, với lộ trình rõ ràng và bài giảng được thiết kế bài bản cho bạn hoặc con.",
+    cta: "Xem khóa học",
+    image: "/images/collaborate_team.jpg",
+    alt: "Học viên cùng học tại Sunshine Center",
+  },
+  {
+    href: "/programs",
+    kicker: "02 · Trải nghiệm cùng cộng đồng",
+    title: "Chương trình",
+    desc: "Trại hè, leo núi, workshop và những buổi off chữa lành — mỗi chương trình là một hành trình để kết nối sâu với bản thân và những người xung quanh.",
+    cta: "Xem chương trình",
+    image: "/images/home-yen-poster.jpg",
+    alt: "Hành trình leo núi cùng Sunshine Center",
+  },
+];
 
 export function CourseProgramChoice() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -10,12 +34,24 @@ export function CourseProgramChoice() {
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    let prefersReduced = false;
-    try { prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { /* noop */ }
-    if (prefersReduced || typeof IntersectionObserver === "undefined") { setVisible(true); return; }
+    let reduced = false;
+    try {
+      reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      reduced = true;
+    }
+    if (reduced || typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.1 },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -25,63 +61,65 @@ export function CourseProgramChoice() {
     <section
       ref={sectionRef}
       id="chon-khoa-hoc-hay-chuong-trinh"
+      data-choice-visible={visible ? "true" : undefined}
       aria-labelledby="course-program-choice-heading"
-      className="scroll-mt-24 bg-[#fffaf2] px-6 py-6 md:py-14"
+      className="scroll-mt-24 bg-[#fffaf2] px-6 py-14 md:py-24"
     >
       <div className="mx-auto max-w-[var(--page-w)]">
-        <div
-          className={`transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-        >
-          <div className="hidden h-1 w-10 bg-yellow md:block" aria-hidden="true" />
-          <h2
-            id="course-program-choice-heading"
-            className="max-w-[22ch] font-display text-2xl font-bold leading-tight text-blue sm:text-3xl md:mt-5 md:max-w-none md:text-4xl"
-          >
-            Khóa học hay Chương trình?
-          </h2>
-          <p className="mt-2 max-w-[52ch] text-sm font-medium text-blue/60 md:text-base">
-            Mỗi hành trình là khác nhau. Chọn hình thức phù hợp với bạn — học sâu theo khóa, hoặc trải nghiệm cùng cộng đồng qua chương trình.
+        <div className={`${styles.headingRise} flex flex-col gap-4 md:flex-row md:items-end md:justify-between`}>
+          <div>
+            <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-[0.2em] text-blue/60">
+              <span className="block h-px w-8 bg-yellow" />
+              Bắt đầu từ đâu?
+            </div>
+            <h2
+              id="course-program-choice-heading"
+              className="font-display text-3xl font-bold leading-tight text-blue md:text-5xl"
+            >
+              Khóa học hay Chương trình?
+            </h2>
+          </div>
+          <p className="max-w-[42ch] text-base leading-relaxed text-blue/65 md:text-right">
+            Mỗi hành trình là khác nhau. Học sâu theo khóa, hoặc trải nghiệm
+            cùng cộng đồng qua chương trình.
           </p>
         </div>
 
-        <div className="mt-5 grid gap-3 md:mt-12 md:grid-cols-2 md:gap-5">
-          <article
-            className={`flex flex-col rounded-xl border border-blue/15 bg-white p-5 transition-all duration-700 ease-out md:min-h-[292px] md:border-l-8 md:border-l-yellow md:p-8 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "120ms" }}
-          >
-            <h3 className="font-display text-lg font-bold text-blue md:text-2xl">
-              Khóa học
-            </h3>
-            <span className="mt-3 hidden h-1 w-12 bg-yellow md:block" aria-hidden="true" />
-            <p className="mt-2 text-sm leading-6 text-blue/75 sm:text-base md:mt-5 md:text-lg md:leading-8">
-              Học có hệ thống với giảng viên hướng dẫn — phù hợp khi bạn muốn đi sâu vào một chủ đề cụ thể, với lộ trình rõ ràng và bài giảng được thiết kế bài bản.
-            </p>
+        <div className="mt-10 grid gap-5 md:mt-14 md:grid-cols-2 md:gap-6">
+          {CHOICES.map((choice, i) => (
             <Link
-              href="/courses"
-              className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-blue px-7 py-3 text-sm font-semibold text-white hover:bg-blue/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue md:mt-auto md:w-fit md:rounded-md md:bg-yellow md:text-blue md:hover:bg-yellow/90"
+              key={choice.href}
+              href={choice.href}
+              className={`${styles.panel} group flex min-h-[24rem] flex-col justify-end rounded-3xl bg-blue focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-yellow focus-visible:ring-offset-4 focus-visible:ring-offset-[#fffaf2] md:min-h-[32rem]`}
+              style={{ "--d": `${i * 180}ms` } as CSSProperties}
             >
-              Xem khóa học
-            </Link>
-          </article>
+              <Image
+                src={choice.image}
+                alt={choice.alt}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className={`${styles.panelImage} -z-10 object-cover`}
+              />
+              <span className={styles.overlay} aria-hidden="true" />
 
-          <article
-            className={`flex flex-col rounded-xl border border-blue/15 bg-white p-5 transition-all duration-700 ease-out md:min-h-[292px] md:border-l-8 md:border-l-blue md:p-8 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "220ms" }}
-          >
-            <h3 className="font-display text-lg font-bold text-blue md:text-2xl">
-              Chương trình
-            </h3>
-            <span className="mt-3 hidden h-1 w-12 bg-yellow md:block" aria-hidden="true" />
-            <p className="mt-2 text-sm leading-6 text-blue/75 sm:text-base md:mt-5 md:text-lg md:leading-8">
-              Trải nghiệm cùng cộng đồng qua trại hè, leo núi, workshop và những buổi off chữa lành — mỗi chương trình là một hành trình để kết nối sâu với bản thân và những người xung quanh.
-            </p>
-            <Link
-              href="/programs"
-              className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-blue px-7 py-3 text-sm font-semibold text-white hover:bg-blue/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue md:mt-auto md:w-fit md:rounded-md"
-            >
-              Xem chương trình
+              <div className={`${styles.content} relative z-10 p-7 md:p-10`}>
+                <div className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-yellow">
+                  {choice.kicker}
+                </div>
+                <h3 className="font-display text-4xl font-bold text-white md:text-5xl">
+                  {choice.title}
+                </h3>
+                <span className={`${styles.rule} mt-4`} aria-hidden="true" />
+                <p className={`${styles.desc} mt-4 max-w-[46ch] text-base leading-relaxed text-white/85`}>
+                  {choice.desc}
+                </p>
+                <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-yellow px-6 py-3 text-sm font-bold text-blue">
+                  {choice.cta}
+                  <ArrowRight size={16} className={styles.arrow} aria-hidden="true" />
+                </span>
+              </div>
             </Link>
-          </article>
+          ))}
         </div>
       </div>
     </section>
