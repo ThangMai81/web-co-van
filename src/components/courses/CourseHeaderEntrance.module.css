@@ -1,0 +1,32 @@
+/*
+ * CourseHeaderEntrance — stagger entrance cho CourseHeader
+ */
+
+@keyframes course-header-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.enterItem {
+  animation: course-header-enter 440ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+.enterTitle      { --enter-delay: 60ms; }
+.enterSlogan     { --enter-delay: 130ms; }
+.enterFacts      { --enter-delay: 220ms; }
+.enterInstructor { --enter-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .enterItem {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

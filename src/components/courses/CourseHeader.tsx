@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import StarRating from "@/components/ui/StarRating";
 import type { Course, CourseDetail } from "@/types/course";
+import enter from "./CourseHeaderEntrance.module.css";
 
 export default function CourseHeader({
   course,
@@ -29,13 +30,13 @@ export default function CourseHeader({
         ]}
       />
 
-      <h1 className="text-3xl font-bold text-blue">{course.title}</h1>
+      <h1 className={`text-3xl font-bold text-blue ${enter.enterItem} ${enter.enterTitle}`}>{course.title}</h1>
       {course.slogan && (
-        <p className="mt-1 font-medium italic text-blue/70">{course.slogan}</p>
+        <p className={`mt-1 font-medium italic text-blue/70 ${enter.enterItem} ${enter.enterSlogan}`}>{course.slogan}</p>
       )}
 
       {(facts.length > 0 || course.targetAudience?.trim()) && (
-        <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+        <dl className={`mt-5 grid gap-3 sm:grid-cols-2 ${enter.enterItem} ${enter.enterFacts}`}>
           {facts.map((fact) => (
             <div
               key={fact.label}
@@ -61,7 +62,7 @@ export default function CourseHeader({
       )}
 
       {detail?.instructor?.name && (
-        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-blue/10 pt-4">
+        <div className={`mt-5 flex flex-wrap items-center gap-3 border-t border-blue/10 pt-4 ${enter.enterItem} ${enter.enterInstructor}`}>
           {detail.instructor.avatar && (
             <Image
               src={detail.instructor.avatar}

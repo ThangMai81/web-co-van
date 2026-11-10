@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import ProgramHeroImageViewer from "./ProgramHeroImageViewer";
 import ProgramHeroWarmSweep from "./ProgramHeroWarmSweep";
 import styles from "./ProgramHero.module.css";
+import enter from "./ProgramHeroEntrance.module.css";
 import type { Program } from "@/types/program";
 
 export default function ProgramHero({ program, viewerEnabled }: { program: Program; viewerEnabled: boolean }) {
@@ -33,7 +34,7 @@ export default function ProgramHero({ program, viewerEnabled }: { program: Progr
           }
         >
           <div className="min-w-0 text-white">
-            <div className="mb-3 flex flex-wrap gap-2">
+            <div className={`mb-3 flex flex-wrap gap-2 ${enter.enterItem} ${enter.enterBadges}`}>
               <span className="flex items-center gap-1.5 rounded-full bg-yellow px-3 py-1 text-sm font-bold text-blue">
                 <CategoryIcon category={program.category} size={14} />
                 {CATEGORY_LABELS[program.category]}
@@ -43,7 +44,7 @@ export default function ProgramHero({ program, viewerEnabled }: { program: Progr
               </span>
             </div>
 
-            <div>
+            <div className={`${enter.enterItem} ${enter.enterTitle}`}>
               <h1 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
                 {program.title}
               </h1>
@@ -54,7 +55,7 @@ export default function ProgramHero({ program, viewerEnabled }: { program: Progr
               )}
             </div>
 
-            <dl className="mt-4 grid gap-3 text-sm font-bold sm:grid-cols-2 xl:grid-cols-2">
+            <dl className={`mt-4 grid gap-3 text-sm font-bold sm:grid-cols-2 xl:grid-cols-2 ${enter.enterItem} ${enter.enterMeta}`}>
               <div className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
                 <dt className="text-xs font-semibold uppercase tracking-wide text-white/60">
                   Hình thức
@@ -86,7 +87,7 @@ export default function ProgramHero({ program, viewerEnabled }: { program: Progr
             </dl>
 
             {program.registration?.isOpen && (
-              <div className="mt-5 border-t border-white/15 pt-4">
+              <div className={`mt-5 border-t border-white/15 pt-4 ${enter.enterItem} ${enter.enterCta}`}>
                 <a
                   href="#program-registration"
                   className="inline-flex min-h-11 items-center rounded-full bg-yellow px-6 py-3 font-bold text-blue transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue"

@@ -7,6 +7,7 @@ import { VoicesSection } from "@/components/home-page/VoiceSection";
 import { NextTripSection } from "@/components/home-page/NextTripSection";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 import { TestimonialsCollage } from "./home-page/TestimonialsCollage";
+import { WhySection } from "./home-page/WhySection";
 import { InquiryForm } from "./home-page/InquiryForm";
 
 export function HomePage() {
@@ -15,6 +16,7 @@ export function HomePage() {
       <SiteHeader />
       <Hero />
       <CourseProgramChoice />
+      <WhySection />
       <TestimonialsCollage />
       <VideoGallery />
       <AboutSection />

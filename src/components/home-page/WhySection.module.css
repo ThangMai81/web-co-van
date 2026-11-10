@@ -1,0 +1,84 @@
+/*
+ * WhySection — "Vì sao chọn Sunshine Center"
+ * Nền navy, stat counter fade-in, reason cards slide-up khi scroll vào
+ */
+
+/* ── Stat items — fade + rise khi data-visible="true" ───────── */
+
+.statItem {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--stat-delay, 0ms);
+}
+
+[data-why-visible="true"] .statItem {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ── Reason cards — slide từ dưới lên ──────────────────────── */
+
+.reasonCard {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reason-delay, 0ms);
+}
+
+[data-why-visible="true"] .reasonCard {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ── Section heading ─────────────────────────────────────────── */
+
+.heading {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-why-visible="true"] .heading {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ── Stat number glow pulse khi vào ─────────────────────────── */
+
+@keyframes stat-number-glow {
+  0%   { text-shadow: 0 0 0 transparent; }
+  40%  { text-shadow: 0 0 24px rgb(216 167 61 / 0.6); }
+  100% { text-shadow: 0 0 0 transparent; }
+}
+
+.statNumber {
+  display: inline-block;
+}
+
+[data-why-visible="true"] .statNumber {
+  animation: stat-number-glow 1200ms ease-out both;
+  animation-delay: var(--stat-delay, 0ms);
+}
+
+/* ── Reduced-motion ─────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .statItem,
+  .reasonCard,
+  .heading {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .statNumber {
+    animation: none !important;
+  }
+}
