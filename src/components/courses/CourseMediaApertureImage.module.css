@@ -27,16 +27,9 @@
 }
 
 @keyframes coursePageUnfold {
+  /* Mở trang một chiều, chậm dần — không vượt quá 0° rồi bật lại */
   from {
     transform: perspective(1200px) rotateY(-76deg);
-  }
-
-  58% {
-    transform: perspective(1200px) rotateY(-16deg);
-  }
-
-  78% {
-    transform: perspective(1200px) rotateY(3deg);
   }
 
   to {

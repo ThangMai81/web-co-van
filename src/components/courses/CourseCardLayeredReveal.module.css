@@ -95,15 +95,12 @@
 }
 
 @keyframes course-card-page-opening {
-  0% {
+  /* Lật mở một chiều — không vượt quá rồi bật lại */
+  from {
     transform: rotateY(-58deg);
   }
 
-  66% {
-    transform: rotateY(5deg);
-  }
-
-  100% {
+  to {
     transform: none;
   }
 }
