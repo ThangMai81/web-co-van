@@ -8,6 +8,14 @@ import type { Program } from "@/types/program";
 
 export default function ProgramCard({ program }: { program: Program }) {
   const isPast = program.status === "past";
+  // Cùng quy tắc với trang chi tiết: link ảnh mẫu Cloudinary "demo" không tồn tại
+  // => dùng ảnh banner có sẵn của Sunshine Center.
+  const coverImage =
+    !program.coverImage || program.coverImage.includes("res.cloudinary.com/demo")
+      ? program.category === "leo-nui"
+        ? "/images/first_banner.jpg"
+        : "/images/Sunshine_banner.jpg"
+      : program.coverImage;
 
   return (
     <Link
@@ -19,9 +27,9 @@ export default function ProgramCard({ program }: { program: Program }) {
       }`}
     >
       <div className="relative h-48 w-full shrink-0 overflow-hidden bg-blue/10 sm:h-52">
-        {program.coverImage && (
+        {coverImage && (
           <ProgramCardThumbnail
-            src={program.coverImage}
+            src={coverImage}
             alt={program.title}
             category={program.category}
             isPast={isPast}
