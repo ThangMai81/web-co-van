@@ -214,14 +214,20 @@ function ProgramGroup({
 }) {
   return (
     <section aria-labelledby={`group-${title}`}>
-      <div className="mb-5 flex items-center gap-2.5">
-        <span className={`h-2.5 w-2.5 rounded-full ${dotClassName}`} />
-        <h2 id={`group-${title}`} className="text-xl font-bold text-blue">
+      <div className="mb-6 flex items-center gap-4">
+        <span className="relative flex h-3 w-3">
+          {dotClassName === "bg-yellow" && (
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-yellow/60 motion-reduce:animate-none" />
+          )}
+          <span className={`relative inline-flex h-3 w-3 rounded-full ${dotClassName}`} />
+        </span>
+        <h2 id={`group-${title}`} className="font-display text-2xl font-bold text-blue md:text-3xl">
           {title}
         </h2>
-        <span className="rounded-full bg-blue/5 px-2.5 py-0.5 text-xs font-bold text-blue/60">
+        <span className="rounded-full bg-blue px-3 py-1 text-xs font-bold text-yellow">
           {items.length}
         </span>
+        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-blue/20 to-transparent" />
       </div>
       <ProgramGrid items={items} journeyBridgeTarget={journeyBridgeTarget} />
     </section>
