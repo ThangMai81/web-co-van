@@ -3,6 +3,25 @@
 import { useState, type FormEvent } from "react";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { Send } from "@/lib/icons";
+import { Clock, HeartHandshake, Phone, ShieldCheck, type LucideIcon } from "lucide-react";
+
+const REASSURANCES: { icon: LucideIcon; title: string; body: string }[] = [
+  {
+    icon: ShieldCheck,
+    title: "An toàn & riêng tư",
+    body: "Những gì bạn chia sẻ chỉ dùng để đội ngũ hiểu và liên hệ lại với bạn.",
+  },
+  {
+    icon: Clock,
+    title: "Liên hệ lại sớm",
+    body: "Sunshine Center sẽ gọi hoặc nhắn cho bạn để trao đổi kỹ hơn.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Không ràng buộc",
+    body: "Cuộc trò chuyện đầu tiên chỉ để hiểu nhau — bạn hoàn toàn tự quyết bước tiếp theo.",
+  },
+];
 
 const CONCERNS = [
   { value: "tim_lai_chinh_minh", label: "Tìm lại chính mình" },
@@ -93,11 +112,12 @@ export function InquiryForm({ coachName, availability, bookingNoticeHours }: { c
       />
 
       <div className="mx-auto max-w-[var(--page-w)] px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-4 flex items-center justify-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
+        <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+        <div className="lg:sticky lg:top-28">
+          <div className="mb-4 flex items-center gap-3 font-mono text-sm font-bold uppercase tracking-widest text-yellow">
             <span className="block h-px w-6 bg-yellow" />
             Bắt đầu hành trình của bạn
-            <span className="block h-px w-6 bg-yellow" />
+
           </div>
           <h2 className="font-display text-3xl font-bold text-blue sm:text-4xl">
             {coachName ? `Đặt phiên coaching với ${coachName}` : "Hãy để chúng tôi hiểu bạn hơn"}
@@ -107,11 +127,31 @@ export function InquiryForm({ coachName, availability, bookingNoticeHours }: { c
               ? "Chia sẻ điều bạn đang cần. Sunshine Center sẽ liên hệ để trao đổi và xác nhận thời gian phù hợp cho phiên riêng với người đồng hành bạn đã chọn."
               : "Chỉ vài dòng ngắn — chúng tôi sẽ liên hệ để cùng bạn tìm hướng phù hợp nhất."}
           </p>
+          <ul className="mt-8 grid gap-4">
+            {REASSURANCES.map(({ icon: Icon, title, body }) => (
+              <li key={title} className="flex items-start gap-4 rounded-2xl border border-blue/10 bg-white p-4 shadow-sm shadow-blue/5">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue text-yellow">
+                  <Icon size={20} strokeWidth={1.8} aria-hidden="true" />
+                </span>
+                <div>
+                  <div className="font-bold text-blue">{title}</div>
+                  <p className="mt-0.5 text-sm leading-relaxed text-blue/65">{body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="tel:0935626186"
+            className="mt-6 inline-flex items-center gap-3 rounded-full border-2 border-blue/15 bg-white px-5 py-3 font-bold text-blue transition-colors hover:border-yellow"
+          >
+            <Phone size={16} aria-hidden="true" className="text-yellow" />
+            Hoặc gọi ngay: 0935 626 186
+          </a>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="mx-auto mt-12 max-w-2xl rounded-2xl border-2 border-blue/15 bg-white p-8 shadow-md shadow-blue/5 sm:p-10"
+          className="w-full rounded-3xl border-2 border-blue/15 bg-white p-8 shadow-xl shadow-blue/10 sm:p-10"
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field
@@ -248,6 +288,7 @@ export function InquiryForm({ coachName, availability, bookingNoticeHours }: { c
             )}
           </button>
         </form>
+        </div>
       </div>
     </section>
   );
