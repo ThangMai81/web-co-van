@@ -2,7 +2,8 @@
 
 // import Image from "next/image"; // Restore with the commented Sunshine banner below.
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Play } from "@/lib/icons";
+import { Play, Quote } from "@/lib/icons";
+import { Reveal } from "@/components/animation/Reveal";
 import { FloatingContact } from "@/components/chatbot/FloatingContact";
 import { HomeHeroBackdrop } from "./HomeHeroBackdrop";
 import styles from "./HomeHeroBackdrop.module.css";
@@ -213,15 +214,31 @@ export function Hero() {
         </div>
       </section>
 
-      <section className="bg-blue px-6 py-10 sm:py-12">
-        <div className="mx-auto w-full max-w-[var(--page-w)]">
-          <p className="max-w-[52ch] text-lg italic text-white/80">
-            Chúng tôi tin rằng mỗi người đều mang trong mình những tiềm năng và
-            giá trị riêng biệt. Sunshine Center đồng hành cùng bạn trên hành
-            trình thấu hiểu bản thân, khai mở nội lực, vượt qua giới hạn và từng
-            bước kiến tạo một cuộc sống hạnh phúc, tự tin, thành công và ý nghĩa
-            hơn. Yes Yes Yes
-          </p>
+      <section className="relative overflow-hidden bg-blue px-6 py-14 sm:py-20">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-yellow/10 blur-3xl" />
+        <div className="relative mx-auto grid w-full max-w-[var(--page-w)] items-center gap-8 md:grid-cols-[auto_minmax(0,1fr)] md:gap-14">
+          <Reveal direction="scale">
+            <div className="grid h-20 w-20 place-items-center rounded-3xl bg-yellow text-blue shadow-2xl shadow-yellow/20 md:h-28 md:w-28">
+              <Quote size={44} strokeWidth={2.2} aria-hidden="true" />
+            </div>
+          </Reveal>
+          <Reveal direction="left" delay={150}>
+            <blockquote className="border-l-2 border-yellow/60 pl-6 md:pl-10">
+              <p className="max-w-[60ch] font-display text-xl font-medium leading-relaxed text-white md:text-2xl md:leading-relaxed">
+                Chúng tôi tin rằng mỗi người đều mang trong mình những tiềm năng
+                và giá trị riêng biệt. Sunshine Center đồng hành cùng bạn trên
+                hành trình thấu hiểu bản thân, khai mở nội lực, vượt qua giới hạn
+                và từng bước kiến tạo một cuộc sống{" "}
+                <span className="text-yellow">
+                  hạnh phúc, tự tin, thành công và ý nghĩa hơn
+                </span>
+                .
+              </p>
+              <footer className="mt-5 font-mono text-xs font-bold uppercase tracking-[0.2em] text-yellow/80">
+                — Sunshine Center
+              </footer>
+            </blockquote>
+          </Reveal>
         </div>
       </section>
 
