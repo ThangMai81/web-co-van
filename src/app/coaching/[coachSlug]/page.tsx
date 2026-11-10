@@ -176,9 +176,10 @@ export default async function CoachProfilePage({
             <h3 className="font-display text-2xl font-bold text-blue md:text-3xl">Bạn có thể cùng coach hướng tới</h3>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {coach.outcomes.map((outcome, index) => (
-                <div key={outcome} className="rounded-2xl border border-blue/10 bg-white p-5">
-                  <span className="font-mono text-sm font-bold text-yellow">0{index + 1}</span>
-                  <p className="mt-2 font-semibold leading-6 text-blue">{outcome}</p>
+                <div key={outcome} className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-blue/10 bg-white p-5 shadow-sm shadow-blue/5 transition-all duration-500 hover:-translate-y-1 hover:border-yellow/70 hover:shadow-xl hover:shadow-blue/10">
+                  <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue font-display text-sm font-extrabold text-yellow transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">0{index + 1}</span>
+                  <p className="pt-1.5 font-semibold leading-6 text-blue">{outcome}</p>
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 bg-gradient-to-r from-yellow to-yellow/0 transition-transform duration-700 group-hover:scale-x-100" />
                 </div>
               ))}
             </div>
