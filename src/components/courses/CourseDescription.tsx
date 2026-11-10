@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import type { Course, CourseDetail } from "@/types/course";
 import styles from "./CourseDescription.module.css";
+import { CircleCheck, Sparkles } from "lucide-react";
 
 export default function CourseDescription({
   course,
@@ -82,7 +83,12 @@ export default function CourseDescription({
 
       {highlights.length > 0 && (
         <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
-          <h3 className="mb-3 font-bold text-blue">✨ Nội dung nổi bật</h3>
+          <h3 className="mb-3 flex items-center gap-2.5 font-bold text-blue">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue text-yellow">
+              <Sparkles size={16} aria-hidden="true" />
+            </span>
+            Nội dung nổi bật
+          </h3>
           <ul className="list-disc space-y-1 pl-5 font-medium text-blue/90">
             {highlights.slice(0, 2).map((item, idx) => (
               <li key={idx}>{item}</li>
@@ -122,10 +128,27 @@ export default function CourseDescription({
 
       {benefits.length > 0 && (
         <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
-          <h3 className="mb-3 font-bold text-blue">✅ Lợi ích chương trình</h3>
-          <ul className="list-disc space-y-1 pl-5 font-medium text-blue/90">
+          <h3 className="mb-4 flex items-center gap-2.5 font-bold text-blue">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-yellow text-blue">
+              <CircleCheck size={16} aria-hidden="true" />
+            </span>
+            Lợi ích chương trình
+          </h3>
+          <ul className="grid gap-3 sm:grid-cols-2">
             {benefits.map((item, idx) => (
-              <li key={idx}>{item}</li>
+              <li
+                key={idx}
+                className="flex items-start gap-3 rounded-xl border border-blue/10 bg-blue/[0.03] p-3 font-medium text-blue/90"
+              >
+                <CircleCheck
+                  size={18}
+                  aria-hidden="true"
+                  className="mt-0.5 shrink-0 text-yellow"
+                  fill="currentColor"
+                  stroke="white"
+                />
+                <span>{item}</span>
+              </li>
             ))}
           </ul>
         </div>
