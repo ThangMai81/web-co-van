@@ -8,7 +8,7 @@ export function BackButton({ variant = "default" }: { variant?: "default" | "lig
         if (window.history.length > 1) window.history.back();
         else window.location.assign("/");
       }}
-      className={`group ml-auto inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider shadow-md backdrop-blur transition hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+      className={`group ml-auto inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full border px-3 py-2.5 sm:px-4 font-mono text-[10px] font-bold uppercase tracking-wider shadow-md backdrop-blur transition hover:-translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         variant === "light"
           ? "border-yellow bg-yellow text-blue hover:bg-white focus-visible:ring-white focus-visible:ring-offset-blue"
           : "border-blue bg-blue text-white hover:border-yellow hover:bg-yellow hover:text-blue focus-visible:ring-yellow focus-visible:ring-offset-white"
@@ -16,7 +16,7 @@ export function BackButton({ variant = "default" }: { variant?: "default" | "lig
       aria-label="Quay lại trang trước"
     >
       <span aria-hidden="true" className="text-base leading-none transition-transform group-hover:-translate-x-0.5">←</span>
-      Quay lại
+      <span className="hidden sm:inline">Quay lại</span>
     </button>
   );
 }

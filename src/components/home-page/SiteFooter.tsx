@@ -49,7 +49,7 @@ export function SiteFooter() {
       </div>
 
       {/* Nội dung chính */}
-      <div className="mx-auto grid max-w-[var(--page-w)] gap-12 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:gap-16">
+      <div className="mx-auto grid max-w-[var(--page-w)] gap-10 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr] md:gap-16 md:py-14">
         <div>
           <div className="relative h-14 w-44 rounded-xl bg-white/95 p-2">
             <Image
@@ -96,7 +96,7 @@ export function SiteFooter() {
           <h3 className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-yellow">
             Khám phá
           </h3>
-          <ul className="mt-5 space-y-3">
+          <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-1">
             {FOOT_LINKS.map((l) => (
               <li key={l.href}>
                 <Link
@@ -144,7 +144,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[var(--page-w)] flex-wrap justify-between gap-3 px-6 py-6 text-xs text-white/45">
+        <div className="mx-auto flex max-w-[var(--page-w)] flex-wrap justify-between gap-3 py-6 pl-6 pr-20 text-xs lg:px-6 text-white/45">
           <span>© 2026 Sunshine Center · Lê Thị Kim Yến</span>
           <span className="italic">
             Khai tâm mở lối · Tìm lại chính mình · Chạm đỉnh vinh quang · Sống đời xuất chúng

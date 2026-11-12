@@ -39,3 +39,22 @@
     transition: none;
   }
 }
+
+.chapterList {
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.chapterList::-webkit-scrollbar {
+  display: none;
+}
+
+.chapterList > li {
+  scroll-snap-align: center;
+}
+
+@media (max-width: 639px) {
+  .chapterList {
+    mask-image: linear-gradient(90deg, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
+  }
+}

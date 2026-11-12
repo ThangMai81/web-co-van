@@ -53,7 +53,7 @@ export function Coaching() {
                 Một người đồng hành, cho hành trình chỉ của riêng bạn.
               </h1>
               <p className="mt-6 max-w-lg text-lg text-ink/70">
-                Không phải khoá học đại trà. Đây là không gian riêng để bạn được
+                Đây là không gian riêng để bạn được
                 lắng nghe, thấu hiểu và dẫn dắt đến đúng mục tiêu của chính
                 mình.
               </p>

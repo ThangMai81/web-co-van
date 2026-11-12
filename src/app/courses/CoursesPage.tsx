@@ -1,4 +1,6 @@
 import CourseGrid from "@/components/courses/CourseGrid";
+import { CourseGuide } from "@/components/courses/CourseGuide";
+import { CourseClosingCTA } from "@/components/courses/CourseClosingCTA";
 import CourseFilterBar from "@/components/courses/CourseFilterBar";
 import CatalogListUnavailable from "@/components/ui/CatalogListUnavailable";
 import HeroSection from "@/components/ui/HeroSection";
@@ -6,6 +8,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import heroMotionStyles from "@/components/ui/HeroSection.module.css";
 import type { CourseListItem } from "@/types/course";
+import { getCachedApiJson } from "@/lib/apiCache";
 
 type CatalogListResult<T> =
   | { kind: "loaded"; items: T[] }
@@ -22,15 +25,9 @@ async function getCourses(
   if (search) query.set("search", search);
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/courses?${query.toString()}`,
-      {
-        cache: "no-store",
-      },
+    const json: unknown = await getCachedApiJson(
+      `/api/courses?${query.toString()}`,
     );
-    if (!res.ok || res.status !== 200) return { kind: "unavailable" };
-
-    const json: unknown = await res.json();
     if (
       typeof json !== "object" ||
       json === null ||
@@ -125,7 +122,7 @@ export default async function CoursesPage({
           <div
             className={[
               heroMotionStyles.coursesCount,
-              "mt-8 flex gap-8 border-t border-white/15 pt-6",
+              "mb-6 mt-8 grid grid-cols-3 gap-4 border-t border-white/15 pt-6 sm:flex sm:gap-8 lg:mb-0",
             ].join(" ")}
           >
             {[
@@ -141,11 +138,11 @@ export default async function CoursesPage({
             ]
               .filter((stat) => stat.value > 0)
               .map((stat, i) => (
-                <div key={stat.label} className={i > 0 ? "border-l border-white/15 pl-8" : ""}>
+                <div key={stat.label} className={i > 0 ? "border-l border-white/15 pl-4 sm:pl-8" : ""}>
                   <div className="font-display text-3xl font-extrabold text-yellow">
                     {stat.value}
                   </div>
-                  <div className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                  <div className="mt-1 text-[11px] font-semibold uppercase leading-snug tracking-wide text-white/60 sm:text-xs">
                     {stat.label}
                   </div>
                 </div>
@@ -154,6 +151,8 @@ export default async function CoursesPage({
         )}
       </HeroSection>
 
+      {/* Bọc bộ lọc + danh sách: thanh lọc chỉ dính trong phạm vi danh sách, không đè lên phần gợi ý và chân trang */}
+      <div className="relative">
       {/* === VÙNG 2: BỘ LỌC === */}
       <nav
         aria-label="Lọc khóa học"
@@ -170,8 +169,9 @@ export default async function CoursesPage({
 
       {/* === VÙNG 3: DANH SÁCH === */}
       <section
+        id="danh-sach-khoa-hoc"
         aria-label="Danh sách khóa học"
-        className="bg-blue/[0.025] py-10 md:py-14"
+        className="scroll-mt-40 bg-blue/[0.025] py-10 md:py-14"
       >
         <div className="mx-auto max-w-[var(--page-w)] px-6">
           {!isLoaded ? (
@@ -185,6 +185,12 @@ export default async function CoursesPage({
           )}
         </div>
       </section>
+
+      </div>
+
+      {/* === VÙNG 4: GỢI Ý CHỌN KHÓA HỌC === */}
+      <CourseGuide activeCategory={category} />
+      <CourseClosingCTA />
     </main>
   );
 }

@@ -15,14 +15,14 @@ export function Breadcrumb({
   const isLight = variant === "light";
 
   return (
-    <div className={`mb-8 flex flex-wrap items-center justify-between gap-3 rounded-full border px-3 py-2 ${
+    <div className={`mb-8 flex w-full items-center justify-between gap-2 rounded-full border py-1.5 pl-4 pr-1.5 sm:gap-3 sm:px-3 sm:py-2 ${
       isLight ? "border-white/25 bg-blue/35" : "border-blue/10 bg-blue/5"
     } ${className}`}>
-      <nav aria-label="Breadcrumb" className="flex min-w-0 flex-wrap items-center gap-2 text-xs sm:text-sm">
+      <nav aria-label="Breadcrumb" className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden text-xs sm:flex-wrap sm:gap-2 sm:text-sm">
       {items.map((item, i) => {
         const isLast = i === items.length - 1;
         return (
-          <span key={item.label} className="flex items-center gap-2">
+          <span key={item.label} className={`flex items-center gap-1.5 sm:gap-2 ${isLast ? "min-w-0" : "shrink-0"}`}>
             {item.href && !isLast ? (
               <Link
                 href={item.href}
@@ -38,7 +38,7 @@ export function Breadcrumb({
               <span
                 className={
                   isLast
-                    ? `rounded-full px-3 py-1.5 font-bold ${isLight ? "bg-yellow text-blue" : "bg-yellow text-blue"}`
+                    ? `block truncate rounded-full px-3 py-1.5 font-bold ${isLight ? "bg-yellow text-blue" : "bg-yellow text-blue"}`
                     : `font-medium ${isLight ? "text-white/70" : "text-blue/60"}`
                 }
               >

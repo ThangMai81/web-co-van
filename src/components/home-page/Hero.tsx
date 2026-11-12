@@ -195,18 +195,18 @@ export function Hero() {
           </h1>
 
           <div
-            className={`${styles.heroEntry} ${styles.heroActions} mt-5 flex flex-wrap gap-4 sm:mt-8 xl:mt-10`}
+            className={`${styles.heroEntry} ${styles.heroActions} mt-5 grid max-w-sm gap-3 sm:mt-8 sm:flex sm:max-w-none sm:flex-wrap sm:gap-4 xl:mt-10`}
           >
             <a
               href="#videos"
-              className="flex items-center gap-2 rounded-full bg-yellow px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-blue ring-1 ring-blue transition hover:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
+              className="flex items-center justify-center gap-2 rounded-full bg-yellow px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-blue ring-1 ring-blue transition hover:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
             >
               <Play size={14} />
               Xem video
             </a>
             <a
               href="#lien-he"
-              className="rounded-full border-2 border-blue bg-white/80 px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-blue backdrop-blur-sm transition hover:border-blue hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
+              className="inline-flex items-center justify-center rounded-full border-2 border-blue bg-white/80 px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-blue backdrop-blur-sm transition hover:border-blue hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
             >
               Đồng hành cùng chúng tôi
             </a>

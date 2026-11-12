@@ -49,7 +49,7 @@ export default function CourseReviews({
 
   return (
     <section>
-      <h2 className="mb-4 text-xl font-bold text-blue">Đánh giá</h2>
+      <h2 className="mb-5 font-editorial text-3xl font-bold text-blue">Đánh giá</h2>
 
       {/* Tổng quan rating */}
       {ratingCount > 0 ? (
@@ -105,7 +105,7 @@ export default function CourseReviews({
           onSubmit={handleSubmit}
           className="mt-5 rounded-xl border border-blue/15 bg-white p-5"
         >
-          <h3 className="mb-3 font-bold text-blue">Viết đánh giá của bạn</h3>
+          <h3 className="mb-3 font-editorial text-xl font-bold text-blue">Viết đánh giá của bạn</h3>
           <div className="mb-3">
             <label
               htmlFor={`course-review-rating-${courseId}`}

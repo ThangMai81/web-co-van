@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Reveal } from "@/components/animation/Reveal";
+import styles from "./Stories.module.css";
 
 type Testimonial = {
   _id: string;
@@ -22,17 +22,30 @@ export function TestimonialCard({
   const hasMore = !!testimonial.story && testimonial.story.length > 0;
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6 transition-colors duration-200 hover:bg-white/8 sm:p-7">
-      <span className="mb-3 block font-display text-4xl leading-none text-yellow">"</span>
+    <div
+      className={`${styles.card} flex h-full flex-col rounded-2xl border border-white/10 p-6 sm:p-7 ${
+        index % 3 === 1 ? "bg-white/[0.09]" : "bg-white/5"
+      } hover:bg-white/8`}
+    >
+      <div className="mb-3 flex items-start justify-between">
+        <span className={`${styles.cardQuote} block font-display text-5xl leading-none text-yellow`}>“</span>
+        <span aria-hidden="true" className="font-mono text-xs font-bold tracking-widest text-white/25">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      </div>
 
       <p className="mb-4 text-sm font-medium leading-relaxed text-white/85">
         {testimonial.quote}
       </p>
 
-      {expanded && hasMore && (
-        <p className="mb-4 whitespace-pre-line border-t border-white/10 pt-4 text-sm leading-relaxed text-white/70">
-          {testimonial.story}
-        </p>
+      {hasMore && (
+        <div className={styles.storyPanel} data-open={expanded} aria-hidden={!expanded}>
+          <div>
+            <p className="mb-4 whitespace-pre-line border-t border-white/10 pt-4 text-sm leading-relaxed text-white/70">
+              {testimonial.story}
+            </p>
+          </div>
+        </div>
       )}
 
       {hasMore && (

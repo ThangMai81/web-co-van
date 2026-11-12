@@ -4,12 +4,15 @@ import {
   ProgramJourneySequenceProvider,
   ProgramJourneyStats,
 } from "@/components/programs/ProgramJourneySequence";
+import { ProgramFlowTimeline } from "@/components/programs/ProgramFlowTimeline";
+import { ProgramFAQ } from "@/components/programs/ProgramFAQ";
 import ProgramFilterBar from "@/components/programs/ProgramFilterBar";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import CatalogListUnavailable from "@/components/ui/CatalogListUnavailable";
 import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import motionStyles from "@/components/ui/PhysicalHeroMotion.module.css";
 import type { Program } from "@/types/program";
+import { getCachedApiJson } from "@/lib/apiCache";
 
 type CatalogListResult<T> =
   | { kind: "loaded"; items: T[] }
@@ -26,13 +29,9 @@ async function getPrograms(
   if (sort) query.set("sort", sort);
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/programs?${query.toString()}`,
-      { cache: "no-store" },
+    const json: unknown = await getCachedApiJson(
+      `/api/programs?${query.toString()}`,
     );
-    if (!res.ok || res.status !== 200) return { kind: "unavailable" };
-
-    const json: unknown = await res.json();
     if (
       typeof json !== "object" ||
       json === null ||
@@ -196,6 +195,9 @@ export default async function ProgramsPage({
           )}
         </div>
       </section>
+
+      <ProgramFlowTimeline />
+      <ProgramFAQ />
       </main>
     </ProgramJourneySequenceProvider>
   );

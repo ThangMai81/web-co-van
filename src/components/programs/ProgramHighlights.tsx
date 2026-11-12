@@ -38,7 +38,7 @@ export default function ProgramHighlights({
     >
       <h2
         id="program-highlights-heading"
-        className={`mb-6 border-l-4 border-yellow pl-4 font-display text-2xl font-bold text-white md:text-3xl ${revealStyles.headingReveal}`}
+        className={`mb-7 border-l-4 border-yellow pl-4 font-editorial text-3xl font-bold leading-tight text-white md:text-[2.6rem] ${revealStyles.headingReveal}`}
       >
         Điểm nổi bật
       </h2>
@@ -51,7 +51,7 @@ export default function ProgramHighlights({
           >
             <span
               aria-hidden="true"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-yellow font-display text-base font-extrabold text-blue shadow-lg shadow-yellow/20 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110"
+              className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-yellow font-editorial text-lg font-bold italic text-blue shadow-lg shadow-yellow/20 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110"
             >
               0{idx + 1}
             </span>
@@ -76,7 +76,7 @@ export default function ProgramHighlights({
     >
       <h2
         id="program-stats-heading"
-        className="border-l-4 border-yellow pl-4 text-xl font-bold text-white"
+        className="border-l-4 border-yellow pl-4 font-editorial text-2xl font-bold text-white"
       >
         Thông tin chương trình
       </h2>
@@ -109,7 +109,7 @@ export default function ProgramHighlights({
         >
           <h3
             id="program-preparation-heading"
-            className="border-l-4 border-yellow pl-4 text-lg font-bold text-white"
+            className="border-l-4 border-yellow pl-4 font-editorial text-xl font-bold text-white"
           >
             Gợi ý cân nhắc
           </h3>

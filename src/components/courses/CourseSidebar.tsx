@@ -23,23 +23,25 @@ export default function CourseSidebar({
     : raw;
 
   return (
-    <div className="mt-6 border-t border-blue/10 pt-6">
-      <a
-        href={`tel:${tel}`}
-        className="group flex min-h-12 w-full items-center justify-center gap-2.5 rounded-full bg-yellow px-6 py-3 font-bold text-blue shadow-lg shadow-yellow/25 transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        <Phone size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:-rotate-12" />
-        Gọi đăng ký: {phone}
-      </a>
-      <Link
-        href="/#lien-he"
-        className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full border-2 border-blue/15 px-6 py-2.5 text-sm font-bold text-blue transition-colors hover:border-yellow hover:bg-yellow/10"
-      >
-        <Send size={15} aria-hidden="true" />
-        Để lại thông tin, chúng tôi gọi lại
-      </Link>
+    <div className="mt-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <a
+          href={`tel:${tel}`}
+          className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-yellow px-7 py-3 font-bold text-blue shadow-lg shadow-yellow/20 transition hover:-translate-y-0.5 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue motion-reduce:transform-none"
+        >
+          <Phone size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:-rotate-12" />
+          Gọi đăng ký: {phone}
+        </a>
+        <Link
+          href="/#lien-he"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition-colors hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+        >
+          <Send size={15} aria-hidden="true" />
+          Để lại thông tin, chúng tôi gọi lại
+        </Link>
+      </div>
       {contactName?.trim() && (
-        <p className="mt-3 text-center text-xs font-medium text-blue/55">
+        <p className="mt-3 text-xs font-medium text-white/55">
           Người tư vấn: {contactName}
         </p>
       )}

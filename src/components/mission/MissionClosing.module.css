@@ -1,0 +1,170 @@
+.section {
+  isolation: isolate;
+}
+
+/* Bầu trời: mặt trời mọc từ đường chân trời phía trên khối nội dung */
+.sky {
+  position: absolute;
+  left: 50%;
+  width: min(56rem, 140vw);
+  top: 1rem;
+  height: 12rem;
+  transform: translateX(-50%);
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+}
+
+.sun {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 10rem;
+  height: 10rem;
+  margin-left: -5rem;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at 50% 45%,
+    #fff4c2 0%,
+    #fece01 45%,
+    #d8a73d 100%
+  );
+  box-shadow:
+    0 0 60px rgb(254 206 1 / 0.55),
+    0 0 140px rgb(254 206 1 / 0.3);
+  transform: translate3d(0, 55%, 0);
+  opacity: 0.9;
+  transition:
+    transform 2.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 2.2s ease;
+}
+
+.ray {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 11.5rem;
+  margin-left: -1px;
+  transform-origin: 50% 100%;
+  transform: rotate(var(--r)) scaleY(0);
+  background: linear-gradient(
+    to top,
+    rgb(254 206 1 / 0.55),
+    rgb(254 206 1 / 0)
+  );
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 45ms + 600ms);
+}
+
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(254 206 1 / 0.7) 30%,
+    rgb(254 206 1 / 0.7) 70%,
+    transparent
+  );
+  transform: scaleX(0);
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Chưa vào khung nhìn: mặt trời nằm dưới chân trời */
+.section[data-armed="true"]:not([data-visible="true"]) .sun {
+  transform: translate3d(0, 100%, 0);
+  box-shadow: 0 0 0 rgb(254 206 1 / 0);
+}
+
+.section[data-visible="true"] .ray {
+  transform: rotate(var(--r)) scaleY(1);
+  animation: rayShimmer 5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 220ms + 2s);
+}
+
+.section[data-visible="true"] .horizon {
+  transform: scaleX(1);
+}
+
+.section[data-visible="true"] .sun {
+  animation: sunGlow 6s ease-in-out 2.2s infinite;
+}
+
+@keyframes sunGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 60px rgb(254 206 1 / 0.55),
+      0 0 140px rgb(254 206 1 / 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 80px rgb(254 206 1 / 0.75),
+      0 0 200px rgb(254 206 1 / 0.4);
+  }
+}
+
+@keyframes rayShimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Nội dung nổi lên lần lượt */
+.rise {
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms);
+}
+
+.section[data-armed="true"]:not([data-visible="true"]) .rise {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0);
+}
+
+/* Thẻ lối đi */
+.path {
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms),
+    border-color 350ms ease,
+    background-color 350ms ease,
+    box-shadow 350ms ease;
+}
+
+.section[data-visible="true"] .path:hover {
+  transition-delay: 0ms;
+  transform: translateY(-6px);
+  border-color: rgb(254 206 1 / 0.6);
+  background-color: rgb(255 255 255 / 0.08);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.25);
+}
+
+.arrow {
+  transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.path:hover .arrow {
+  transform: translateX(4px) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun,
+  .ray,
+  .horizon,
+  .rise,
+  .path {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { BackToTop } from "@/components/navigation/BackToTop";
 import { RouteEntryFade } from "@/components/navigation/RouteEntryFade";
+import { editorialFont } from "@/lib/editorialFont";
 import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -28,12 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={beVietnamPro.variable} data-scroll-behavior="smooth">
+    <html lang="vi" className={`${beVietnamPro.variable} ${editorialFont.variable}`} data-scroll-behavior="smooth">
       <body>
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
         >
           <RouteEntryFade>{children}</RouteEntryFade>
+          <BackToTop />
         </GoogleOAuthProvider>
       </body>
     </html>

@@ -119,9 +119,8 @@ export async function getCoaches(): Promise<Coach[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) return demoCoaches;
   try {
-    const response = await fetch(`${apiUrl}/api/coaches`, { cache: "no-store" });
-    if (!response.ok) return demoCoaches;
-    const result = (await response.json()) as { data?: Coach[] };
+    const { getCachedApiJson } = await import("@/lib/apiCache");
+    const result = (await getCachedApiJson("/api/coaches")) as { data?: Coach[] };
     return result.data?.length
       ? result.data.map((coach) => mergeCoachDetails(coach, demoCoaches.find((item) => item.slug === coach.slug)))
       : demoCoaches;
@@ -135,9 +134,8 @@ export async function getCoach(slug: string): Promise<Coach | null> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) return fallback;
   try {
-    const response = await fetch(`${apiUrl}/api/coaches/${encodeURIComponent(slug)}`, { cache: "no-store" });
-    if (!response.ok) return fallback;
-    const result = (await response.json()) as { data?: Coach };
+    const { getCachedApiJson } = await import("@/lib/apiCache");
+    const result = (await getCachedApiJson(`/api/coaches/${encodeURIComponent(slug)}`)) as { data?: Coach };
     return result.data ? mergeCoachDetails(result.data, fallback ?? undefined) : fallback;
   } catch {
     return fallback;

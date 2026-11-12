@@ -1,4 +1,5 @@
 // Server-side helper imported only by the course and program Server Components.
+import { swrCached } from "./apiCache";
 type FailureKind =
   | "network"
   | "timeout"
@@ -17,9 +18,9 @@ type Failure = {
 type DetailDataGuard<T> = (value: unknown) => value is T;
 
 const MAX_ATTEMPTS = 4;
-const TOTAL_BUDGET_MS = 30_000;
-const PER_ATTEMPT_TIMEOUT_MS = 8_000;
-const ATTEMPT_START_OFFSETS_MS = [0, 1_000, 5_000, 20_000] as const;
+const TOTAL_BUDGET_MS = 55_000; // back-end Render Free cần khoảng 1 phút để thức dậy
+const PER_ATTEMPT_TIMEOUT_MS = 20_000;
+const ATTEMPT_START_OFFSETS_MS = [0, 2_000, 22_000, 40_000] as const;
 
 class DetailRouteFetchError extends Error {
   constructor(readonly failure: Failure) {
@@ -59,7 +60,20 @@ function wait(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Lấy dữ liệu trang chi tiết qua bộ nhớ đệm phía server: lần xem sau trả ngay,
+ * và khi back-end đang khởi động/lỗi thì dùng bản đã lưu thay vì hiện trang lỗi.
+ */
 export async function fetchDetailRouteData<T>(
+  endpoint: string,
+  isExpectedData: DetailDataGuard<T>,
+): Promise<T | null> {
+  return swrCached(`detail:${endpoint}`, () =>
+    fetchDetailRouteDataUncached(endpoint, isExpectedData),
+  );
+}
+
+async function fetchDetailRouteDataUncached<T>(
   endpoint: string,
   isExpectedData: DetailDataGuard<T>,
 ): Promise<T | null> {

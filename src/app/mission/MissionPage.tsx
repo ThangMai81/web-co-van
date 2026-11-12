@@ -6,6 +6,7 @@ import { JourneyInside } from "@/components/mission/JourneyInside";
 import { Mission } from "@/components/mission/Mission";
 import { CultureAndValues } from "@/components/mission/CultureAndValues";
 import { Founder } from "@/components/mission/Founder";
+import { MissionClosing } from "@/components/mission/MissionClosing";
 import { MissionChapterNav } from "@/components/mission/MissionChapterNav";
 
 export function MissionPage() {
@@ -21,6 +22,7 @@ export function MissionPage() {
         <CultureAndValues />
         <Founder />
       </div>
+      <MissionClosing />
       <SiteFooter />
     </main>
   );

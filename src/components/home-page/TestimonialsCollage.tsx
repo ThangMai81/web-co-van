@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Reveal } from "@/components/animation/Reveal";
 import { Quote } from "@/lib/icons";
+import { getCachedApiJson } from "@/lib/apiCache";
 
 type Testimonial = {
   _id: string;
@@ -11,13 +12,11 @@ type Testimonial = {
 
 async function getFeaturedTestimonials(): Promise<Testimonial[]> {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/testimonials/featured`,
-      { cache: "no-store" },
-    );
-    if (!res.ok) return [];
-    const json = await res.json();
-    return json.success ? json.data : [];
+    const json = (await getCachedApiJson("/api/testimonials/featured")) as {
+      success?: boolean;
+      data?: Testimonial[];
+    };
+    return json.success && Array.isArray(json.data) ? json.data : [];
   } catch {
     return [];
   }

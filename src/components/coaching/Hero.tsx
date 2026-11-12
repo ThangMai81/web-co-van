@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/animation/Reveal";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import styles from "./Hero.module.css";
@@ -70,19 +71,20 @@ export function Hero() {
               <span className="mt-2 block">cho hành trình riêng.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg text-white/80">
-              Không phải khoá học đại trà. Đây là không gian riêng để bạn được
+              Đây là không gian riêng để bạn được
               lắng nghe, thấu hiểu và dẫn dắt đến đúng mục tiêu của chính mình.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
               <a
                 href="#booking"
-                className="rounded-full bg-yellow px-7 py-3.5 font-mono text-xs uppercase tracking-wider text-blue transition-transform hover:-translate-y-1 hover:brightness-90"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-yellow px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-blue shadow-lg shadow-yellow/20 transition-transform hover:-translate-y-1 hover:brightness-95"
               >
                 Đặt lịch tư vấn miễn phí
+                <ArrowRight size={15} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a
                 href="#process"
-                className="rounded-full border border-white/50 px-7 py-3.5 font-mono text-xs uppercase tracking-wider text-white transition-colors hover:border-yellow hover:text-yellow"
+                className="inline-flex items-center justify-center rounded-full border border-white/50 px-7 py-3.5 font-mono text-xs uppercase tracking-wider text-white transition-colors hover:border-yellow hover:text-yellow"
               >
                 Xem quy trình
               </a>

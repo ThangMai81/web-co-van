@@ -9,6 +9,17 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { CoachingJourney } from "@/components/coaching/CoachingJourney";
 import { StoryQuoteTrace } from "@/components/coaching/StoryQuoteTrace";
 import { getCoach } from "@/data/coaches";
+import { CoachDetailMotion } from "@/components/coaching/CoachDetailMotion";
+import m from "@/components/coaching/CoachDetailMotion.module.css";
+import { Clock3, MapPin, UsersRound } from "lucide-react";
+
+const SESSION_BASICS = [
+  { icon: UsersRound, title: "Riêng tư, 1 đối 1", desc: "Chỉ có bạn và người đồng hành trong suốt phiên." },
+  { icon: Clock3, title: "60–90 phút mỗi phiên", desc: "Độ dài được thống nhất trước theo chủ đề của bạn." },
+  { icon: MapPin, title: "Trực tiếp hoặc online", desc: "Gặp tại Đà Nẵng hoặc qua video call." },
+];
+
+const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
 export default async function CoachProfilePage({
   params,
@@ -23,6 +34,7 @@ export default async function CoachProfilePage({
   return (
     <main className="min-h-screen bg-white">
       <SiteHeader />
+      <CoachDetailMotion />
       <section className="relative overflow-hidden bg-blue pb-24 pt-[88px] text-white">
         <div className="pointer-events-none absolute -right-28 -top-24 h-96 w-96 rounded-full bg-yellow/20 blur-3xl" />
         <div className="relative mx-auto max-w-[var(--page-w)] px-6">
@@ -35,20 +47,22 @@ export default async function CoachProfilePage({
             ]}
           />
           <div className="mx-auto grid w-full max-w-[var(--page-w)] items-center gap-12 px-6 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className={m.portraitWrap}>
+            <span aria-hidden="true" className={m.ring} />
             {coach.image ? (
-              <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border-4 border-yellow/70 shadow-2xl shadow-black/20">
+              <div className={`${m.portrait} relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border-4 border-yellow/70 shadow-2xl shadow-black/20`}>
                 <Image
                   src={coach.image}
                   alt={coach.isDemo ? `Ảnh minh hoạ hồ sơ demo của ${coach.name}` : coach.name}
                   fill
                   priority
                   sizes="(min-width: 1024px) 40vw, 100vw"
-                  className="object-cover"
+                  className={`${m.portraitImg} object-cover`}
                 />
               </div>
             ) : (
               <div
-                className="mx-auto flex aspect-[4/5] w-full max-w-md items-center justify-center overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border-4 border-yellow/70 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,.8),transparent_40%),linear-gradient(145deg,var(--coach-accent),#172d55)] shadow-2xl shadow-black/20"
+                className={`${m.portrait} mx-auto flex aspect-[4/5] w-full max-w-md items-center justify-center overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border-4 border-yellow/70 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,.8),transparent_40%),linear-gradient(145deg,var(--coach-accent),#172d55)] shadow-2xl shadow-black/20`}
                 style={{ "--coach-accent": coach.accent } as CSSProperties}
               >
                 <span className="font-display text-8xl font-bold text-white drop-shadow-lg">
@@ -56,8 +70,12 @@ export default async function CoachProfilePage({
                 </span>
               </div>
             )}
+            </div>
             <div>
-              <p className="mb-4 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">
+              <p
+                className={`${m.heroRise} mb-4 font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow`}
+                style={delay(350)}
+              >
                 {coach.title}
               </p>
               <h1
@@ -73,7 +91,10 @@ export default async function CoachProfilePage({
                     ))
                   : coach.name}
               </h1>
-              <p className="mt-6 max-w-2xl text-xl leading-8 text-white/80">
+              <p
+                className={`${m.heroRise} mt-6 max-w-2xl text-xl leading-8 text-white/80`}
+                style={delay(750)}
+              >
                 {coach.quote}
               </p>
               {coach.isDemo && (
@@ -81,7 +102,10 @@ export default async function CoachProfilePage({
                   Hồ sơ demo · danh tính minh hoạ
                 </div>
               )}
-              <div className="mt-8 flex flex-wrap gap-4">
+              <div
+                className={`${m.heroRise} mt-8 flex flex-wrap gap-4`}
+                style={delay(1000)}
+              >
                 <a
                   href="#session-details"
                   className="rounded-full bg-yellow px-7 py-4 font-mono text-xs font-bold uppercase tracking-wider text-blue transition hover:-translate-y-1 hover:bg-white"
@@ -135,27 +159,45 @@ export default async function CoachProfilePage({
 
       <section id="session-details" className="bg-[#f4f6fa] px-6 py-20 md:py-28">
         <div className="mx-auto max-w-[var(--page-w)]">
-          <div className="mb-10 max-w-3xl">
+          <div data-cd-reveal className={`${m.reveal} mb-10 max-w-3xl`}>
             <p className="font-mono text-sm font-bold uppercase tracking-[.18em] text-yellow">Thông tin phiên khai vấn</p>
             <h2 className="mt-3 font-display text-3xl font-bold text-blue md:text-5xl">Một phiên cùng {coach.name.split(" ").slice(-1)[0]}</h2>
             <p className="mt-4 leading-7 text-blue/70">Phí và thời gian được hiển thị trước để bạn chủ động sắp xếp. Các hồ sơ minh hoạ cần được Sunshine Center xác nhận trước khi nhận đăng ký thật.</p>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
-            <div className="rounded-3xl bg-blue p-7 text-white md:p-9">
+            <div data-cd-reveal className={`${m.reveal} ${m.revealLeft} rounded-3xl bg-blue p-7 text-white md:p-9`}>
               <p className="font-mono text-xs font-bold uppercase tracking-widest text-yellow">Phí khai vấn</p>
               <p className="mt-3 font-display text-2xl font-bold md:text-3xl">{coach.sessionFee}</p>
-              <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/15 pt-6">
-                <div><p className="text-3xl font-extrabold text-yellow">{coach.experienceYears ?? "—"}</p><p className="mt-1 text-sm text-white/65">năm cùng Sunshine</p></div>
-                <div><p className="text-3xl font-extrabold text-yellow">{coach.coachingHours ? coach.coachingHours.toLocaleString("vi-VN") : "—"}</p><p className="mt-1 text-sm text-white/65">giờ khai vấn</p></div>
-              </div>
-              <p className="mt-6 text-xs leading-5 text-white/55">{coach.isDemo ? "Số liệu minh hoạ cho giao diện demo." : "Kinh nghiệm và số giờ đang được Sunshine Center xác nhận."}</p>
+              {coach.experienceYears != null || coach.coachingHours != null ? (
+                <>
+                  <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/15 pt-6">
+                    <div><p className="text-3xl font-extrabold text-yellow"><span className={m.statGlow}>{coach.experienceYears ?? "—"}</span></p><p className="mt-1 text-sm text-white/65">năm cùng Sunshine</p></div>
+                    <div><p className="text-3xl font-extrabold text-yellow"><span className={m.statGlow}>{coach.coachingHours ? coach.coachingHours.toLocaleString("vi-VN") : "—"}</span></p><p className="mt-1 text-sm text-white/65">giờ khai vấn</p></div>
+                  </div>
+                  <p className="mt-6 text-xs leading-5 text-white/55">{coach.isDemo ? "Số liệu minh hoạ cho giao diện demo." : "Kinh nghiệm và số giờ đang được Sunshine Center xác nhận."}</p>
+                </>
+              ) : (
+                <ul className="mt-8 space-y-4 border-t border-white/15 pt-6">
+                  {SESSION_BASICS.map(({ icon: Icon, title, desc }) => (
+                    <li key={title} className="group flex items-start gap-3.5">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 text-yellow ring-1 ring-white/10 transition-colors duration-500 group-hover:bg-yellow group-hover:text-blue">
+                        <Icon size={18} strokeWidth={1.8} aria-hidden="true" />
+                      </span>
+                      <span>
+                        <span className="block font-semibold text-white">{title}</span>
+                        <span className="mt-0.5 block text-sm leading-5 text-white/60">{desc}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
-            <div className="rounded-3xl border border-blue/10 bg-white p-7 md:p-9">
+            <div data-cd-reveal style={delay(150)} className={`${m.reveal} ${m.revealRight} rounded-3xl border border-blue/10 bg-white p-7 md:p-9`}>
               <h3 className="font-display text-xl font-bold text-blue md:text-2xl">Khung giờ thường nhận phiên</h3>
-              <div className="mt-5 flex flex-wrap gap-3">
-                {coach.availability.map((slot) => <span key={slot} className="rounded-full border border-blue/15 bg-[#f7f8fb] px-4 py-2.5 text-sm font-medium text-blue">{slot}</span>)}
+              <div className={`${m.chips} mt-5 flex flex-wrap gap-3`}>
+                {coach.availability.map((slot, i) => <span key={slot} style={{ "--i": i } as CSSProperties} className="rounded-full border border-blue/15 bg-[#f7f8fb] px-4 py-2.5 text-sm font-medium text-blue">{slot}</span>)}
               </div>
               <div className="mt-7 grid gap-4 border-t border-blue/10 pt-6 sm:grid-cols-2">
                 <div>
@@ -174,7 +216,7 @@ export default async function CoachProfilePage({
 
           <div className="mt-14">
             <h3 className="font-display text-2xl font-bold text-blue md:text-3xl">Bạn có thể cùng coach hướng tới</h3>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div data-cd-reveal className={`${m.reveal} mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3`}>
               {coach.outcomes.map((outcome, index) => (
                 <div key={outcome} className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-blue/10 bg-white p-5 shadow-sm shadow-blue/5 transition-all duration-500 hover:-translate-y-1 hover:border-yellow/70 hover:shadow-xl hover:shadow-blue/10">
                   <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue font-display text-sm font-extrabold text-yellow transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">0{index + 1}</span>
@@ -186,7 +228,7 @@ export default async function CoachProfilePage({
             <p className="mt-4 text-xs leading-5 text-blue/50">Kết quả phụ thuộc vào mục tiêu, hoàn cảnh và mức độ tham gia của từng người; nội dung này không phải cam kết bảo đảm kết quả.</p>
           </div>
 
-          <div className="mt-12 flex flex-col items-start justify-between gap-5 rounded-3xl border border-yellow/50 bg-yellow/15 p-6 md:flex-row md:items-center md:p-8">
+          <div data-cd-reveal className={`${m.reveal} mt-12 flex flex-col items-start justify-between gap-5 rounded-3xl border border-yellow/50 bg-yellow/15 p-6 md:flex-row md:items-center md:p-8`}>
             <div><h3 className="font-display text-xl font-bold text-blue">Muốn tìm hiểu trước khi gửi yêu cầu?</h3><p className="mt-2 text-sm leading-6 text-blue/70">Liên hệ Sunshine Center qua thông tin ở cuối trang để xác nhận phí, lịch trống và thời gian phản hồi.</p></div>
             <Link href="/coaching#companions" className="inline-flex shrink-0 items-center rounded-full bg-yellow px-6 py-3 font-mono text-xs font-bold uppercase tracking-wider text-blue transition hover:-translate-y-0.5 hover:bg-white">Xem các coach khác</Link>
           </div>

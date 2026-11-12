@@ -426,18 +426,18 @@ export default function ProgramGallery({
   return (
     <section
       aria-labelledby="program-gallery-heading"
-      className="mt-12 border-t border-blue/10 pt-8"
+      className="pt-2"
     >
       <h2
         id="program-gallery-heading"
-        className="mb-5 flex items-center gap-3 font-bold text-blue"
+        className="mb-6 flex items-center gap-3 font-editorial text-2xl font-bold text-blue md:text-3xl"
       >
         <span
           ref={accentRef}
           aria-hidden="true"
           className={`h-5 w-1 rounded-full bg-yellow ${accentMotionClass}`}
         />
-        <span className="inline-flex items-center gap-2"><Camera size={18} className="text-yellow" aria-hidden="true" />Thư viện ảnh</span>
+        <span className="inline-flex items-center gap-2"><Camera size={22} className="text-yellow" aria-hidden="true" />Thư viện ảnh</span>
       </h2>
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-stretch lg:gap-4">

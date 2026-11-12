@@ -1,0 +1,183 @@
+/* Hiệu ứng chung cho trang Quên mật khẩu / Đặt lại mật khẩu */
+
+/* Ảnh nền cột trái: zoom chậm kiểu Ken Burns */
+.photo {
+  animation: kenBurns 24s ease-in-out infinite alternate;
+  transform-origin: 30% 60%;
+}
+
+@keyframes kenBurns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.14) translate3d(-2%, -1.5%, 0);
+  }
+}
+
+/* Vệt nắng vàng quét chéo qua ảnh một lần khi vào trang */
+.sunSweep {
+  position: absolute;
+  inset: -20%;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgb(254 206 1 / 0.28) 48%,
+    rgb(255 255 255 / 0.12) 52%,
+    transparent 65%
+  );
+  transform: translate3d(-70%, 0, 0);
+  animation: sunSweep 2.6s cubic-bezier(0.45, 0, 0.2, 1) 0.5s forwards;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+@keyframes sunSweep {
+  0% {
+    opacity: 0;
+    transform: translate3d(-70%, 0, 0);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(70%, 0, 0);
+    visibility: hidden;
+  }
+}
+
+/* Chữ cột trái: hiện lần lượt */
+.rise {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  animation: rise 1100ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.kickerLine {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: lineGrow 900ms cubic-bezier(0.22, 1, 0.36, 1) 300ms forwards;
+}
+
+@keyframes lineGrow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Cột phải: logo và thẻ form trượt lên */
+.formEnter {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0) scale(0.98);
+  animation: rise 1000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Ô nhập: viền vàng phát sáng khi focus */
+.input {
+  transition:
+    border-color 250ms ease,
+    box-shadow 300ms ease;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 4px rgb(254 206 1 / 0.22);
+}
+
+/* Nút submit: ánh sáng chạy ngang khi hover */
+.submit {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.55) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+}
+
+.submit:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgb(254 206 1 / 0.4);
+}
+
+.submit:not(:disabled):hover::after {
+  transition: transform 800ms ease;
+  transform: translateX(120%);
+}
+
+/* Trạng thái thành công: khối nội dung hiện ra, biểu tượng bật nảy */
+.successIn {
+  animation: successIn 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes successIn {
+  from {
+    opacity: 0;
+    transform: translate3d(18px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.iconPop {
+  animation: iconPop 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms both;
+  box-shadow: 0 0 0 0 rgb(254 206 1 / 0.5);
+}
+
+@keyframes iconPop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+    box-shadow: 0 0 0 0 rgb(254 206 1 / 0.5);
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 18px rgb(254 206 1 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo,
+  .sunSweep,
+  .rise,
+  .kickerLine,
+  .formEnter,
+  .successIn,
+  .iconPop {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .sunSweep {
+    display: none;
+  }
+}

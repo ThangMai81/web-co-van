@@ -1,0 +1,320 @@
+/* ===== Stories route — motion language: "lời kể hiện dần" =====
+   Chuyển động chậm, rõ, ưu tiên desktop. Mobile chỉ hiển thị nội dung. */
+
+/* ---------- Hero ---------- */
+.heroRays {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 140vmax;
+  height: 140vmax;
+  translate: -50% -50%;
+  pointer-events: none;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgb(254 206 1 / 0.07) 0deg 6deg,
+    transparent 6deg 18deg
+  );
+  mask-image: radial-gradient(circle, #000 0%, transparent 55%);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 55%);
+  opacity: 0.8;
+}
+
+.quoteMark {
+  display: block;
+  margin: 0 auto 1.25rem;
+  width: 5.5rem;
+  height: 4.5rem;
+  color: var(--color-yellow);
+}
+
+.quoteMark path {
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 2.5;
+}
+
+.headlineWord {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+}
+
+.headlineWord > span {
+  display: inline-block;
+}
+
+.heroFade {
+  opacity: 1;
+}
+
+/* ---------- Journey (trước — trong — sau) ---------- */
+.journeyTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.25rem;
+  height: 3px;
+  border-radius: 999px;
+  background: rgb(20 40 80 / 0.1);
+  overflow: hidden;
+}
+
+.journeyFill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(var(--journey-progress, 1));
+  background: linear-gradient(90deg, var(--color-yellow), #ffe57a, var(--color-yellow));
+  box-shadow: 0 0 14px rgb(254 206 1 / 0.6);
+}
+
+.stage {
+  position: relative;
+}
+
+.stageDot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 999px;
+  border: 3px solid rgb(20 40 80 / 0.12);
+  background: #fff;
+  color: var(--color-blue);
+}
+
+.stageCard {
+  border-radius: 1.5rem;
+}
+
+/* Điện thoại: chặng xếp dọc như một dòng thời gian, biểu tượng nối liền với thẻ */
+@media (max-width: 767px) {
+  .stage {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    column-gap: 1rem;
+    align-items: start;
+  }
+
+  .stage:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: calc(1.625rem - 1px);
+    top: 3.75rem;
+    bottom: calc(-1.5rem + 0.5rem);
+    width: 2px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--color-yellow), rgb(254 206 1 / 0.15));
+  }
+
+  .stageDot {
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .stageDot svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* ---------- Testimonial cards ---------- */
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -40% auto auto;
+  z-index: -1;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgb(254 206 1 / 0.22), transparent 65%);
+  opacity: 0;
+  transition: opacity 600ms ease, transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover::before {
+  opacity: 1;
+  transform: translate(-18%, 18%);
+}
+
+.cardQuote {
+  display: inline-block;
+  transform-origin: left bottom;
+}
+
+.storyPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.storyPanel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.storyPanel > div {
+  overflow: hidden;
+}
+
+/* ---------- Closing CTA ---------- */
+.ctaBand {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.ctaShine {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.55) 48%,
+    transparent 66%
+  );
+  transform: translateX(-120%);
+}
+
+/* ===== Desktop motion ===== */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .heroRays {
+    animation: stories-rays-spin 90s linear infinite;
+  }
+
+  .quoteMark path {
+    stroke-dasharray: 260;
+    stroke-dashoffset: 260;
+    animation:
+      stories-quote-draw 1800ms cubic-bezier(0.65, 0, 0.35, 1) 150ms forwards,
+      stories-quote-fill 900ms ease 1700ms forwards;
+  }
+
+  .quoteMark {
+    animation: stories-quote-float 6s ease-in-out 2.4s infinite;
+  }
+
+  .headlineWord > span {
+    transform: translateY(110%);
+    animation: stories-word-rise 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(700ms + var(--word-index, 0) * 110ms);
+  }
+
+  .heroFade {
+    opacity: 0;
+    animation: stories-fade-up 1000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--fade-delay, 1800ms);
+  }
+
+  .stageDot {
+    transition:
+      border-color 700ms ease,
+      background-color 700ms ease,
+      transform 900ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 700ms ease;
+  }
+
+  .stage[data-active="false"] .stageDot {
+    transform: scale(0.82);
+  }
+
+  .stage[data-active="true"] .stageDot {
+    border-color: var(--color-yellow);
+    background: var(--color-blue);
+    color: var(--color-yellow);
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgb(254 206 1 / 0.16), 0 18px 40px rgb(20 40 80 / 0.25);
+  }
+
+  .stageCard {
+    transition:
+      opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .stage[data-active="false"] .stageCard {
+    opacity: 0.25;
+    transform: translateY(2.5rem);
+  }
+
+  .stage[data-active="true"] .stageCard {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .journeyFill {
+    transition: transform 160ms linear;
+  }
+
+  [data-visible="true"] .cardQuote {
+    animation: stories-card-quote 1200ms cubic-bezier(0.34, 1.56, 0.64, 1) 250ms both;
+  }
+
+  .card {
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), border-color 600ms ease;
+  }
+
+  .card:hover {
+    transform: translateY(-8px) rotate(-0.4deg);
+    border-color: rgb(254 206 1 / 0.45);
+  }
+
+  .ctaShine {
+    animation: stories-cta-shine 4.5s ease-in-out 1s infinite;
+  }
+}
+
+@media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+  .journeyFill {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes stories-rays-spin {
+  to { rotate: 360deg; }
+}
+
+@keyframes stories-quote-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes stories-quote-fill {
+  to { fill: currentColor; }
+}
+
+@keyframes stories-quote-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-3deg); }
+}
+
+@keyframes stories-word-rise {
+  from { transform: translateY(110%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes stories-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stories-card-quote {
+  0% { transform: scale(0.3) rotate(-25deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes stories-cta-shine {
+  0% { transform: translateX(-120%); }
+  45%, 100% { transform: translateX(120%); }
+}

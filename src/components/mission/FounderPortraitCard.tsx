@@ -19,6 +19,7 @@ export function FounderPortraitCard() {
         fill
         sizes="(min-width: 1024px) 50vw, 100vw"
         className="object-cover"
+        style={{ transform: "scale(1.15)", transformOrigin: "0% 25%" }}
       />
     </div>
   );

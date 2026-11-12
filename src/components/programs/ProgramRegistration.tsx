@@ -62,7 +62,7 @@ export default function ProgramRegistration({
         </div>
       )}
       <div className="p-6 sm:p-8">
-        <h2 className="mb-1 text-2xl font-bold">Đăng ký tham gia</h2>
+        <h2 className="mb-1 font-editorial text-3xl font-bold md:text-4xl">Đăng ký tham gia</h2>
         <p className="mb-5 text-sm font-medium text-white/60">
           Quy trình đơn giản, chúng tôi sẽ hỗ trợ bạn từng bước.
         </p>
@@ -77,7 +77,7 @@ export default function ProgramRegistration({
               }`}
               style={{ transitionDelay: `${150 + i * 100}ms` }}
             >
-              <div className="mb-2 font-mono text-xs font-bold text-yellow">{s.step}</div>
+              <div className="mb-2 font-editorial text-3xl font-bold italic leading-none text-yellow">{s.step}</div>
               <div className="mb-1 font-bold text-white">{s.label}</div>
               <p className="text-xs leading-relaxed text-white/65">{s.desc}</p>
             </li>

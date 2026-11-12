@@ -1,0 +1,177 @@
+/* ---------- HERO ---------- */
+
+.portraitWrap {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+/* Vòng vàng đứt nét "thở" phía sau ảnh */
+.ring {
+  position: absolute;
+  inset: -1.25rem;
+  border-radius: 48% 48% 2rem 2rem;
+  border: 2px dashed rgb(254 206 1 / 0.45);
+  animation:
+    ringIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both,
+    ringBreathe 7s ease-in-out 1.9s infinite;
+  pointer-events: none;
+}
+
+@keyframes ringIn {
+  from {
+    opacity: 0;
+    transform: scale(0.88) rotate(-6deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ringBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    border-color: rgb(254 206 1 / 0.45);
+  }
+  50% {
+    transform: scale(1.035);
+    border-color: rgb(254 206 1 / 0.8);
+  }
+}
+
+/* Ảnh mở từ dưới lên theo hình vòm */
+.portrait {
+  animation:
+    archReveal 1.5s cubic-bezier(0.65, 0, 0.25, 1) 0.15s both,
+    floatY 8s ease-in-out 1.8s infinite;
+}
+
+@keyframes archReveal {
+  from {
+    clip-path: inset(100% 0 0 0 round 48% 48% 1.5rem 1.5rem);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 48% 48% 1.5rem 1.5rem);
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+.portraitImg {
+  animation: imgSettle 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes imgSettle {
+  from {
+    transform: scale(1.25);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Chữ hero hiện lần lượt */
+.heroRise {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  animation: heroRise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes heroRise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- PHIÊN KHAI VẤN: hiện khi cuộn ---------- */
+
+:global(html[data-cd-motion="ready"]) .reveal:not([data-visible="true"]) {
+  opacity: 0;
+  transform: translate3d(0, 48px, 0);
+}
+
+.reveal {
+  transition:
+    opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms),
+    transform 1000ms cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms);
+}
+
+:global(html[data-cd-motion="ready"]) .revealLeft:not([data-visible="true"]) {
+  transform: translate3d(-56px, 0, 0);
+}
+
+:global(html[data-cd-motion="ready"]) .revealRight:not([data-visible="true"]) {
+  transform: translate3d(56px, 0, 0);
+}
+
+/* Các chip khung giờ bật lên từng cái */
+.chips > * {
+  transition:
+    opacity 600ms ease calc(var(--i, 0) * 110ms + 450ms),
+    transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1)
+      calc(var(--i, 0) * 110ms + 450ms);
+}
+
+:global(html[data-cd-motion="ready"])
+  [data-cd-reveal]:not([data-visible="true"])
+  .chips
+  > * {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+/* Số liệu trong thẻ phí: nhấp sáng khi xuất hiện */
+.statGlow {
+  display: inline-block;
+}
+
+[data-visible="true"] .statGlow {
+  animation: statGlow 1.6s ease 0.6s both;
+}
+
+@keyframes statGlow {
+  0% {
+    text-shadow: 0 0 0 rgb(254 206 1 / 0);
+    transform: scale(0.85);
+  }
+  50% {
+    text-shadow: 0 0 22px rgb(254 206 1 / 0.75);
+    transform: scale(1.08);
+  }
+  100% {
+    text-shadow: 0 0 0 rgb(254 206 1 / 0);
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  .ring {
+    inset: -0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .portrait,
+  .portraitImg,
+  .heroRise,
+  .statGlow {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}

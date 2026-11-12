@@ -151,7 +151,7 @@ export function InquiryForm({ coachName, availability, bookingNoticeHours }: { c
 
         <form
           onSubmit={handleSubmit}
-          className="w-full rounded-3xl border-2 border-blue/15 bg-white p-8 shadow-xl shadow-blue/10 sm:p-10"
+          className="w-full rounded-3xl border-2 border-blue/15 bg-white p-6 shadow-xl shadow-blue/10 sm:p-10"
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field
@@ -220,18 +220,31 @@ export function InquiryForm({ coachName, availability, bookingNoticeHours }: { c
             <span className="mb-3 block font-mono text-xs font-bold uppercase tracking-wider text-blue">
               Điều bạn đang quan tâm hoặc vướng bận nhất lúc này
             </span>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {CONCERNS.map((c) => (
                 <button
                   key={c.value}
                   type="button"
                   onClick={() => setConcern(c.value)}
-                  className={`rounded-xl border-2 px-4 py-3 text-left text-sm font-bold transition ${
+                  aria-pressed={concern === c.value}
+                  className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 text-left text-[13px] font-bold leading-snug transition active:scale-[0.98] sm:px-4 sm:py-3 sm:text-sm ${
                     concern === c.value
                       ? "border-yellow bg-yellow/15 text-blue"
                       : "border-blue/15 text-blue/70 hover:border-yellow/50"
                   }`}
                 >
+                  <span
+                    aria-hidden="true"
+                    className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 transition-colors ${
+                      concern === c.value ? "border-blue bg-blue" : "border-blue/25"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full bg-yellow transition-transform duration-200 ${
+                        concern === c.value ? "scale-100" : "scale-0"
+                      }`}
+                    />
+                  </span>
                   {c.label}
                 </button>
               ))}

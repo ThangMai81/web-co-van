@@ -206,6 +206,7 @@ body {
   --font-display: var(--font-display-raw), sans-serif;
   --font-body: var(--font-body-raw), serif;
   --font-mono: Arial, Helvetica, sans-serif;
+  --font-editorial: var(--font-editorial-raw), Georgia, "Times New Roman", serif;
 }
 
 @keyframes coach-profile-portrait-settle {
@@ -275,4 +276,17 @@ h1[data-coach-name-kinetic="true"] .coach-profile-name-kinetic__word:nth-of-type
   main > section:first-of-type > div > div.grid > [class~="max-w-md"][class~="rounded-[48%_48%_1.5rem_1.5rem]"] > :is(img, span) {
     animation: coach-profile-portrait-settle 1800ms cubic-bezier(0.77, 0, 0.18, 1) 150ms both;
   }
+}
+
+/* Tiêu đề section: chia dòng cân đối, tránh một chữ mồ côi ở dòng cuối (vd. "...đường học / tập") */
+@layer base {
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+/* Số trong font editorial (Playfair) mặc định là số kiểu cũ; dùng số thẳng hàng cho dễ đọc */
+.font-editorial {
+  font-variant-numeric: lining-nums proportional-nums;
 }

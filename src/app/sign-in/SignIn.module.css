@@ -1,0 +1,187 @@
+/* ===== Sign-in route — motion language: "bình minh mở cửa" =====
+   Ảnh trôi chậm như máy quay, chữ trồi từ mặt nạ, form nổi lên sau.
+   Chỉ chạy trên desktop; mobile và reduced-motion giữ nguyên trạng thái tĩnh. */
+
+.photo {
+  transform-origin: 60% 40%;
+}
+
+.glowOrb {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgb(254 206 1 / 0.35), transparent 65%);
+  filter: blur(6px);
+}
+
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.line > span {
+  display: block;
+}
+
+.rule {
+  display: block;
+  height: 1px;
+  width: 1.5rem;
+  background: var(--color-yellow);
+  transform-origin: left center;
+}
+
+.taglineRule {
+  display: block;
+  height: 2px;
+  width: 4rem;
+  background: linear-gradient(90deg, var(--color-yellow), transparent);
+  transform-origin: left center;
+}
+
+/* Tabs với thanh vàng trượt */
+.tabs {
+  position: relative;
+  isolation: isolate;
+}
+
+.tabPill {
+  position: absolute;
+  z-index: -1;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  width: calc(50% - 0.25rem);
+  border-radius: 999px;
+  background: var(--color-yellow);
+  box-shadow: 0 4px 14px rgb(254 206 1 / 0.35);
+  transition: transform 520ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.tabPill[data-mode="register"] {
+  transform: translateX(100%);
+}
+
+.submit {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.65) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .photo {
+    animation:
+      signin-photo-settle 2600ms cubic-bezier(0.22, 1, 0.36, 1) both,
+      signin-photo-drift 22s ease-in-out 2600ms infinite alternate;
+  }
+
+  .glowOrb {
+    animation: signin-orb-float 9s ease-in-out infinite alternate;
+  }
+
+  .glowOrb + .glowOrb {
+    animation-duration: 12s;
+    animation-delay: -4s;
+  }
+
+  .line > span {
+    transform: translateY(105%);
+    animation: signin-line-rise 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--delay, 600ms);
+  }
+
+  .rule,
+  .taglineRule {
+    transform: scaleX(0);
+    animation: signin-rule-draw 900ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation-delay: var(--delay, 400ms);
+  }
+
+  .fadeUp {
+    animation: signin-fade-up 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  .card {
+    animation: signin-card-rise 1100ms cubic-bezier(0.22, 1, 0.36, 1) 350ms both;
+  }
+
+  .heading {
+    animation: signin-heading-swap 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .fieldEnter {
+    animation: signin-field-enter 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .submit:hover::after,
+  .submit:focus-visible::after {
+    animation: signin-submit-shine 900ms ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabPill {
+    transition: none;
+  }
+}
+
+@keyframes signin-photo-settle {
+  from { transform: scale(1.18); filter: brightness(0.7) saturate(0.8); }
+  to { transform: scale(1.04); filter: brightness(1) saturate(1); }
+}
+
+@keyframes signin-photo-drift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(-1.5%, -1%, 0); }
+}
+
+@keyframes signin-orb-float {
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.55; }
+  to { transform: translate3d(2.5rem, -2rem, 0) scale(1.2); opacity: 0.9; }
+}
+
+@keyframes signin-line-rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes signin-rule-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes signin-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes signin-card-rise {
+  from { opacity: 0; transform: translateY(36px) scale(0.97); box-shadow: 0 0 0 rgb(0 0 0 / 0); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes signin-heading-swap {
+  from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes signin-field-enter {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes signin-submit-shine {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}

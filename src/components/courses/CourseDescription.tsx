@@ -34,12 +34,13 @@ export default function CourseDescription({
 
   return (
     <section>
-      <h2 className="mb-3 text-xl font-bold text-blue">Mô tả</h2>
+      <span className="mb-2 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-blue/55"><span aria-hidden="true" className="block h-px w-8 bg-yellow" />Về khóa học</span>
+      <h2 className="mb-6 font-editorial text-3xl font-bold text-blue md:text-4xl">Mô tả</h2>
 
       {(description || bullets.length > 0) && (
-        <div className="rounded-xl border border-blue/10 bg-blue/5 p-5">
+        <div className="relative overflow-hidden rounded-[1.75rem] bg-white p-6 shadow-[0_30px_60px_-40px_rgb(20_40_80/0.45)] ring-1 ring-blue/5 md:p-8">
           {description && (
-            <p className="mb-3 font-medium text-blue/90">{description}</p>
+            <p className="mb-5 font-editorial text-xl font-semibold leading-relaxed text-blue md:text-[1.45rem]">{description}</p>
           )}
 
           {bullets.length > 0 && (
@@ -82,9 +83,9 @@ export default function CourseDescription({
       )}
 
       {highlights.length > 0 && (
-        <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
-          <h3 className="mb-3 flex items-center gap-2.5 font-bold text-blue">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue text-yellow">
+        <div className="mt-5 rounded-[1.5rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgb(20_40_80/0.45)] ring-1 ring-blue/5 md:p-7">
+          <h3 className="mb-3 flex items-center gap-2.5 font-editorial text-xl font-bold text-blue">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-blue text-yellow">
               <Sparkles size={16} aria-hidden="true" />
             </span>
             Nội dung nổi bật
@@ -127,9 +128,9 @@ export default function CourseDescription({
       )}
 
       {benefits.length > 0 && (
-        <div className="mt-4 rounded-xl border border-blue/15 bg-white p-5">
-          <h3 className="mb-4 flex items-center gap-2.5 font-bold text-blue">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-yellow text-blue">
+        <div className="mt-5 rounded-[1.5rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgb(20_40_80/0.45)] ring-1 ring-blue/5 md:p-7">
+          <h3 className="mb-4 flex items-center gap-2.5 font-editorial text-xl font-bold text-blue">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-yellow text-blue">
               <CircleCheck size={16} aria-hidden="true" />
             </span>
             Lợi ích chương trình

@@ -12,13 +12,8 @@ export function JourneyInside() {
           <Reveal direction="left">
             <p className="mb-4 font-medium text-blue/70">
               Nơi giúp bạn tìm thấy mình, hiểu được nội hàm bên trong mình, nơi
-              giúp bạn từng bước đi qua bóng tối bên trong để chạm vào vùng sáng
+              giúp bạn từng bước đi qua bóng tối để chạm vào vùng sáng
               vốn có sẵn bên trong bạn.
-            </p>
-            <p className="mb-4 text-2xl font-bold text-blue md:text-3xl">
-              Giúp bạn tìm thấy phiên bản xuất sắc nhất bên trong mình, bạn trở
-              về với phiên bản vốn là của bạn, bạn sống cuộc đời rực rỡ nhất của
-              chính bạn.
             </p>
             <p className="font-medium text-blue/70">
               Là nơi giúp bạn trở thành ngọn hải đăng, trở thành hình mẫu, thành

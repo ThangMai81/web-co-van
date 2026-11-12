@@ -4,6 +4,7 @@ import ProgramVideo from "./ProgramVideo";
 import ProgramHighlights from "./ProgramHighlights";
 import ProgramGallery from "./ProgramGallery";
 import ProgramRegistration from "./ProgramRegistration";
+import { ProgramClosingCTA } from "./ProgramClosingCTA";
 import type { Program } from "@/types/program";
 import { fetchDetailRouteData } from "@/lib/detailRouteFetch";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
@@ -114,7 +115,7 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
   ];
 
   return (
-    <div className="min-h-svh bg-white">
+    <div className="min-h-svh bg-cream">
       <DetailRouteScrollReset />
       <SiteHeader />
       <ReadingProgress />
@@ -122,11 +123,12 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
         <ProgramHero
           program={displayProgram}
           viewerEnabled={slug !== "chinh-phuc-fansipan-noc-nha-dong-duong"}
+          nextTone={hasInformationSections ? "cream" : hasStructuredContent ? "blue" : "cream"}
         />
 
         {hasInformationSections && (
-          <section className="bg-[#edf5fb]">
-            <div className="mx-auto max-w-[var(--page-w)] px-6 pb-10">
+          <section id="program-content" className="scroll-mt-24 bg-cream">
+            <div className="mx-auto max-w-[var(--page-w)] px-6 pb-14">
               <DetailSectionNav
                 items={sectionItems}
                 label="Điều hướng nội dung chương trình"
@@ -159,18 +161,19 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
                     aria-labelledby="program-description-heading"
                     className="mt-8 scroll-mt-28 md:scroll-mt-32"
                   >
-                    <div className="relative overflow-hidden rounded-3xl border border-blue/10 bg-white p-7 shadow-xl shadow-blue/5 md:p-10">
-                      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-yellow to-yellow/20" />
-                      <svg aria-hidden="true" viewBox="0 0 120 96" className="pointer-events-none absolute right-6 top-6 h-16 w-20 text-yellow/15">
-                        <path fill="currentColor" d="M0 96V58C0 26 15 7 46 0l6 13C35 19 27 30 26 48h22v48H0Zm66 0V58C66 26 81 7 112 0l6 13c-17 6-25 17-26 35h22v48H66Z" />
-                      </svg>
+                    <div className="relative overflow-hidden rounded-[2rem] bg-white px-7 py-9 shadow-[0_30px_60px_-40px_rgb(20_40_80/0.45)] ring-1 ring-blue/5 md:px-12 md:py-12">
+                      <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-yellow/15 blur-2xl" />
+                      <span aria-hidden="true" className="pointer-events-none absolute right-8 top-2 select-none font-editorial text-[9rem] font-bold leading-none text-yellow/25 md:right-12 md:text-[11rem]">
+                        &ldquo;
+                      </span>
                       <h2
                         id="program-description-heading"
-                        className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.2em] text-blue/55"
+                        className="relative mb-5 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-blue/55"
                       >
+                        <span aria-hidden="true" className="block h-px w-8 bg-yellow" />
                         Giới thiệu chương trình
                       </h2>
-                      <p className="relative max-w-[62ch] font-display text-xl font-medium leading-relaxed text-blue md:text-2xl md:leading-relaxed">
+                      <p className="relative max-w-[58ch] font-editorial text-[1.2rem] font-semibold leading-[1.55] sm:text-[1.4rem] text-blue first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-editorial first-letter:text-[4.2rem] first-letter:font-bold first-letter:leading-[0.85] first-letter:text-sun md:text-[1.75rem]">
                         {description}
                       </p>
                     </div>
@@ -183,10 +186,12 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
         )}
 
         {hasStructuredContent && (
-          <section className="bg-blue text-white">
+          <section className="relative isolate overflow-hidden bg-blue text-white">
+            <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 -z-10 h-[28rem] w-[28rem] rounded-full bg-yellow/10 blur-3xl" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(rgb(255_255_255/0.06)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(90deg,transparent_40%,#000)]" />
             <div
-              className={`mx-auto max-w-[var(--page-w)] px-6 pb-12 ${
-                hasInformationSections ? "pt-8" : "pt-2"
+              className={`mx-auto max-w-[var(--page-w)] px-6 pb-16 md:pb-20 ${
+                hasInformationSections ? "pt-14 md:pt-16" : "pt-2"
               }`}
             >
               {!hasInformationSections && (
@@ -205,10 +210,10 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
         )}
 
         {hasGallery && (
-          <section className="bg-[#edf5fb]">
+          <section className="bg-white">
             <div
-              className={`mx-auto max-w-[var(--page-w)] px-6 pb-12 ${
-                hasInformationSections || hasStructuredContent ? "pt-8" : "pt-2"
+              className={`mx-auto max-w-[var(--page-w)] px-6 pb-16 ${
+                hasInformationSections || hasStructuredContent ? "pt-14 md:pt-16" : "pt-2"
               }`}
             >
               {!hasInformationSections && !hasStructuredContent && (
@@ -232,6 +237,7 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
             </div>
           </section>
         )}
+        <ProgramClosingCTA />
       </main>
       <SiteFooter />
     </div>

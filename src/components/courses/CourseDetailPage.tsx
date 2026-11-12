@@ -6,6 +6,7 @@ import CourseDescription from "./CourseDescription";
 import CourseCurriculum from "./CourseCurriculum";
 import CourseReviews from "./CourseReviews";
 import RelatedCourses from "./RelatedCourses";
+import { CourseClosingCTA } from "./CourseClosingCTA";
 import type { CourseDetailResponse } from "@/types/course";
 import { fetchDetailRouteData } from "@/lib/detailRouteFetch";
 import { SiteHeader } from "@/components/navigation/SiteHeader";
@@ -13,6 +14,14 @@ import { ReadingProgress } from "@/components/navigation/ReadingProgress";
 import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import CourseCategoryIcon from "./CourseCategoryIcon";
+import {
+  DetailHeroBackdrop,
+  DetailHeroCurve,
+  DetailHeroFrame,
+  RotatingSeal,
+} from "@/components/detail/DetailHero";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -178,22 +187,28 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
       : []),
   ];
 
+  const heroImage = detail?.thumbnail && !detail.thumbnail.includes("res.cloudinary.com/demo") ? detail.thumbnail : detail?.thumbnail ? "/images/collaborate_team.jpg" : null;
+
   return (
-    <div className="min-h-svh bg-white">
+    <div className="min-h-svh bg-cream">
       <DetailRouteScrollReset />
       <SiteHeader />
       <ReadingProgress />
       <main className="route-detail-enter">
-        <section className="relative isolate overflow-hidden bg-blue">
-          <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 -z-10 h-[30rem] w-[30rem] rounded-full bg-yellow/15 blur-3xl" />
-          <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 -left-24 -z-10 h-[26rem] w-[26rem] rounded-full bg-[#24407a] blur-3xl" />
-          <div className="mx-auto max-w-[var(--page-w)] px-6 pb-12 pt-[88px] md:pb-16 md:pt-[128px] lg:pt-[96px]">
+        <section className="relative isolate overflow-hidden text-white">
+          <DetailHeroBackdrop image={heroImage} />
+          <div className="mx-auto max-w-[var(--page-w)] px-6 pb-20 pt-[88px] md:pb-24 md:pt-[128px] lg:pt-[96px]">
+            <Breadcrumb
+              variant="light"
+              items={[
+                { label: "Khóa học", href: "/courses" },
+                { label: course.title },
+              ]}
+            />
             <div
-              className={`grid gap-6 ${detail?.thumbnail ? "items-center lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10" : ""}`}
+              className={`mt-8 grid gap-12 ${detail?.thumbnail ? "lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14" : "max-w-3xl"}`}
             >
-              <div
-                className={`order-1 rounded-3xl border border-white/20 bg-white p-6 shadow-2xl shadow-black/30 sm:p-8 ${detail?.thumbnail ? "lg:order-2" : "max-w-3xl"}`}
-              >
+              <div className="min-w-0">
                 <CourseHeader course={course} detail={detail} />
                 {detail && (
                   <CourseSidebar
@@ -204,17 +219,23 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
                 )}
               </div>
               {detail?.thumbnail && (
-                <div className="order-2 lg:order-1">
+                <DetailHeroFrame className="mr-3 sm:mr-5">
                   <CourseMedia detail={detail} title={course.title} slug={slug} />
-                </div>
+                  <RotatingSeal
+                    text={`Khóa học • ${course.format.trim() || "Sunshine Center"}`}
+                    icon={<CourseCategoryIcon category={detail.category ?? "coach"} size={22} />}
+                    className="-bottom-8 -left-5 sm:-bottom-10 sm:-left-10"
+                  />
+                </DetailHeroFrame>
               )}
             </div>
           </div>
+          <DetailHeroCurve tone={hasLearningContent ? "cream" : "blue"} />
         </section>
 
         {hasLearningContent && (
-          <section className="bg-[#edf5fb]">
-            <div className="mx-auto max-w-[var(--page-w)] px-6 pb-12">
+          <section className="bg-cream">
+            <div className="mx-auto max-w-[var(--page-w)] px-6 pb-16">
               <DetailSectionNav
                 items={sectionItems}
                 label="Điều hướng nội dung khóa học"
@@ -245,8 +266,10 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
           </section>
         )}
 
-        <section className="bg-blue">
-          <div className="mx-auto max-w-[var(--page-w)] px-6 py-10 md:py-12">
+        <section className="relative isolate overflow-hidden bg-blue">
+          <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-10 -z-10 h-[26rem] w-[26rem] rounded-full bg-yellow/10 blur-3xl" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(rgb(255_255_255/0.06)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(90deg,#000,transparent_60%)]" />
+          <div className="mx-auto max-w-[var(--page-w)] px-6 py-14 md:py-20">
             {!hasLearningContent && (
               <div className="rounded-xl bg-white px-4">
                 <DetailSectionNav
@@ -263,7 +286,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
             >
               <div
                 id="course-reviews"
-                className="scroll-mt-28 md:scroll-mt-32 rounded-xl bg-white p-5 sm:p-6"
+                className="scroll-mt-28 md:scroll-mt-32 rounded-[1.75rem] bg-white p-6 shadow-2xl shadow-black/20 sm:p-8"
               >
                 <CourseReviews
                   courseId={course._id}
@@ -277,7 +300,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
               {relatedCourses.length > 0 && (
                 <div
                   id="related-courses"
-                  className="scroll-mt-28 md:scroll-mt-32 rounded-xl bg-white p-5 sm:p-6"
+                  className="scroll-mt-28 md:scroll-mt-32 rounded-[1.75rem] bg-white p-6 shadow-2xl shadow-black/20 sm:p-8"
                 >
                   <RelatedCourses courses={relatedCourses} />
                 </div>
@@ -285,6 +308,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
             </div>
           </div>
         </section>
+        <CourseClosingCTA />
       </main>
       <SiteFooter />
     </div>

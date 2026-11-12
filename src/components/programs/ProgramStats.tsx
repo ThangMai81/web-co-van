@@ -12,7 +12,7 @@ export default function ProgramStats({ stats }: { stats: ProgramStat[] }) {
           key={idx}
           className="rounded-xl border border-blue/15 bg-blue/5 p-4 text-center"
         >
-          <div className="text-2xl font-extrabold text-blue">
+          <div className="font-editorial text-2xl font-bold text-blue md:text-[1.7rem]">
             <ProgramStatsCountUp
               key={`${stat.label}:${stat.value}`}
               value={stat.value}

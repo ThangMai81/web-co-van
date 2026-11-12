@@ -11,7 +11,7 @@ export default function RelatedCourses({
 
   return (
     <section>
-      <h2 className="mb-4 text-xl font-bold text-blue">
+      <h2 className="mb-5 font-editorial text-3xl font-bold text-blue">
         Khóa học tương tự
       </h2>
       <div

@@ -250,9 +250,9 @@ export default function CourseCurriculum({
 
   return (
     <section>
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-xl bg-blue px-5 py-3 text-white">
-        <h2 className="font-bold">Nội dung chương trình</h2>
-        <span className="text-sm font-medium">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-[1.5rem] bg-blue px-6 py-5 text-white">
+        <h2 className="font-editorial text-2xl font-bold md:text-3xl">Nội dung chương trình</h2>
+        <span className="rounded-full bg-yellow/15 px-3 py-1 text-sm font-semibold text-yellow">
           {visibleChapters.length} Chương • {visibleLessonCount} Bài giảng
           {formatFilter === "all" && totalDurationLabel
             ? ` • ${totalDurationLabel}`
@@ -295,7 +295,7 @@ export default function CourseCurriculum({
         </div>
       )}
 
-      <div className="divide-y divide-blue/10 rounded-b-xl border border-blue/15">
+      <div className="divide-y divide-blue/10 overflow-hidden rounded-b-[1.5rem] border border-blue/15 bg-white">
         {visibleChapters.map(({ chapter, chapterIndex, lessons }, idx) => {
           const headingId = `curriculum-chapter-${chapterIndex}`;
           const regionId = `curriculum-panel-${chapterIndex}`;

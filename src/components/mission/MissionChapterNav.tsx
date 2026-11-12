@@ -13,6 +13,7 @@ const CHAPTERS = [
 
 export function MissionChapterNav() {
   const navRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -114,21 +115,34 @@ export function MissionChapterNav() {
 
   const activeIndex = CHAPTERS.findIndex(([id]) => id === activeId);
 
+  // Điện thoại: thanh chương cuộn ngang, giữ mục đang đọc luôn trong tầm nhìn
+  useEffect(() => {
+    if (!activeId) return;
+    const list = listRef.current;
+    const link = list?.querySelector<HTMLElement>(`a[href="#${activeId}"]`);
+    if (!list || !link || list.scrollWidth <= list.clientWidth) return;
+    const target = link.offsetLeft - (list.clientWidth - link.offsetWidth) / 2;
+    list.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
+  }, [activeId]);
+
   return (
     <nav
       ref={navRef}
       aria-label="Đi đến phần nội dung"
       className={`border-b border-blue/10 bg-white px-6 ${styles.chapterNav}`}
     >
-      <ol className="mx-auto flex max-w-[var(--page-w)] flex-wrap gap-x-5 gap-y-2 py-3 sm:gap-x-7">
+      <ol
+        ref={listRef}
+        className={`relative -mx-6 flex max-w-[var(--page-w)] gap-x-5 overflow-x-auto px-6 py-2 sm:mx-auto sm:flex-wrap sm:gap-y-2 sm:overflow-visible sm:px-0 sm:py-3 sm:gap-x-7 ${styles.chapterList}`}
+      >
         {CHAPTERS.map(([id, label], index) => {
           const isActive = activeId === id;
           return (
-            <li key={id}>
+            <li key={id} className="shrink-0">
               <a
                 href={`#${id}`}
                 aria-current={isActive ? "location" : undefined}
-                className={`inline-flex min-h-10 items-center gap-2 text-sm font-semibold hover:text-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 ${styles.chapterLink} ${isActive ? "text-blue" : "text-blue/70"}`}
+                className={`inline-flex min-h-10 items-center gap-2 whitespace-nowrap text-sm font-semibold hover:text-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 ${styles.chapterLink} ${isActive ? "text-blue" : "text-blue/70"}`}
               >
                 <span className="font-mono text-xs font-bold text-yellow">0{index + 1}</span>
                 {label}

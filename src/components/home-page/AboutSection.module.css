@@ -1,0 +1,58 @@
+.sunHalo {
+  position: absolute;
+  z-index: -1;
+  right: -7rem;
+  bottom: -7rem;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(254 206 1 / 0.28), rgb(254 206 1 / 0) 68%);
+  animation: about-halo-breathe 7s ease-in-out infinite;
+}
+
+.sunRays {
+  position: absolute;
+  z-index: -1;
+  right: -9rem;
+  bottom: -9rem;
+  width: 22rem;
+  height: 22rem;
+  border-radius: 9999px;
+  background: repeating-conic-gradient(rgb(254 206 1 / 0.1) 0deg 4deg, transparent 4deg 18deg);
+  mask-image: radial-gradient(circle, transparent 28%, #000 30%, transparent 70%);
+  animation: about-rays-turn 60s linear infinite;
+}
+
+.liveDot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: #6ee7b7;
+}
+
+.liveDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: about-live-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes about-halo-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes about-rays-turn {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes about-live-ping {
+  75%, 100% { transform: scale(2.6); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sunHalo, .sunRays, .liveDot::after { animation: none; }
+}
