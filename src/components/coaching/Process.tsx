@@ -28,7 +28,8 @@ const PROCESS = [
     step: "03",
     title: "Bắt đầu phiên coaching 1:1",
     body: "Bạn và coach thống nhất nội dung, mục tiêu và lịch cho phiên đầu tiên.",
-    image: "/images/Sunshine_banner.jpg",
+    // Ảnh thật của Coach Yến (4:3) thay banner 3:1 có chữ bị cắt trong khung 4:3/16:10
+    image: "/images/programs/community/fansipan-coach-yen-gallery-4x3.jpg",
   },
 ];
 

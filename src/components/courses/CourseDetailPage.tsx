@@ -16,6 +16,7 @@ import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrol
 import { SiteFooter } from "@/components/home-page/SiteFooter";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import CourseCategoryIcon from "./CourseCategoryIcon";
+import { getCourseDisplayImage } from "./courseThumbnails";
 import {
   DetailHeroBackdrop,
   DetailHeroCurve,
@@ -187,7 +188,10 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
       : []),
   ];
 
-  const heroImage = detail?.thumbnail && !detail.thumbnail.includes("res.cloudinary.com/demo") ? detail.thumbnail : detail?.thumbnail ? "/images/collaborate_team.jpg" : null;
+  // Poster riêng của khóa học (đã duyệt) thay cho ảnh chuyến Kinabalu dùng làm ảnh dự phòng trước đây.
+  const heroImage = detail
+    ? getCourseDisplayImage({ slug, title: course.title, thumbnail: detail.thumbnail })
+    : null;
 
   return (
     <div className="min-h-svh bg-cream">
@@ -206,7 +210,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
               ]}
             />
             <div
-              className={`mt-8 grid gap-12 ${detail?.thumbnail ? "lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14" : "max-w-3xl"}`}
+              className={`mt-8 grid gap-12 ${heroImage ? "lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14" : "max-w-3xl"}`}
             >
               <div className="min-w-0">
                 <CourseHeader course={course} detail={detail} />
@@ -218,7 +222,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
                   />
                 )}
               </div>
-              {detail?.thumbnail && (
+              {heroImage && detail && (
                 <DetailHeroFrame className="mr-3 sm:mr-5">
                   <CourseMedia detail={detail} title={course.title} slug={slug} />
                   <RotatingSeal

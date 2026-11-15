@@ -13,8 +13,11 @@ const CHOICES = [
     title: "Khóa học",
     desc: "Học có hệ thống cùng giảng viên — phù hợp khi bạn muốn đi sâu vào một chủ đề, với lộ trình rõ ràng và bài giảng được thiết kế bài bản cho bạn hoặc con.",
     cta: "Xem khóa học",
-    image: "/images/collaborate_team.jpg",
-    alt: "Học viên cùng học tại Sunshine Center",
+    // Cô Yến giảng "Bánh xe cuộc đời" (cắt từ poster khóa học đã duyệt). Ảnh cũ là đoàn
+    // Kinabalu ở sân bay, không phải khóa học.
+    image: "/images/home/khoa-hoc-co-yen-giang-bai-panel.jpg",
+    alt: "Coach Yến Lê giảng bài Bánh xe cuộc đời trong khóa học tại Sunshine Center",
+    imagePosition: "62% 30%",
   },
   {
     href: "/programs",
@@ -24,6 +27,7 @@ const CHOICES = [
     cta: "Xem chương trình",
     image: "/images/home-yen-poster.jpg",
     alt: "Hành trình leo núi cùng Sunshine Center",
+    imagePosition: "50% 50%",
   },
 ];
 
@@ -99,6 +103,7 @@ export function CourseProgramChoice() {
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className={`${styles.panelImage} -z-10 object-cover`}
+                style={{ objectPosition: choice.imagePosition }}
               />
               <span className={styles.overlay} aria-hidden="true" />
 

@@ -65,3 +65,16 @@ export function getCourseThumbnailAspectRatio(course: CourseImageIdentity) {
 export function getCourseThumbnail(course: CourseImageIdentity) {
   return getCourseThumbnailFallback(course) ?? course.thumbnail;
 }
+
+/**
+ * Ảnh cho hero/khung ảnh trang chi tiết khóa học: poster riêng của khóa học (đã duyệt),
+ * sau đó tới ảnh thật từ API. Link Cloudinary "demo" không tồn tại => null (không hiện ảnh)
+ * thay vì mượn ảnh của một chuyến đi khác.
+ */
+export function getCourseDisplayImage(course: CourseImageIdentity): string | null {
+  const poster = getCourseThumbnailFallback(course);
+  if (poster) return poster;
+  const thumbnail = course.thumbnail?.trim();
+  if (thumbnail && !thumbnail.includes("res.cloudinary.com/demo")) return thumbnail;
+  return null;
+}

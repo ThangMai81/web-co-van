@@ -42,7 +42,8 @@ export const demoCoaches: Coach[] = [
   },
   {
     slug: "nguyen-mai-phuong-demo", name: "Nguyễn Mai Phương", title: "Người đồng hành · Hồ sơ demo",
-    image: "/images/first_banner.jpg", initials: "MP", accent: "#6ca7dc",
+    // Hồ sơ demo: chưa có ảnh thật => hiện chữ viết tắt trên nền màu (chờ ảnh được duyệt)
+    image: "", initials: "MP", accent: "#6ca7dc",
     quote: "Khi lắng nghe điều quan trọng với mình, bạn có thể chọn một hướng đi sáng rõ hơn.",
     bio: "Mai Phương là danh tính minh hoạ được tạo cho bản demo website. Hồ sơ mô phỏng một người đồng hành về định hướng nghề nghiệp và phát triển giá trị cá nhân.",
     approach: "Bắt đầu từ câu chuyện hiện tại, cùng gọi tên ưu tiên và chia nhỏ lựa chọn thành những bước có thể thử trong đời sống.",
@@ -60,7 +61,7 @@ export const demoCoaches: Coach[] = [
   },
   {
     slug: "tran-minh-ha-demo", name: "Trần Minh Hà", title: "Người đồng hành · Hồ sơ demo",
-    image: "/images/Hieu.jpg", initials: "MH", accent: "#a78bd4",
+    image: "", initials: "MH", accent: "#a78bd4",
     quote: "Một cuộc trò chuyện an toàn có thể mở ra cách nhìn mới cho những mối quan hệ thân thuộc.",
     bio: "Minh Hà là danh tính minh hoạ được tạo cho bản demo website. Hồ sơ mô phỏng một người đồng hành về giao tiếp, gia đình và các mối quan hệ.",
     approach: "Cùng lắng nghe nhiều góc nhìn, nhận diện điều mỗi người đang cần và tìm cách kết nối phù hợp với hoàn cảnh.",
@@ -78,7 +79,7 @@ export const demoCoaches: Coach[] = [
   },
   {
     slug: "pham-thu-huong-demo", name: "Phạm Thu Hương", title: "Người đồng hành · Hồ sơ demo",
-    image: "/images/collaborate_team.jpg", initials: "TH", accent: "#e79d73",
+    image: "", initials: "TH", accent: "#e79d73",
     quote: "Bạn không cần có ngay mọi câu trả lời để bắt đầu một thay đổi nhỏ.",
     bio: "Thu Hương là danh tính minh hoạ được tạo cho bản demo website. Hồ sơ mô phỏng một người đồng hành trong hành trình chuyển hoá và xây dựng sự tự tin.",
     approach: "Tạo không gian để nhìn lại thói quen, nhận ra nguồn lực sẵn có và chọn một hành động nhỏ, cụ thể cho tuần tiếp theo.",

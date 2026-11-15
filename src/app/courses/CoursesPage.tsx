@@ -78,7 +78,6 @@ export default async function CoursesPage({
 
       {/* === VÙNG 1: GIỚI THIỆU === */}
       <HeroSection
-        portraitAfterHeading
         portraitPresentation="courseEditorial"
         leadingContent={
           <Breadcrumb
@@ -89,7 +88,7 @@ export default async function CoursesPage({
         }
         portrait={{
           src: "/images/khoa-hoc-co-yen.jpg",
-          alt: "Cô giáo của Sunshine Center",
+          alt: "Coach Yến Lê giảng bài Bánh xe cuộc đời trong khóa học tại Sunshine Center",
           // name: "Tên của cô",     // bỏ comment nếu muốn hiện thẻ tên cạnh ảnh
           // role: "Chức danh",
         }}

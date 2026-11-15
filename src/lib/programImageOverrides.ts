@@ -15,10 +15,31 @@ const PROGRAM_IMAGE_OVERRIDES: Record<string, ProgramImageOverride> = {
       "/images/programs/community/workshop-online-zoom-participants-b-gallery-4x3.jpg",
     ],
   },
+  // Ảnh thật nhóm thiếu nhi tại trại hè (Drive WEBSITE/1. Trại hè (bìa ngoài)).
+  // Ảnh suối trước đây là chuyến Off chữa lành của người lớn nên đã chuyển sang mục đó.
   "trai-he-khai-tam-2027": {
-    card: "/images/programs/community/trai-he-suoi-doi-nhom-card-2x1.jpg",
-    cover: "/images/programs/community/trai-he-suoi-doi-nhom-cover-4x3.jpg",
-    gallery: ["/images/programs/community/trai-he-tam-suoi-gallery-4x3.jpg"],
+    card: "/images/programs/community/trai-he-thieu-nhi-card-2x1.jpg",
+    cover: "/images/programs/community/trai-he-thieu-nhi-cover-4x3.jpg",
+    gallery: [],
+  },
+  // Drive WEBSITE/1. Off chữa lành (bìa ngoài): cả nhóm đứng giữa suối.
+  "off-chua-lanh-thang-10": {
+    card: "/images/programs/community/off-chua-lanh-doan-suoi-card-2x1.jpg",
+    cover: "/images/programs/community/off-chua-lanh-doan-suoi-cover-4x3.jpg",
+    gallery: [],
+  },
+  // Chuyến đã diễn ra: ảnh tắm suối (Facebook) làm bìa để khác thẻ tháng 10; ảnh nhóm vào thư viện.
+  "off-chua-lanh-thang-6": {
+    card: "/images/programs/community/off-chua-lanh-tam-suoi-card-2x1.jpg",
+    cover: "/images/programs/community/off-chua-lanh-tam-suoi-cover-4x3.jpg",
+    gallery: ["/images/programs/community/off-chua-lanh-doan-suoi-cover-4x3.jpg"],
+  },
+  // Drive WEBSITE/1. Leo kinabalu (bìa ngoài): đoàn trên đỉnh; thư viện thêm ảnh đoàn
+  // mặc áo "Borneo Calling · Mount Kinabalu" tại sân bay Malaysia.
+  "kinabalu-gap-go-chinh-minh": {
+    card: "/images/programs/community/kinabalu-doan-dinh-card-2x1.jpg",
+    cover: "/images/programs/community/kinabalu-doan-dinh-cover-4x3.jpg",
+    gallery: ["/images/collaborate_team.jpg"],
   },
   "chinh-phuc-fansipan-noc-nha-dong-duong": {
     card: "/images/programs/community/fansipan-doan-dong-co-card-2x1.jpg",

@@ -1,3 +1,40 @@
+/* Quầng sáng vàng phía sau cột ảnh (trang trí, không nhận chuột) */
+.portraitGlow {
+  position: absolute;
+  z-index: 0;
+  right: -6rem;
+  top: 50%;
+  width: 34rem;
+  height: 34rem;
+  transform: translateY(-40%);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(254, 206, 1, 0.16) 0%, rgba(254, 206, 1, 0) 68%);
+  pointer-events: none;
+}
+
+/* Khung viền lệch phía sau ảnh tạo cảm giác "banner" có chiều sâu */
+.portraitOffset {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(254, 206, 1, 0.6);
+  border-radius: 1.5rem;
+  transform: translate(10px, 10px);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .portraitOffset {
+    inset: 3rem 0; /* khớp md:py-12 của figure */
+    transform: translate(14px, 14px);
+  }
+}
+
+@media (max-width: 767px) {
+  .portraitGlow {
+    display: none;
+  }
+}
+
 .courseEditorialPortrait {
   position: relative;
   border: 1px solid rgba(254, 206, 1, 0.68);

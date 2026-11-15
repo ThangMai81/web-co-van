@@ -25,11 +25,12 @@ export function JourneyInside() {
       </div>
       <JourneyImageZoom className="relative mt-12 aspect-[2/1] w-full overflow-hidden bg-blue/5 md:mt-16 md:aspect-[21/8]">
         <Image
-          src="/images/first_banner.jpg"
-          alt="Hành trình bên trong"
+          // Ảnh ngang 2:1 (đoàn trên đỉnh Kinabalu, Drive bìa) thay ảnh dọc 9:16 bị cắt trong khung 21:8
+          src="/images/programs/community/kinabalu-doan-dinh-wide-2x1.jpg"
+          alt="Đoàn Sunshine Center trên đỉnh núi Kinabalu, phía trên biển mây"
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-[60%_70%]"
         />
       </JourneyImageZoom>
     </section>

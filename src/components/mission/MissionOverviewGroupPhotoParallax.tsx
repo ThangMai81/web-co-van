@@ -258,7 +258,7 @@ export function MissionOverviewGroupPhotoParallax() {
       <Image
         ref={imageRef}
         src="/images/collaborate_team.jpg"
-        alt="Sunshine Center"
+        alt="Thành viên Sunshine Center mặc áo Borneo Calling trong chuyến leo núi Kinabalu"
         fill
         sizes="100vw"
         className="object-cover"
