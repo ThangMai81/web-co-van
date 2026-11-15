@@ -12,6 +12,10 @@ import { ReadingProgress } from "@/components/navigation/ReadingProgress";
 import { DetailSectionNav } from "@/components/navigation/DetailSectionNav";
 import { DetailRouteScrollReset } from "@/components/navigation/DetailRouteScrollReset";
 import { SiteFooter } from "@/components/home-page/SiteFooter";
+import {
+  getProgramCoverImage,
+  getProgramGalleryImages,
+} from "@/lib/programImageOverrides";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -69,11 +73,7 @@ async function getProgram(slug: string): Promise<Program | null> {
 export default async function ProgramDetailPage({ slug }: { slug: string }) {
   const program = await getProgram(slug);
   if (!program) notFound();
-  const coverImage = !program.coverImage || program.coverImage.includes("res.cloudinary.com/demo")
-    ? program.category === "leo-nui"
-      ? "/images/first_banner.jpg"
-      : "/images/Sunshine_banner.jpg"
-    : program.coverImage;
+  const coverImage = getProgramCoverImage(program);
   const displayProgram = { ...program, coverImage };
   const videoUrl = program.videoUrl?.trim() || undefined;
   const description = program.description.trim();
@@ -81,7 +81,7 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
     (stat) => stat.label.trim() && stat.value.trim(),
   );
   const highlights = program.highlights.filter((highlight) => highlight.trim());
-  const galleryImages = program.gallery.filter((image) => image.trim());
+  const galleryImages = getProgramGalleryImages(program);
   const hasHighlights = highlights.length > 0;
   const hasStats = stats.length > 0;
   const hasStructuredContent = hasHighlights || hasStats;

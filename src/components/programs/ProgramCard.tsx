@@ -4,18 +4,12 @@ import { Calendar, MapPin } from "@/lib/icons";
 import CategoryIcon from "./CategoryIcon";
 import ProgramCardThumbnail from "./ProgramCardThumbnail";
 import ViewDetailLabel from "@/components/ui/ViewDetailLabel";
+import { getProgramCardImage } from "@/lib/programImageOverrides";
 import type { Program } from "@/types/program";
 
 export default function ProgramCard({ program }: { program: Program }) {
   const isPast = program.status === "past";
-  // Cùng quy tắc với trang chi tiết: link ảnh mẫu Cloudinary "demo" không tồn tại
-  // => dùng ảnh banner có sẵn của Sunshine Center.
-  const coverImage =
-    !program.coverImage || program.coverImage.includes("res.cloudinary.com/demo")
-      ? program.category === "leo-nui"
-        ? "/images/first_banner.jpg"
-        : "/images/Sunshine_banner.jpg"
-      : program.coverImage;
+  const coverImage = getProgramCardImage(program);
 
   return (
     <Link
