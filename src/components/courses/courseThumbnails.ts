@@ -18,9 +18,9 @@ const COURSE_THUMBNAILS: Array<{
   },
   {
     match: /khai-tam-dinh-vi/,
-    src: "/images/khai-tam-dinh-vi.jpg",
-    width: 768,
-    height: 1376,
+    src: "/images/courses/khai-tam-dinh-vi-co-yen-chi-banh-xe-4x3.jpg",
+    width: 1200,
+    height: 900,
   },
   {
     match: /khai-phong-ban-than/,
