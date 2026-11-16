@@ -1,0 +1,107 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #0f1d3d;
+}
+
+.layer {
+  position: absolute;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  will-change: transform;
+}
+
+/* Ngày / đêm theo giờ của người xem */
+.nightSky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #050b1f 0%, #0d1a3d 55%, #1d2f5e 78%);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.moon {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.sun {
+  transition: opacity 1.2s ease;
+}
+
+.scene[data-time="night"] .nightSky {
+  opacity: 0.88;
+}
+
+.scene[data-time="night"] .moon {
+  opacity: 1;
+}
+
+.scene[data-time="night"] .sun {
+  opacity: 0;
+}
+
+.scene[data-time="night"] .far,
+.scene[data-time="night"] .mid,
+.scene[data-time="night"] .near,
+.scene[data-time="night"] .cloudsBack,
+.scene[data-time="night"] .cloudsFront {
+  filter: brightness(0.62) saturate(0.85);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rays {
+    transform-box: view-box;
+    transform-origin: 400px 330px;
+    animation: rays-spin 60s linear infinite;
+  }
+
+  .stars circle {
+    animation: twinkle 4.2s ease-in-out infinite;
+  }
+
+  .cloudsBack g {
+    animation: drift 26s ease-in-out infinite alternate;
+  }
+
+  .cloudsFront g {
+    animation: drift 18s ease-in-out infinite alternate-reverse;
+  }
+
+  .path {
+    animation: walk 2.4s linear infinite;
+  }
+
+  .nightStar {
+    animation: twinkle 3.6s ease-in-out infinite;
+  }
+
+  .birds g {
+    animation: glide 9s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes rays-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.95; }
+}
+
+@keyframes drift {
+  from { transform: translateX(-28px); }
+  to { transform: translateX(28px); }
+}
+
+@keyframes walk {
+  to { stroke-dashoffset: -48; }
+}
+
+@keyframes glide {
+  from { transform: translate(-12px, 6px); }
+  to { transform: translate(18px, -10px); }
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import AuthScene from "@/components/auth/AuthScene";
 import Link from "next/link";
 import motion from "@/components/auth/AuthMotion.module.css";
 import { useRouter } from "next/navigation";
@@ -58,15 +59,8 @@ export function ResetPassword({ token }: { token: string }) {
       />
       <div className="grid h-svh overflow-hidden md:grid-cols-2">
         <div className="relative hidden h-full overflow-hidden md:block">
-          <Image
-            src="/images/collaborate_team.jpg"
-            alt="Sunshine Center"
-            fill
-            priority
-            sizes="(min-width: 768px) 50vw, 0vw"
-            className={`object-cover ${motion.photo}`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-blue via-blue/55 to-blue/10" />
+          <AuthScene />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-blue/95 via-blue/30 to-transparent" />
           <div aria-hidden="true" className={motion.sunSweep} />
           <div className="absolute inset-x-0 bottom-0 p-10 lg:p-14">
             <div

@@ -4,6 +4,7 @@ import { CourseClosingCTA } from "@/components/courses/CourseClosingCTA";
 import CourseFilterBar from "@/components/courses/CourseFilterBar";
 import CatalogListUnavailable from "@/components/ui/CatalogListUnavailable";
 import HeroSection from "@/components/ui/HeroSection";
+import CoursesHeroCollage from "@/components/courses/CoursesHeroCollage";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { HeroLineMaskReveal } from "@/components/ui/HeroLineMaskReveal";
 import heroMotionStyles from "@/components/ui/HeroSection.module.css";
@@ -78,7 +79,6 @@ export default async function CoursesPage({
 
       {/* === VÙNG 1: GIỚI THIỆU === */}
       <HeroSection
-        portraitPresentation="courseEditorial"
         leadingContent={
           <Breadcrumb
             className={heroMotionStyles.coursesBreadcrumb}
@@ -86,12 +86,7 @@ export default async function CoursesPage({
             items={[{ label: "Trang chủ", href: "/" }, { label: "Khóa học" }]}
           />
         }
-        portrait={{
-          src: "/images/khoa-hoc-co-yen.jpg",
-          alt: "Coach Yến Lê giảng bài Bánh xe cuộc đời trong khóa học tại Sunshine Center",
-          // name: "Tên của cô",     // bỏ comment nếu muốn hiện thẻ tên cạnh ảnh
-          // role: "Chức danh",
-        }}
+        aside={<CoursesHeroCollage />}
       >
         <div
           className={[

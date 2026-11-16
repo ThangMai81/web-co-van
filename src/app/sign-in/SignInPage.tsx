@@ -2,6 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import Image from "next/image";
+import AuthScene from "@/components/auth/AuthScene";
 import Link from "next/link";
 import { Lock, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -137,15 +138,8 @@ export function SignIn() {
       <div className="grid h-svh overflow-hidden md:grid-cols-2">
         {/* Cột trái - ảnh, chỉ hiện từ md trở lên */}
         <div className="relative hidden h-full overflow-hidden md:block">
-          <Image
-            src="/images/collaborate_team.jpg"
-            alt="Sunshine Center"
-            fill
-            priority
-            sizes="(min-width: 768px) 50vw, 0vw"
-            className={`${styles.photo} object-cover`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-blue via-blue/55 to-blue/10" />
+          <AuthScene />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-blue/95 via-blue/30 to-transparent" />
           <div aria-hidden="true" className={`${styles.glowOrb} right-[12%] top-[14%] h-56 w-56`} />
           <div aria-hidden="true" className={`${styles.glowOrb} left-[8%] top-[42%] h-32 w-32`} />
           <div className="absolute inset-x-0 bottom-0 p-10 lg:p-14">

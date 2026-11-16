@@ -101,7 +101,7 @@
 .ribbonReveal {
   fill: none;
   stroke: #fff;
-  stroke-width: 144px;
+  stroke-width: 90px;
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
   stroke-linecap: butt;
@@ -122,7 +122,7 @@
 .ribbonHighlight {
   fill: none;
   stroke: url("#mission-ribbon-highlight");
-  stroke-width: 5px;
+  stroke-width: 3px;
   stroke-linecap: round;
 }
 
@@ -167,4 +167,82 @@
       }
     }
   }
+}
+
+/* Dải lụa: mặt sáng như chữ, mép đậm, nếp xoắn, gân sáng, lượn nhẹ */
+.silkShadow {
+  fill: none;
+  stroke: rgba(4, 12, 32, 0.35);
+  stroke-width: 22px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: blur(6px);
+}
+
+.silkEdge {
+  fill: none;
+  stroke-width: 24px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.silkFace {
+  fill: none;
+  stroke-width: 19px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.silkTwist {
+  fill: none;
+  stroke: rgba(176, 113, 26, 0.55);
+  stroke-width: 19px;
+  stroke-linecap: butt;
+  stroke-dasharray: 0.018 0.11 0.012 0.14;
+}
+
+.silkCrease {
+  fill: none;
+  stroke: rgba(255, 252, 235, 0.85);
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+}
+
+.silkSheen {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 16px;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 0.9;
+  stroke-dashoffset: 0.1;
+  opacity: 0;
+  filter: blur(2.5px);
+}
+
+.silkFlow {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .silkFlow {
+    animation: silk-flow 6s ease-in-out infinite alternate;
+  }
+
+  .silkSheen {
+    animation: silk-sheen 4.8s ease-in-out 1.2s infinite;
+  }
+}
+
+@keyframes silk-flow {
+  0% { transform: translateY(-4px) skewX(-1.2deg) scaleY(0.97); }
+  50% { transform: translateY(2px) skewX(0.6deg) scaleY(1.03); }
+  100% { transform: translateY(5px) skewX(1.4deg) scaleY(0.99); }
+}
+
+@keyframes silk-sheen {
+  0% { stroke-dashoffset: 0.1; opacity: 0; }
+  10% { opacity: 0.9; }
+  80% { opacity: 0.9; }
+  100% { stroke-dashoffset: -0.9; opacity: 0; }
 }

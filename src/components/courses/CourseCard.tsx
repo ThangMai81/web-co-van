@@ -18,9 +18,11 @@ import ViewDetailLabel from "@/components/ui/ViewDetailLabel";
 import type { CourseListItem } from "@/types/course";
 import type { CSSProperties } from "react";
 import styles from "./CourseCardLayeredReveal.module.css";
+import CourseCoverIllustration from "./CourseCoverIllustration";
 import {
-  getCourseThumbnail,
-  getCourseThumbnailAspectRatio,
+  COURSE_COVER_ASPECT_RATIO,
+  getCourseDisplayAlt,
+  getCourseDisplayImage,
 } from "./courseThumbnails";
 
 type CourseCardRevealPhase = "static" | "opening" | "settled";
@@ -53,8 +55,8 @@ function subscribeToMediaQuery(
 }
 
 export default function CourseCard({ course }: { course: CourseListItem }) {
-  const thumbnail = getCourseThumbnail(course);
-  const thumbnailAspectRatio = getCourseThumbnailAspectRatio(course);
+  const thumbnail = getCourseDisplayImage(course);
+  const thumbnailAlt = getCourseDisplayAlt(course);
   const thumbnailFrameRef = useRef<HTMLDivElement>(null);
   const thumbnailImageRef = useRef<HTMLImageElement>(null);
   const revealPhaseRef = useRef<CourseCardRevealPhase>("static");
@@ -436,26 +438,28 @@ export default function CourseCard({ course }: { course: CourseListItem }) {
         onAnimationEnd={finishPageOpening}
         className={`relative z-10 flex h-full w-full scroll-mt-[22rem] flex-col overflow-hidden rounded-2xl border border-blue/10 bg-white shadow-sm shadow-blue/5 transition-[border-color,box-shadow] duration-200 hover:border-blue/25 hover:shadow-md hover:shadow-blue/10 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white md:scroll-mt-[16rem] lg:scroll-mt-[11rem] ${styles.cardLink}`}
       >
-        {thumbnail && (
-          <div
-            ref={thumbnailFrameRef}
-            className={`relative aspect-[var(--thumbnail-aspect-ratio)] w-full shrink-0 overflow-hidden bg-blue/[0.035] ${styles.thumbnailFrame}`}
-            style={
-              {
-                "--thumbnail-aspect-ratio": thumbnailAspectRatio,
-              } as CSSProperties
-            }
-          >
+        <div
+          ref={thumbnailFrameRef}
+          className={`relative aspect-[var(--thumbnail-aspect-ratio)] w-full shrink-0 overflow-hidden bg-blue/[0.035] ${styles.thumbnailFrame}`}
+          style={
+            {
+              "--thumbnail-aspect-ratio": COURSE_COVER_ASPECT_RATIO,
+            } as CSSProperties
+          }
+        >
+          {thumbnail ? (
             <Image
               ref={thumbnailImageRef}
               src={thumbnail}
-              alt={course.title}
+              alt={thumbnailAlt}
               fill
               sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 84vw"
-              className="object-contain object-center"
+              className="object-cover object-center"
             />
-          </div>
-        )}
+          ) : (
+            <CourseCoverIllustration category={course.category} seed={course.slug} />
+          )}
+        </div>
 
         <div className={`flex flex-1 flex-col gap-2.5 p-5 md:p-6 ${styles.cardCopy}`}>
           <h3 className="min-h-[3.5rem] text-lg font-bold leading-snug text-blue">

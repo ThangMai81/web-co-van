@@ -1,7 +1,12 @@
 import { Play } from "lucide-react";
 import type { CourseDetail } from "@/types/course";
 import { CourseMediaApertureImage } from "./CourseMediaApertureImage";
-import { getCourseDisplayImage } from "./courseThumbnails";
+import CourseCoverIllustration from "./CourseCoverIllustration";
+import {
+  getCourseDetailIllustration,
+  getCourseDisplayAlt,
+  getCourseDisplayImage,
+} from "./courseThumbnails";
 
 export default function CourseMedia({
   detail,
@@ -14,17 +19,27 @@ export default function CourseMedia({
 }) {
   if (!detail) return null;
   // Poster riêng của khóa học (hoặc ảnh thật từ API); không mượn ảnh chuyến đi khác.
-  const image = getCourseDisplayImage({ slug, title, thumbnail: detail.thumbnail });
-  if (!image) return null;
+  const identity = { slug, title, thumbnail: detail.thumbnail };
+  const illustration = getCourseDetailIllustration(identity);
+  const image = illustration?.src ?? getCourseDisplayImage(identity);
 
   return (
     <div className="relative mx-auto aspect-[4/3] w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white/20 bg-blue shadow-2xl shadow-black/40">
-      <CourseMediaApertureImage
-        slug={slug}
-        src={image}
-        alt={`Ảnh giới thiệu ${title}`}
-        sizes="(min-width: 1536px) 46rem, (min-width: 1024px) 52vw, calc(100vw - 3rem)"
-      />
+      {image ? (
+        <CourseMediaApertureImage
+          slug={slug}
+          src={image}
+          alt={illustration?.alt ?? getCourseDisplayAlt(identity)}
+          sizes="(min-width: 1536px) 46rem, (min-width: 1024px) 52vw, calc(100vw - 3rem)"
+        />
+      ) : (
+        <CourseCoverIllustration category={detail.category} seed={slug} iconSize={64} />
+      )}
+      {illustration && (
+        <span className="absolute left-3 top-3 z-20 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-blue shadow">
+          Ảnh minh họa
+        </span>
+      )}
       {detail.videoUrl && (
         <a
           href={detail.videoUrl}

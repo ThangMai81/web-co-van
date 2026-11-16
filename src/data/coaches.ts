@@ -98,11 +98,13 @@ export const demoCoaches: Coach[] = [
 ];
 
 function mergeCoachDetails(coach: Coach, fallback?: Coach): Coach {
+  const isDemo = coach.isDemo || fallback?.isDemo || false;
   return {
     ...fallback,
     ...coach,
-    isDemo: coach.isDemo || fallback?.isDemo || false,
-    image: coach.image || fallback?.image || "",
+    isDemo,
+    // Hồ sơ demo không có ảnh chân dung thật: hiển thị chữ viết tắt thay vì mượn ảnh người khác.
+    image: isDemo ? "" : coach.image || fallback?.image || "",
     focusAreas: coach.focusAreas?.length ? coach.focusAreas : fallback?.focusAreas ?? [],
     story: coach.story?.length ? coach.story : fallback?.story ?? [coach.bio],
     sessionFee: coach.sessionFee || fallback?.sessionFee || "Liên hệ Sunshine Center để xác nhận",
@@ -116,22 +118,25 @@ function mergeCoachDetails(coach: Coach, fallback?: Coach): Coach {
   };
 }
 
+// Tạm thời chỉ hiển thị coach thật; hồ sơ demo chỉ dùng làm dữ liệu bổ sung.
+const fallbackCoaches = demoCoaches.filter((coach) => !coach.isDemo);
+
 export async function getCoaches(): Promise<Coach[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) return demoCoaches;
+  if (!apiUrl) return fallbackCoaches;
   try {
     const { getCachedApiJson } = await import("@/lib/apiCache");
     const result = (await getCachedApiJson("/api/coaches")) as { data?: Coach[] };
     return result.data?.length
       ? result.data.map((coach) => mergeCoachDetails(coach, demoCoaches.find((item) => item.slug === coach.slug)))
-      : demoCoaches;
+      : fallbackCoaches;
   } catch {
-    return demoCoaches;
+    return fallbackCoaches;
   }
 }
 
 export async function getCoach(slug: string): Promise<Coach | null> {
-  const fallback = demoCoaches.find((coach) => coach.slug === slug) ?? null;
+  const fallback = fallbackCoaches.find((coach) => coach.slug === slug) ?? null;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) return fallback;
   try {

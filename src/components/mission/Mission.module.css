@@ -1,0 +1,46 @@
+/* Quầng nắng trắng phía sau huy hiệu, tạo chiều sâu cho nền vàng */
+.sunGlow {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  right: -10rem;
+  width: 44rem;
+  height: 44rem;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 65%);
+}
+
+.plaque {
+  position: relative;
+  overflow: hidden;
+  max-width: 26rem;
+  margin-inline: auto;
+  padding: 2.25rem 2rem;
+  border-radius: 2rem 2rem 2rem 0.5rem;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08), transparent 45%),
+    var(--color-blue);
+  box-shadow: 0 30px 60px rgba(24, 37, 68, 0.3);
+  transform: rotate(-1.5deg);
+}
+
+/* Góc gấp vàng ở góc trên phải */
+.plaqueCorner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  background: linear-gradient(225deg, var(--color-yellow) 50%, rgba(255, 255, 255, 0.25) 50%);
+  border-bottom-left-radius: 1rem;
+}
+
+.bigNumber {
+  font-family: var(--font-display, inherit);
+  font-size: clamp(6rem, 12vw, 9rem);
+  font-weight: 800;
+  line-height: 0.8;
+  color: var(--color-yellow);
+  text-shadow: 0 10px 30px rgba(254, 206, 1, 0.25);
+}

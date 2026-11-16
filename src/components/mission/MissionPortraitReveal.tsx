@@ -84,7 +84,7 @@ export function MissionPortraitReveal() {
     >
       <figure className={`${styles.portrait} ${revealClass}`.trim()}>
         <Image
-          src="/images/Yến.jpg"
+          src="/images/mission/co-yen-ban-lam-viec-chan-dung.jpg"
           alt="Shining Coach Yến Lê tại Sunshine Center"
           fill
           priority

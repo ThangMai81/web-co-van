@@ -38,7 +38,7 @@ function PhoneFrame({ step, coach, active, compact = false, screenImage, confirm
     >
       <div className="relative h-full w-full overflow-hidden rounded-[1.45rem] bg-white">
         {step === 0 && (screenImage ? <Image src={screenImage.src} alt={screenImage.alt} fill sizes="220px" className="object-cover" /> : coach.image ? <Image src={coach.image} alt={coach.name} fill sizes="220px" className="object-cover" /> : <div className="flex h-full items-center justify-center bg-[linear-gradient(145deg,#6ca7dc,#172d55)]"><span className="font-display text-5xl font-bold text-white">{coach.initials}</span></div>)}
-        {step === 1 && <Image src={screenImage?.src ?? "/images/collaborate_team.jpg"} alt={screenImage?.alt ?? "Những người đồng hành trong hoạt động của Sunshine Center"} fill sizes="220px" className="object-cover" />}
+        {step === 1 && <Image src={screenImage?.src ?? "/images/coaching/nguoi-dong-hanh-kinabalu-3x4.jpg"} alt={screenImage?.alt ?? "Những người đồng hành trong hoạt động của Sunshine Center"} fill sizes="220px" className="object-cover" />}
         {step === 2 && (
           <div className="flex h-full flex-col items-center justify-center bg-[#fbfaf6] px-3 text-center">
             <div className={["mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-yellow text-blue shadow-lg shadow-yellow/30", confirmationMarkAnimating ? motionStyles.confirmationCircle : ""].filter(Boolean).join(" ")}>

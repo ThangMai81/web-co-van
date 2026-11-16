@@ -7,6 +7,7 @@ type Portrait = {
   alt: string;
   name?: string; // tên hiện trên thẻ nhỏ cạnh ảnh (tùy chọn)
   role?: string;
+  secondary?: { src: string; alt: string };
 };
 
 const fadeLeft = "linear-gradient(to right, black, transparent 55%)";
@@ -22,18 +23,22 @@ export default function HeroSection({
   portrait,
   portraitPresentation = "default",
   leadingContent,
+  aside,
   children,
 }: {
   portrait?: Portrait;
+  /** Nội dung tùy chỉnh cho cột phải, dùng thay cho ảnh chân dung. */
+  aside?: ReactNode;
   portraitPresentation?: "default" | "courseEditorial";
   leadingContent?: ReactNode;
   children: ReactNode;
 }) {
   const isCourseEditorial = portraitPresentation === "courseEditorial";
+  const hasSideColumn = Boolean(portrait || aside);
 
   return (
     <header
-      className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${portrait || leadingContent ? "pt-[88px]" : "pt-32"}`}
+      className={`relative isolate overflow-hidden border-b-4 border-yellow bg-blue ${hasSideColumn || leadingContent ? "pt-[88px]" : "pt-32"}`}
     >
       {/* Lớp 2: lưới chấm mờ dần về bên phải */}
       <div
@@ -48,7 +53,7 @@ export default function HeroSection({
         }}
       />
 
-      {portrait && (
+      {hasSideColumn && (
         // Quầng sáng vàng sau ảnh, chỉ để trang trí
         <div aria-hidden className={styles.portraitGlow} />
       )}
@@ -63,39 +68,66 @@ export default function HeroSection({
 
       <div
         className={`relative mx-auto max-w-[var(--page-w)] px-6 ${
-          portrait
-            ? "grid grid-cols-1 items-center md:grid-cols-[minmax(0,1fr)_minmax(200px,240px)] md:gap-10 lg:min-h-[520px] lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,380px)] lg:gap-16"
+          hasSideColumn
+            ? "grid grid-cols-1 items-center md:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] md:gap-10 lg:min-h-[560px] lg:grid-cols-[minmax(0,1fr)_minmax(420px,480px)] lg:gap-14"
             : ""
         }`}
       >
-        <div className={portrait ? "w-full pb-8 md:py-12" : "w-full pb-16"}>
+        <div className={hasSideColumn ? "w-full pb-8 md:py-12" : "w-full pb-16"}>
           {children}
         </div>
 
+        {aside && !portrait && (
+          <div className="relative mx-auto mb-12 w-full max-w-[420px] md:mb-0 md:max-w-none md:py-12">
+            {aside}
+          </div>
+        )}
+
         {portrait && (
-          <figure className="relative mx-auto mb-10 w-full max-w-[200px] md:mb-0 md:max-w-none md:py-12 lg:ml-auto lg:mr-0">
-            <span aria-hidden className={styles.portraitOffset} />
-            <div
-              className={`relative aspect-[1122/1402] w-full overflow-hidden rounded-[1.5rem] ${
-                isCourseEditorial
-                  ? styles.courseEditorialPortrait
-                  : "border border-white/20 bg-blue/20"
-              }`}
-            >
-              <Image
-                src={portrait.src}
-                alt={portrait.alt}
-                fill
-                preload
-                sizes="(min-width: 1024px) 380px, (min-width: 768px) 240px, 200px"
-                className="object-cover object-center"
-              />
+          <figure
+            className={`relative mx-auto mb-12 w-full md:mb-0 md:py-12 lg:mr-0 ${
+              portrait.secondary
+                ? "max-w-[340px] pl-[22%] md:max-w-none md:pl-[18%]"
+                : "max-w-[220px] md:max-w-none"
+            }`}
+          >
+            <div className="relative">
+              <span aria-hidden className={styles.portraitOffset} />
+              <div
+                className={`relative aspect-[4/5] w-full overflow-hidden rounded-[1.75rem] ${
+                  isCourseEditorial
+                    ? styles.courseEditorialPortrait
+                    : "border border-white/20 bg-blue/20"
+                }`}
+              >
+                <Image
+                  src={portrait.src}
+                  alt={portrait.alt}
+                  fill
+                  preload
+                  sizes="(min-width: 1024px) 400px, (min-width: 768px) 270px, 270px"
+                  className="object-cover object-[70%_30%]"
+                />
+                {portrait.name && (
+                  <figcaption className="absolute bottom-3 right-3 z-[2] max-w-[44%] rounded-xl bg-blue/85 px-3 py-1.5 text-right text-xs leading-snug text-white/80 shadow-lg shadow-black/20 backdrop-blur-sm md:max-w-[46%] md:text-sm">
+                    <span className="block font-bold text-white">{portrait.name}</span>
+                    {portrait.role && <span className="hidden sm:inline">{portrait.role}</span>}
+                  </figcaption>
+                )}
+              </div>
             </div>
-            {portrait.name && (
-              <figcaption className="mt-3 text-center text-sm text-white/75">
-                <span className="font-bold text-white">{portrait.name}</span>
-                {portrait.role ? ` · ${portrait.role}` : null}
-              </figcaption>
+            {portrait.secondary && (
+              <div className="absolute bottom-[-1.5rem] left-0 w-[52%] overflow-hidden rounded-2xl border-4 border-blue shadow-2xl shadow-black/40 md:bottom-6 md:w-[50%]">
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src={portrait.secondary.src}
+                    alt={portrait.secondary.alt}
+                    fill
+                    sizes="(min-width: 1024px) 240px, 170px"
+                    className="object-cover object-center"
+                  />
+                </div>
+              </div>
             )}
           </figure>
         )}

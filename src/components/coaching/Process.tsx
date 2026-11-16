@@ -10,26 +10,26 @@ import {
   type TransitionEvent,
 } from "react";
 import styles from "./Process.module.css";
+import { PROCESS_SCENE_IMAGES, ProcessScene } from "./ProcessScene";
 
 const PROCESS = [
   {
     step: "01",
     title: "Gửi yêu cầu với coach bạn chọn",
     body: "Chia sẻ điều bạn đang cần qua biểu mẫu riêng ngay trên hồ sơ của coach.",
-    image: "/images/collaborate_team.jpg",
+    image: "/images/coaching/quy-trinh-buoc-01-thu-nho.webp",
   },
   {
     step: "02",
     title: "Xác nhận thông tin và lịch",
     body: "Sunshine Center liên hệ để làm rõ nhu cầu và thống nhất thời gian, hình thức phù hợp.",
-    image: "/images/first_banner.jpg",
+    image: "/images/coaching/quy-trinh-buoc-02-thu-nho.webp",
   },
   {
     step: "03",
     title: "Bắt đầu phiên coaching 1:1",
     body: "Bạn và coach thống nhất nội dung, mục tiêu và lịch cho phiên đầu tiên.",
-    // Ảnh thật của Coach Yến (4:3) thay banner 3:1 có chữ bị cắt trong khung 4:3/16:10
-    image: "/images/programs/community/fansipan-coach-yen-gallery-4x3.jpg",
+    image: "/images/coaching/quy-trinh-buoc-03-thu-nho.webp",
   },
 ];
 
@@ -53,6 +53,8 @@ function otherStageSlot(slot: ProcessStageSlotIndex): ProcessStageSlotIndex {
 
 function ProcessStageLayer({
   item,
+  stepIndex,
+  scenePlaying,
   state,
   motionEnabled,
   eagerLoad,
@@ -62,6 +64,8 @@ function ProcessStageLayer({
   onTransitionCancel,
 }: {
   item: (typeof PROCESS)[number] | null;
+  stepIndex: number | null;
+  scenePlaying: boolean;
   state: ProcessStageLayerState;
   motionEnabled: boolean;
   eagerLoad: boolean;
@@ -76,10 +80,10 @@ function ProcessStageLayer({
       onTransitionEnd={onTransitionEnd}
       onTransitionCancel={onTransitionCancel}
     >
-      {item && (
+      {item && stepIndex !== null && (
         <>
           <Image
-            src={item.image}
+            src={PROCESS_SCENE_IMAGES[stepIndex] ?? item.image}
             alt=""
             fill
             sizes="(min-width: 1280px) 40vw, 45vw"
@@ -87,6 +91,11 @@ function ProcessStageLayer({
             loading={eagerLoad ? "eager" : undefined}
             onLoad={onImageLoad}
             onError={onImageError}
+          />
+          <ProcessScene
+            key={state === "current" ? "current" : "idle"}
+            step={stepIndex}
+            playing={scenePlaying && state === "current"}
           />
           <span className="absolute left-4 top-4 rounded-full bg-yellow px-3 py-1.5 font-mono text-xs font-bold text-blue">
             {item.step}
@@ -117,6 +126,8 @@ function ProcessStage({
   const [incomingSlot, setIncomingSlot] = useState<ProcessStageSlotIndex | null>(null);
   const [transitionStarted, setTransitionStarted] = useState(false);
   const [motionTransitionEnabled, setMotionTransitionEnabled] = useState(false);
+  const [sceneInView, setSceneInView] = useState(false);
+  const stageRootRef = useRef<HTMLDivElement>(null);
   const slotsRef = useRef(slots);
   const currentSlotRef = useRef<ProcessStageSlotIndex>(0);
   const incomingSlotRef = useRef<ProcessStageSlotIndex | null>(null);
@@ -444,6 +455,26 @@ function ProcessStage({
 
   useEffect(() => () => clearPendingWork(), [clearPendingWork]);
 
+  useEffect(() => {
+    const root = stageRootRef.current;
+    if (!root || typeof IntersectionObserver === "undefined") return;
+    let intersecting = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        intersecting = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+        setSceneInView(intersecting && !document.hidden);
+      },
+      { threshold: [0, 0.35, 0.6] },
+    );
+    observer.observe(root);
+    const onVisibility = () => setSceneInView(intersecting && !document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
   const handleTransitionEnd = useCallback((event: TransitionEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget || event.propertyName !== "opacity") return;
     if (phaseRef.current !== "transitioning") return;
@@ -473,6 +504,8 @@ function ProcessStage({
       <ProcessStageLayer
         key={slot}
         item={item}
+        stepIndex={selected.step}
+        scenePlaying={sceneInView && transitionEligible}
         state={state}
         motionEnabled={motionTransitionEnabled}
         eagerLoad={state === "preloading" || (state === "current" && transitionEligible)}
@@ -485,7 +518,7 @@ function ProcessStage({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-blue/10 bg-white shadow-[0_24px_64px_rgba(24,37,68,.12)]">
+    <div ref={stageRootRef} className="relative overflow-hidden rounded-3xl border border-blue/10 bg-white shadow-[0_24px_64px_rgba(24,37,68,.12)]">
       <div className={`relative aspect-[4/3] ${styles.canvas}`}>
         {renderSlot(0)}
         {renderSlot(1)}

@@ -124,7 +124,7 @@ export function VideoGallery() {
                 <div data-video-thumbnail className={styles.thumb}>
                   {/* Ảnh thumbnail YouTube có sẵn miễn phí theo đúng video ID, không cần tự upload riêng */}
                   <Image
-                    src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                    src={`https://i.ytimg.com/vi/${v.youtubeId}/sddefault.jpg`}
                     alt={v.title}
                     fill
                     sizes={featured ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"}

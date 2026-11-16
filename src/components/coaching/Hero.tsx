@@ -95,7 +95,7 @@ export function Hero() {
         <Reveal direction="right">
           <div className="relative aspect-[4/3] overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] shadow-2xl shadow-blue/40">
             <Image
-              src="/images/collaborate_team.jpg"
+              src="/images/coaching/hero-co-yen-ke-sach-4x3.jpg"
               alt="Coaching 1:1"
               fill
               priority

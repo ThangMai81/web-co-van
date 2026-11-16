@@ -2,6 +2,7 @@ import { Reveal } from "@/components/animation/Reveal";
 import { FounderStatsGravity } from "./FounderStatsGravity";
 import { FounderPortraitCard } from "./FounderPortraitCard";
 import Link from "next/link";
+import { ChapterMark } from "./ChapterMark";
 import {
   ArrowRight,
   Clock3,
@@ -27,16 +28,13 @@ export function Founder() {
   return (
     <section id="founder" className="scroll-mt-24 bg-white px-6 py-16 md:py-20">
       <div className="mx-auto grid max-w-[var(--page-w)] items-center gap-12 lg:grid-cols-2">
-        <Reveal direction="left" showOnObserverSetupError>
+        <Reveal direction="right" showOnObserverSetupError className="lg:order-2">
           <FounderPortraitCard />
         </Reveal>
 
-        <Reveal direction="right">
+        <Reveal direction="left" className="lg:order-1">
           <div>
-            <div className="mb-4 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
-              <span className="block h-px w-6 bg-yellow" />
-              Nhà sáng lập
-            </div>
+            <ChapterMark number="05" label="Nhà sáng lập" />
             <h2 className="mb-5 font-display text-3xl font-bold text-blue md:text-4xl">
               Shining Coach Yến Lê
             </h2>

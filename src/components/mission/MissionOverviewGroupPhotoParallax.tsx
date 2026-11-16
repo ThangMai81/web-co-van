@@ -257,8 +257,8 @@ export function MissionOverviewGroupPhotoParallax() {
     <div ref={imageWindowRef} className={styles.imageWindow}>
       <Image
         ref={imageRef}
-        src="/images/collaborate_team.jpg"
-        alt="Thành viên Sunshine Center mặc áo Borneo Calling trong chuyến leo núi Kinabalu"
+        src="/images/mission/cong-dong-sunshine-dong-co-fansipan-12x5.jpg"
+        alt="Cộng đồng Sunshine Center mặc áo vàng trên đồng cỏ hoa trong hành trình Fansipan"
         fill
         sizes="100vw"
         className="object-cover"

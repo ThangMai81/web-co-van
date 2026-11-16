@@ -210,7 +210,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
               ]}
             />
             <div
-              className={`mt-8 grid gap-12 ${heroImage ? "lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14" : "max-w-3xl"}`}
+              className={`mt-8 grid gap-12 ${detail ? "lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14" : "max-w-3xl"}`}
             >
               <div className="min-w-0">
                 <CourseHeader course={course} detail={detail} />
@@ -222,7 +222,7 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
                   />
                 )}
               </div>
-              {heroImage && detail && (
+              {detail && (
                 <DetailHeroFrame className="mr-3 sm:mr-5">
                   <CourseMedia detail={detail} title={course.title} slug={slug} />
                   <RotatingSeal

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ProgramGalleryImageViewer from "./ProgramGalleryImageViewer";
-import { Camera } from "lucide-react";
+import { Camera, Maximize2 } from "lucide-react";
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -71,19 +71,32 @@ export default function ProgramGallery({
   const placeholderImages = displayImages.map(
     (displaySrc, index) => displaySrc !== images[index],
   );
-  const supportingImages = images.slice(1);
-  const supportingColumns =
-    supportingImages.length >= 3
-      ? "grid-cols-2 sm:grid-cols-3"
-      : supportingImages.length === 2
-        ? "grid-cols-2 sm:grid-cols-2"
-        : "grid-cols-1 sm:grid-cols-1";
-  const supportingLayout =
-    supportingImages.length === 3
-      ? "lg:grid-cols-2 lg:grid-rows-2"
-      : supportingImages.length === 2
-        ? "lg:grid-cols-1 lg:grid-rows-2"
-        : "lg:grid-cols-1";
+  const galleryLayout = (index: number) => {
+    const count = images.length;
+    if (count === 1) {
+      return {
+        className: "col-span-2 aspect-[4/3] sm:aspect-[16/9] lg:col-span-12 lg:row-span-2 lg:aspect-auto",
+        sizes: "(min-width: 1024px) 60rem, 100vw",
+      };
+    }
+    if (count === 2) {
+      return index === 0
+        ? { className: "col-span-2 aspect-[4/3] lg:col-span-7 lg:row-span-2 lg:aspect-auto", sizes: "(min-width: 1024px) 34rem, 100vw" }
+        : { className: "col-span-2 aspect-[4/3] lg:col-span-5 lg:row-span-2 lg:aspect-auto", sizes: "(min-width: 1024px) 25rem, 100vw" };
+    }
+    if (count === 3) {
+      return index === 0
+        ? { className: "col-span-2 aspect-[16/10] lg:col-span-7 lg:row-span-2 lg:aspect-auto", sizes: "(min-width: 1024px) 34rem, 100vw" }
+        : { className: "col-span-1 aspect-square lg:col-span-5 lg:aspect-auto", sizes: "(min-width: 1024px) 25rem, 50vw" };
+    }
+    if (index === 0) {
+      return { className: "col-span-2 aspect-[16/10] lg:col-span-6 lg:row-span-2 lg:aspect-auto", sizes: "(min-width: 1024px) 30rem, 100vw" };
+    }
+    if (index === 1) {
+      return { className: "col-span-2 aspect-[16/9] lg:col-span-6 lg:aspect-auto", sizes: "(min-width: 1024px) 30rem, 100vw" };
+    }
+    return { className: "col-span-1 aspect-square lg:col-span-3 lg:aspect-auto", sizes: "(min-width: 1024px) 15rem, 50vw" };
+  };
 
   const openImageViewer = (index: number) => {
     viewerOriginIndexRef.current = index;
@@ -279,12 +292,8 @@ export default function ProgramGallery({
     ? `motion-safe:transition-opacity motion-safe:duration-300 motion-reduce:opacity-100 motion-reduce:transition-none ${accentState === "waiting" ? "opacity-0" : "opacity-100"}`
     : "";
 
-  const renderImage = (
-    src: string,
-    index: number,
-    featured = false,
-    supportingClassName = "",
-  ) => {
+  const renderImage = (src: string, index: number) => {
+    const layout = galleryLayout(index);
     const failedSourceKey = `${index}:${src}`;
     const fallbackSrc = PREVIEW_FALLBACKS[index];
     const displaySrc =
@@ -324,11 +333,7 @@ export default function ProgramGallery({
     return (
       <figure
         key={failedSourceKey}
-        className={`group relative overflow-hidden rounded-2xl border border-blue/15 bg-white shadow-sm ${
-          featured
-            ? "col-span-1 aspect-[16/9] sm:aspect-[16/10] lg:aspect-[4/3]"
-            : "aspect-[4/3] lg:aspect-auto"
-        } ${supportingClassName}`}
+        className={`group relative rounded-[1.4rem] bg-white p-1.5 shadow-[0_14px_34px_rgba(24,37,68,.10)] ring-1 ring-blue/10 motion-safe:transition-[transform,box-shadow] motion-safe:duration-300 motion-safe:ease-out hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(24,37,68,.18)] ${layout.className}`}
       >
         <button
           ref={(button) => {
@@ -357,17 +362,13 @@ export default function ProgramGallery({
                 : current,
             );
           }}
-          className="absolute inset-0 h-full w-full cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue"
+          className="absolute inset-1.5 cursor-zoom-in overflow-hidden rounded-[1.05rem] bg-blue/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue"
         >
           <Image
             src={displaySrc}
             alt={imageLabel}
             fill
-            sizes={
-              featured
-                ? "(min-width: 1024px) 38vw, 90vw"
-                : "(min-width: 1024px) 29vw, (min-width: 640px) 30vw, 40vw"
-            }
+            sizes={layout.sizes}
             className={`object-cover object-center ${
               revealEntries
                 ? "motion-safe:transition-[clip-path,transform]"
@@ -395,30 +396,27 @@ export default function ProgramGallery({
               }));
             }}
           />
-        </button>
-        <figcaption
-          className={`absolute inset-x-2 bottom-2 z-10 flex items-center gap-2 ${
-            showingFallback ? "justify-between" : "justify-end"
-          }`}
-        >
-          {showingFallback && (
-            <span
-              aria-hidden="true"
-              className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-blue shadow"
-            >
-              Ảnh minh họa
-            </span>
-          )}
-          <a
-            href={src}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Mở ảnh gốc ${index + 1} của chương trình ${programTitle} trong thẻ mới`}
-            className="inline-flex min-h-9 items-center rounded-full bg-blue/90 px-3 py-1.5 text-xs font-bold text-white shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-blue"
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-blue/75 via-blue/20 to-transparent px-4 pb-3 pt-12 opacity-0 motion-safe:transition-opacity motion-safe:duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
           >
-            Ảnh gốc
-          </a>
-        </figcaption>
+            <span className="font-mono text-xs font-bold tracking-[.18em] text-yellow">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-blue shadow">
+              <Maximize2 size={13} aria-hidden="true" />
+              Xem ảnh
+            </span>
+          </span>
+        </button>
+        {showingFallback && (
+          <span
+            aria-hidden="true"
+            className="absolute bottom-2 left-2 z-10 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-blue shadow"
+          >
+            Ảnh minh họa
+          </span>
+        )}
       </figure>
     );
   };
@@ -426,43 +424,41 @@ export default function ProgramGallery({
   return (
     <section
       aria-labelledby="program-gallery-heading"
-      className="pt-2"
+      className="relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#fff6d6] via-white to-[#e9f0fb] p-5 ring-1 ring-blue/10 md:p-8"
     >
-      <h2
-        id="program-gallery-heading"
-        className="mb-6 flex items-center gap-3 font-editorial text-2xl font-bold text-blue md:text-3xl"
-      >
-        <span
-          ref={accentRef}
-          aria-hidden="true"
-          className={`h-5 w-1 rounded-full bg-yellow ${accentMotionClass}`}
-        />
-        <span className="inline-flex items-center gap-2"><Camera size={22} className="text-yellow" aria-hidden="true" />Thư viện ảnh</span>
-      </h2>
-
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-stretch lg:gap-4">
-        {images[0] && renderImage(images[0], 0, true)}
-        {supportingImages.length > 0 && (
-          <div
-            className={`grid gap-3 lg:h-full lg:gap-4 ${supportingColumns} ${supportingLayout}`}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 -top-24 -z-10 h-64 w-64 rounded-full bg-yellow/30 blur-3xl"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-28 -left-16 -z-10 h-64 w-64 rounded-full bg-blue/10 blur-3xl"
+      />
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3 md:mb-8">
+        <div>
+          <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[.2em] text-blue/55">
+            Khoảnh khắc chương trình
+          </p>
+          <h2
+            id="program-gallery-heading"
+            className="flex items-center gap-3 font-editorial text-2xl font-bold text-blue md:text-3xl"
           >
-            {supportingImages.map((src, offset) => {
-              const index = offset + 1;
-              const finalSupportingImage = offset === supportingImages.length - 1;
-              const centeredFinalImage =
-                supportingImages.length === 3 && finalSupportingImage;
+            <span
+              ref={accentRef}
+              aria-hidden="true"
+              className={`h-6 w-1.5 rounded-full bg-yellow ${accentMotionClass}`}
+            />
+            <span className="inline-flex items-center gap-2"><Camera size={22} className="text-yellow" aria-hidden="true" />Thư viện ảnh</span>
+          </h2>
+        </div>
+        <span aria-hidden="true" className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 text-sm font-semibold text-blue shadow-sm ring-1 ring-blue/10">
+          <span className="font-bold">{images.length} ảnh</span>
+          <span className="text-blue/50">· bấm để phóng to</span>
+        </span>
+      </div>
 
-              return renderImage(
-                src,
-                index,
-                false,
-                centeredFinalImage
-                  ? "col-span-2 mx-auto w-1/2 sm:col-span-1 sm:mx-0 sm:w-full lg:col-span-2"
-                  : "",
-              );
-            })}
-          </div>
-        )}
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:auto-rows-[13.5rem] lg:grid-cols-12 lg:gap-5">
+        {images.map((src, index) => renderImage(src, index))}
       </div>
       <ProgramGalleryImageViewer
         programTitle={programTitle}

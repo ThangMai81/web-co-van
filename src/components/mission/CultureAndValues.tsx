@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/animation/Reveal";
 import { CultureValuesOrbit } from "./CultureValuesOrbit";
+import { ChapterMark } from "./ChapterMark";
 import { Ear, Footprints, Gem, Handshake, Mountain, Sun } from "lucide-react";
 
 const WAYS = [
@@ -18,10 +19,7 @@ export function CultureAndValues() {
       <div className="relative mx-auto max-w-[var(--page-w)]">
         <Reveal direction="up" showOnObserverSetupError>
           <div className="mb-10 max-w-2xl">
-            <div className="mb-3 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-widest text-yellow">
-              <span className="block h-px w-6 bg-yellow" />
-              Văn hoá &amp; giá trị
-            </div>
+            <ChapterMark number="04" label="Văn hoá & giá trị" tone="dark" />
             <h2 className="font-display text-3xl font-bold leading-tight text-white md:text-4xl">
               Mỗi người là một <span className="text-yellow">mặt trời</span>
             </h2>
