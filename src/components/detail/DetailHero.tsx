@@ -7,7 +7,14 @@ export function DetailHeroBackdrop({ image }: { image?: string | null }) {
   return (
     <div aria-hidden="true" className={styles.backdrop}>
       {image && (
-        <Image src={image} alt="" fill sizes="100vw" className={styles.backdropImage} />
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes="100vw"
+          loading="eager"
+          className={styles.backdropImage}
+        />
       )}
       <div className={styles.backdropShade} />
       <div className={styles.backdropDots} />
