@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import CourseHeader from "./CourseHeader";
 import CourseMedia from "./CourseMedia";
+import CourseGallery from "./CourseGallery";
+import CourseIntroVideo from "./CourseIntroVideo";
+import { getCourseGallery } from "./courseGalleryData";
 import CourseSidebar from "./CourseSidebar";
 import CourseDescription from "./CourseDescription";
 import CourseCurriculum from "./CourseCurriculum";
@@ -176,12 +179,19 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
       detail?.benefits.some((item) => item.trim()),
   );
   const hasCurriculum = Boolean(detail && detail.curriculum.length > 0);
-  const hasLearningContent = hasOverview || hasCurriculum;
+  const gallery = getCourseGallery(slug, course.title);
+  const showVideo = Boolean(
+    detail && (detail.videoUrl?.trim() || /y[eế]n/i.test(detail.instructor?.name ?? "")),
+  );
+  const hasLearningContent =
+    hasOverview || hasCurriculum || showVideo || gallery.length > 0;
   const sectionItems = [
     ...(hasOverview ? [{ id: "course-overview", label: "Mô tả" }] : []),
     ...(hasCurriculum
       ? [{ id: "course-curriculum", label: "Nội dung chương trình" }]
       : []),
+    ...(showVideo ? [{ id: "course-video", label: "Video" }] : []),
+    ...(gallery.length > 0 ? [{ id: "course-gallery", label: "Hình ảnh" }] : []),
     { id: "course-reviews", label: "Đánh giá" },
     ...(relatedCourses.length > 0
       ? [{ id: "related-courses", label: "Khóa học tương tự" }]
@@ -263,6 +273,20 @@ export default async function CourseDetailPage({ slug }: { slug: string }) {
                       curriculum={detail.curriculum}
                       totalDurationLabel={detail.totalDurationLabel}
                     />
+                  </div>
+                )}
+                {showVideo && detail && (
+                  <div id="course-video" className="scroll-mt-28 md:scroll-mt-32">
+                    <CourseIntroVideo
+                      videoUrl={detail.videoUrl}
+                      instructorName={detail.instructor?.name}
+                      courseTitle={course.title}
+                    />
+                  </div>
+                )}
+                {gallery.length > 0 && (
+                  <div id="course-gallery" className="scroll-mt-28 md:scroll-mt-32">
+                    <CourseGallery title={course.title} items={gallery} />
                   </div>
                 )}
               </div>
