@@ -130,8 +130,8 @@ export function SiteHeader() {
           scrolled ? "shadow-[0_2px_20px_rgba(20,40,80,0.08)]" : ""
         }`}
       >
-        <div className="mx-auto flex max-w-[var(--page-w)] items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
+        <div className="mx-auto flex max-w-[var(--page-w)] items-center justify-between px-6 py-4 max-[359px]:px-4">
+          <Link href="/" className="flex items-center gap-3 max-[359px]:gap-2">
             <Image
               src="/images/Sunshine_brand_without_slogan.png"
               alt="Sunshine Center"
@@ -139,7 +139,7 @@ export function SiteHeader() {
               height={42}
             />
             <div className="leading-tight">
-              <div className="font-display text-lg font-bold text-blue-900">
+              <div className="whitespace-nowrap font-display text-lg font-bold text-blue-900 max-[359px]:text-base">
                 SUNSHINE CENTER
               </div>
               <div className="font-mono text-[10px] uppercase tracking-widest text-yellow-400 text-center">
