@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, MessageCircleQuestion, Phone } from "lucide-react";
 import { Reveal } from "@/components/animation/Reveal";
 
+// Chatbot tư vấn dùng bản sao ở back-end/src/data/faq.json — sửa ở đây thì sửa cả bên đó.
 const FAQS = [
   {
     q: "Một phiên coaching kéo dài bao lâu?",

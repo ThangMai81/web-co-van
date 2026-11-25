@@ -23,13 +23,6 @@
 
 /* ---------- Shared pieces ---------- */
 
-.hand {
-  position: absolute;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  will-change: transform;
-}
-
 .cursor {
   position: absolute;
   left: 0;
@@ -125,26 +118,6 @@
   clip-path: inset(0 100% 0 0);
 }
 
-.s1Keys {
-  opacity: 0;
-  animation-name: s1-keys;
-}
-
-.key {
-  position: absolute;
-  border-radius: 0.3cqw;
-  background: rgb(254 206 1 / 0.85);
-  opacity: 0;
-  animation-name: key-tap;
-  animation-duration: 0.9s !important;
-  animation-timing-function: steps(1, end) !important;
-}
-
-.key:nth-child(2) { animation-delay: 0.22s; }
-.key:nth-child(3) { animation-delay: 0.45s; }
-.key:nth-child(4) { animation-delay: 0.67s; }
-
-.s1Hand { animation-name: s1-hand; }
 .s1Cursor { animation-name: s1-cursor; }
 .s1Field1Zoom { animation-name: s1-field-1-zoom; }
 .s1Field2Zoom { animation-name: s1-field-2-zoom; }
@@ -157,24 +130,6 @@
 .s1Line3 { animation-name: s1-line-3; }
 .s1Ripple { animation-name: s1-ripple; }
 .s1Badge { animation-name: s1-badge; }
-
-/* Tay cầm chuột và con trỏ dùng chung mốc thời gian: tay dịch nhẹ, con trỏ đi xa tương ứng. */
-@keyframes s1-hand {
-  0%, 4% { transform: translate(0, 0); }
-  11% { transform: translate(0.55cqw, -1.38cqh); }
-  12% { transform: translate(0.55cqw, -1.1cqh) scale(0.985); }
-  13%, 28% { transform: translate(0.55cqw, -1.38cqh); }
-  35% { transform: translate(0.48cqw, -0.92cqh); }
-  36% { transform: translate(0.48cqw, -0.64cqh) scale(0.985); }
-  37%, 49% { transform: translate(0.48cqw, -0.92cqh); }
-  55% { transform: translate(0.35cqw, -0.09cqh); }
-  56% { transform: translate(0.35cqw, 0.19cqh) scale(0.985); }
-  57%, 74% { transform: translate(0.35cqw, -0.09cqh); }
-  82% { transform: translate(0.97cqw, 0.64cqh); }
-  84% { transform: translate(0.97cqw, 0.92cqh) scale(0.985); }
-  86%, 92% { transform: translate(0.97cqw, 0.64cqh); }
-  98%, 100% { transform: translate(0, 0); }
-}
 
 @keyframes s1-cursor {
   0%, 4% { transform: translate(69.1cqw, 51.6cqh); }
@@ -217,22 +172,6 @@
   84% { transform: scale(1.02); filter: brightness(0.95); }
   86%, 90% { transform: scale(1.1); filter: brightness(1.08) saturate(1.15); }
   94%, 100% { transform: scale(1); filter: none; }
-}
-
-@keyframes s1-keys {
-  0%, 12% { opacity: 0; }
-  13%, 27% { opacity: 1; }
-  28%, 36% { opacity: 0; }
-  37%, 48% { opacity: 1; }
-  49%, 56% { opacity: 0; }
-  57%, 74% { opacity: 1; }
-  75%, 100% { opacity: 0; }
-}
-
-@keyframes key-tap {
-  0% { opacity: 0.9; }
-  45% { opacity: 0; }
-  100% { opacity: 0; }
 }
 
 @keyframes s1-field-1 {
@@ -331,7 +270,6 @@
   line-height: 1;
 }
 
-.s2Hand { animation-name: s2-hand; }
 .s2Cursor { animation-name: s2-cursor; }
 .s2Day { animation-name: s2-day; }
 .s2Slot { animation-name: s2-slot; }
@@ -340,20 +278,6 @@
 .s2RippleSlot { animation-name: s2-ripple-slot; }
 .s2RippleConfirm { animation-name: s2-ripple-confirm; }
 .s2Badge { animation-name: s2-badge; }
-
-@keyframes s2-hand {
-  0%, 6% { transform: translate(0, 0); }
-  20% { transform: translate(-1.52cqw, -0.09cqh); }
-  22% { transform: translate(-1.52cqw, 0.19cqh) scale(0.985); }
-  24% { transform: translate(-1.52cqw, -0.09cqh); }
-  38% { transform: translate(0.66cqw, -0.64cqh); }
-  40% { transform: translate(0.66cqw, -0.36cqh) scale(0.985); }
-  42% { transform: translate(0.66cqw, -0.64cqh); }
-  56% { transform: translate(1cqw, 0.31cqh); }
-  58% { transform: translate(1cqw, 0.59cqh) scale(0.985); }
-  60%, 90% { transform: translate(1cqw, 0.31cqh); }
-  98%, 100% { transform: translate(0, 0); }
-}
 
 @keyframes s2-cursor {
   0%, 6% { transform: translate(60.8cqw, 55.3cqh); }
@@ -580,7 +504,6 @@
   .cursor,
   .ripple,
   .badge,
-  .s1Keys,
   .lobby,
   .live,
   .voice,

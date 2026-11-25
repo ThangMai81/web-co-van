@@ -5,14 +5,9 @@ const IMAGE_W = 1448;
 const IMAGE_H = 1086;
 
 export const PROCESS_SCENE_IMAGES = [
-  "/images/coaching/quy-trinh-buoc-01-nen-4x3.webp",
-  "/images/coaching/quy-trinh-buoc-02-nen-4x3.webp",
+  "/images/coaching/quy-trinh-buoc-01-minh-hoa-4x3.webp",
+  "/images/coaching/quy-trinh-buoc-02-minh-hoa-4x3.webp",
   "/images/coaching/quy-trinh-buoc-03-minh-hoa-4x3.webp",
-] as const;
-
-const HAND_LAYERS = [
-  { src: "/images/coaching/quy-trinh-buoc-01-tay-chuot.webp", box: [905, 828, 187, 134] },
-  { src: "/images/coaching/quy-trinh-buoc-02-tay-chuot.webp", box: [880, 846, 208, 132] },
 ] as const;
 
 function box(x: number, y: number, w: number, h: number): CSSProperties {
@@ -55,17 +50,6 @@ function Zoom({
     <span className={`${styles.zoom} ${className}`} style={zoomBox(src, ...rect)}>
       {children}
     </span>
-  );
-}
-
-function Hand({ step, className }: { step: 0 | 1; className: string }) {
-  const layer = HAND_LAYERS[step];
-  const [x, y, w, h] = layer.box;
-  return (
-    <span
-      className={`${styles.hand} ${className}`}
-      style={{ ...box(x, y, w, h), backgroundImage: `url(${layer.src})` }}
-    />
   );
 }
 
@@ -123,17 +107,10 @@ function RequestScene() {
       </Zoom>
       <Zoom src={src} rect={[1020, 618, 130, 57]} className={styles.s1SendZoom} />
 
-      <span className={styles.s1Keys}>
-        <span className={styles.key} style={box(628, 832, 30, 14)} />
-        <span className={styles.key} style={box(700, 852, 30, 14)} />
-        <span className={styles.key} style={box(772, 828, 30, 14)} />
-        <span className={styles.key} style={box(842, 848, 30, 14)} />
-      </span>
       <span className={`${styles.ripple} ${styles.s1Ripple}`} style={point(1085, 647)} />
       <span className={`${styles.badge} ${styles.s1Badge}`} style={point(1085, 647)}>
         <Check />
       </span>
-      <Hand step={0} className={styles.s1Hand} />
       <Cursor className={styles.s1Cursor} />
     </>
   );
@@ -157,7 +134,6 @@ function ScheduleScene() {
       <span className={`${styles.badge} ${styles.s2Badge}`} style={point(1180, 626)}>
         <Check />
       </span>
-      <Hand step={1} className={styles.s2Hand} />
       <Cursor className={styles.s2Cursor} />
     </>
   );
