@@ -53,22 +53,6 @@ function Zoom({
   );
 }
 
-function Cursor({ className }: { className: string }) {
-  return (
-    <span className={`${styles.cursor} ${className}`}>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          d="M4 2.5 19.5 13l-6.6 1.1 3.9 6.9-2.9 1.6-3.9-6.9L5 20.5Z"
-          fill="#fff"
-          stroke="#182544"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-  );
-}
-
 function Clock() {
   return (
     <svg viewBox="0 0 16 16" aria-hidden="true" className={styles.clock}>
@@ -111,7 +95,6 @@ function RequestScene() {
       <span className={`${styles.badge} ${styles.s1Badge}`} style={point(1085, 647)}>
         <Check />
       </span>
-      <Cursor className={styles.s1Cursor} />
     </>
   );
 }
@@ -134,7 +117,6 @@ function ScheduleScene() {
       <span className={`${styles.badge} ${styles.s2Badge}`} style={point(1180, 626)}>
         <Check />
       </span>
-      <Cursor className={styles.s2Cursor} />
     </>
   );
 }
