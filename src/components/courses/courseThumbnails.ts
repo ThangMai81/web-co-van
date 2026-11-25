@@ -11,28 +11,28 @@ const COURSE_PHOTOS: Array<{
 }> = [
   {
     match: /khai-tam-dinh-vi/,
-    src: "/images/courses/khai-tam-dinh-vi-co-yen-chi-banh-xe-4x3.jpg",
-    alt: "Coach Yến Lê mặc áo dài đỏ chỉ vào sơ đồ Bánh xe cuộc đời trên bảng trắng",
+    src: "/images/courses/khai-tam-dinh-vi-minh-hoa-4x3.webp",
+    alt: "Tranh minh họa: nhân vật ngồi thiền trước Bánh xe cuộc đời và la bàn, tự hỏi mình đang ở đâu",
   },
   {
     match: /khai-van/,
-    src: "/images/courses/khai-van-yen-le-direction.webp",
-    alt: "Coach Yến Lê chỉ về phía trước trong hoạt động ngoài trời",
+    src: "/images/courses/khoa-hoc-khai-van-minh-hoa-4x3.webp",
+    alt: "Tranh minh họa: người đồng hành trò chuyện cùng học viên, mặt trời nhỏ sáng lên trong lòng học viên",
   },
   {
     match: /khai-phong-ban-than/,
-    src: "/images/courses/khai-phong-ban-than-yen-le-outdoor.webp",
-    alt: "Coach Yến Lê tham gia hoạt động ngoài trời cùng học viên",
+    src: "/images/courses/khoa-hoc-khai-phong-ban-than-minh-hoa-4x3.webp",
+    alt: "Tranh minh họa: nhân vật dang tay đón bình minh trên đỉnh đồi, biển chỉ đường Tự do và Tự tin",
   },
   {
     match: /coach-thuc-chien/,
-    src: "/images/courses/coach-thuc-chien-lop-hoc-4x3.webp",
-    alt: "Coach Yến Lê hướng dẫn học viên thực hành coaching trong lớp",
+    src: "/images/courses/khoa-coach-thuc-chien-minh-hoa-4x3.webp",
+    alt: "Tranh minh họa: huấn luyện viên đứng cạnh bảng giấy, học viên thực hành coaching theo cặp",
   },
   {
     match: /after-kien-thuc/,
-    src: "/images/courses/after-kien-thuc-co-yen-giang-bai-4x3.webp",
-    alt: "Coach Yến Lê mặc áo dài đỏ chia sẻ bên bảng trong lớp học",
+    src: "/images/courses/khoa-after-kien-thuc-minh-hoa-4x3.webp",
+    alt: "Tranh minh họa: hai người tựa vai chữa lành, cây trái tim và bậc thang Thấu hiểu, Chữa lành, Nâng tầm",
   },
 ];
 

@@ -291,6 +291,69 @@
   .support {
     margin-top: 48px;
   }
+
+  /* Bố cục desktop: chữ + câu trích dẫn bên trái, chân dung lớn bên phải */
+  .hero {
+    padding-bottom: 72px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 27vw, 380px);
+    grid-template-areas:
+      "copy portrait"
+      "quote portrait";
+    column-gap: clamp(48px, 6vw, 104px);
+    row-gap: 40px;
+    align-items: center;
+    padding-top: clamp(28px, 4.5vh, 48px);
+  }
+
+  .copy {
+    grid-area: copy;
+    align-self: end;
+    max-width: none;
+    margin: 0;
+    text-align: left;
+  }
+
+  .kicker {
+    justify-content: flex-start;
+    margin-bottom: 44px;
+    text-align: left;
+  }
+
+  .heading {
+    margin: 0;
+    font-size: clamp(3rem, 6.1vw, 6.6rem);
+    text-align: left;
+  }
+
+  .tagline {
+    max-width: 42ch;
+    margin: 30px 0 0;
+    text-align: left;
+  }
+
+  .cta {
+    min-width: 0;
+    margin: 30px 0 0;
+  }
+
+  .support {
+    display: contents;
+  }
+
+  .quote {
+    grid-area: quote;
+    align-self: start;
+    max-width: 640px;
+  }
+
+  .supportPortrait {
+    grid-area: portrait;
+    width: 100%;
+  }
 }
 
 .portraitTarget {

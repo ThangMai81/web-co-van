@@ -150,22 +150,24 @@ function supportsMotionSetup(filterId: string, revealId: string) {
   );
 }
 
-/**
- * Dải lụa uốn lượn quanh tiêu đề: vòng lên trên "Khai tâm", luồn xuống giữa hai dòng,
- * cuộn một vòng nhỏ, vút lên trên "mở lối" rồi vòng xuống ôm dòng dưới và bay ra phải.
- */
-const SILK_PATH =
-  "M -30 215 " +
-  "C 20 120, 80 22, 190 18 " +
-  "C 300 14, 320 118, 372 156 " +
-  "C 420 190, 486 196, 512 160 " +
-  "C 536 126, 506 92, 474 104 " +
-  "C 440 117, 452 170, 506 178 " +
-  "C 610 194, 640 36, 770 24 " +
-  "C 878 14, 930 104, 900 182 " +
-  "C 872 254, 770 300, 640 296 " +
-  "C 520 292, 430 250, 320 270 " +
-  "C 230 286, 170 312, 120 300";
+const MISSION_RIBBON_PATH =
+  "M 10 145 C 82 80, 158 42, 230 48 " +
+  "C 314 56, 408 115, 500 170 " +
+  "C 582 218, 660 274, 750 282 " +
+  "C 842 290, 926 242, 992 224";
+const MISSION_RIBBON_BAND_PATH =
+  "M 10 145 C 82 74, 158 24, 230 30 " +
+  "C 316 40, 408 108, 500 163 " +
+  "C 582 211, 660 251, 750 258 " +
+  "C 842 266, 930 230, 992 224 " +
+  "C 938 285, 850 322, 750 304 " +
+  "C 660 297, 582 225, 500 177 " +
+  "C 408 122, 316 75, 230 67 " +
+  "C 158 59, 82 108, 10 145 Z";
+const MISSION_RIBBON_UNDERPASS_PATH =
+  "M 474 160 C 492 164, 508 171, 526 175 " +
+  "C 531 177, 528 182, 523 180 C 506 175, 490 168, 472 165 " +
+  "C 467 164, 469 159, 474 160 Z";
 
 function subscribeToMediaQuery(query: MediaQueryList, listener: () => void) {
   if (
@@ -193,8 +195,8 @@ export function MissionHeroMetallicSweep({
   children: ReactNode;
 }) {
   const ribbonId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  const silkGoldId = ribbonId + "-silk-gold";
-  const silkEdgeId = ribbonId + "-silk-edge";
+  const ribbonBandId = ribbonId + "-band";
+  const ribbonCrossingGapId = ribbonId + "-crossing-gap";
   const ribbonRevealId = ribbonId + "-reveal";
   const metallicFilterId = ribbonId + "-metallic-lighting";
   const hasStartedRef = useRef(false);
@@ -263,20 +265,30 @@ export function MissionHeroMetallicSweep({
         focusable="false"
       >
         <defs>
+          <clipPath id={ribbonBandId} clipPathUnits="userSpaceOnUse">
+            <path d={MISSION_RIBBON_BAND_PATH} />
+            <path d={MISSION_RIBBON_UNDERPASS_PATH} />
+          </clipPath>
+          <clipPath
+            id={ribbonCrossingGapId}
+            clipPathUnits="userSpaceOnUse"
+          >
+            <rect x="478" y="165" width="64" height="10" rx="5" />
+          </clipPath>
           <mask
             id={ribbonRevealId}
             maskUnits="userSpaceOnUse"
             maskContentUnits="userSpaceOnUse"
-            x="-80"
+            x="0"
             y="-80"
-            width="1160"
-            height="480"
+            width="1100"
+            height="440"
           >
-            <rect x="-80" y="-80" width="1160" height="480" fill="black" />
+            <rect x="0" y="-80" width="1100" height="440" fill="black" />
             <path
               className={styles.ribbonReveal}
               data-ribbon-draw="true"
-              d={SILK_PATH}
+              d={MISSION_RIBBON_PATH}
               pathLength={1}
             />
           </mask>
@@ -377,41 +389,70 @@ export function MissionHeroMetallicSweep({
               <feMergeNode in="metallicBevelChampagne" />
             </feMerge>
           </filter>
-          <linearGradient id={silkGoldId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="0">
-            <stop offset="0%" stopColor="#fff2c1" />
-            <stop offset="12%" stopColor="#f7d97f" />
-            <stop offset="24%" stopColor="#e1a73a" />
-            <stop offset="36%" stopColor="#fff0b1" />
-            <stop offset="50%" stopColor="#f2c860" />
-            <stop offset="62%" stopColor="#fff6d6" />
-            <stop offset="74%" stopColor="#e6ac3f" />
-            <stop offset="87%" stopColor="#ffe9a0" />
-            <stop offset="100%" stopColor="#f5cf6a" />
+          <linearGradient id="mission-ribbon-underside" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#654111" />
+            <stop offset="38%" stopColor="#2e1c09" />
+            <stop offset="74%" stopColor="#1f1407" />
+            <stop offset="100%" stopColor="#5a3911" />
           </linearGradient>
-          <linearGradient id={silkEdgeId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="0">
-            <stop offset="0%" stopColor="#b77a1f" />
-            <stop offset="50%" stopColor="#9c6416" />
-            <stop offset="100%" stopColor="#b77a1f" />
+          <linearGradient id="mission-ribbon-extrusion" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#58370e" stopOpacity={0} />
+            <stop offset="7%" stopColor="#58370e" stopOpacity={0.78} />
+            <stop offset="38%" stopColor="#2a1b0b" stopOpacity={0.95} />
+            <stop offset="74%" stopColor="#1c1207" stopOpacity={0.98} />
+            <stop offset="93%" stopColor="#4b2e0b" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="#5a3911" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="mission-ribbon-gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#f0cc70" stopOpacity={0} />
+            <stop offset="4%" stopColor="#e0af49" stopOpacity={0.22} />
+            <stop offset="10%" stopColor="#e0af49" />
+            <stop offset="18%" stopColor="#a96a16" />
+            <stop offset="36%" stopColor="#f4d270" />
+            <stop offset="52%" stopColor="#fff4c5" />
+            <stop offset="68%" stopColor="#9c5f12" />
+            <stop offset="84%" stopColor="#f4ce65" />
+            <stop offset="90%" stopColor="#efc85f" />
+            <stop offset="96%" stopColor="#ba7b21" stopOpacity={0.22} />
+            <stop offset="100%" stopColor="#805011" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="mission-ribbon-highlight" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#fff0b1" stopOpacity={0} />
+            <stop offset="6%" stopColor="#fff0b1" stopOpacity={0.12} />
+            <stop offset="12%" stopColor="#fff0b1" stopOpacity={0.38} />
+            <stop offset="42%" stopColor="#fff8da" stopOpacity="0.9" />
+            <stop offset="68%" stopColor="#ffe29a" stopOpacity="0.6" />
+            <stop offset="88%" stopColor="#fff4c4" stopOpacity={0.38} />
+            <stop offset="96%" stopColor="#fff4c4" stopOpacity={0.12} />
+            <stop offset="100%" stopColor="#fff4c4" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <g mask={"url(#" + ribbonRevealId + ")"} className={styles.silkFlow}>
-          {/* Bóng mờ dưới dải lụa */}
-          <path className={styles.silkShadow} d={SILK_PATH} transform="translate(0 7)" />
-          {/* Mép lụa đậm hơn để dải có độ dày */}
-          <path className={styles.silkEdge} d={SILK_PATH} stroke={`url(#${silkEdgeId})`} />
-          {/* Mặt lụa sáng như chữ */}
-          <path className={styles.silkFace} d={SILK_PATH} stroke={`url(#${silkGoldId})`} />
-          {/* Nếp xoắn: các đoạn mặt trái của lụa xen kẽ */}
-          <path className={styles.silkTwist} d={SILK_PATH} pathLength={1} />
-          {/* Gân sáng chạy dọc giữa dải */}
-          <path className={styles.silkCrease} d={SILK_PATH} transform="translate(0 -3)" />
+        <g mask={"url(#" + ribbonRevealId + ")"}>
+          {/* A short inter-line strand passes beneath the open S-band. */}
           <path
-            className={styles.ribbonGlint}
-            data-ribbon-glint="true"
-            d={SILK_PATH}
-            pathLength={1}
+            className={styles.ribbonExtrusion}
+            d={MISSION_RIBBON_BAND_PATH}
+            transform="translate(0 4)"
           />
-          <path className={styles.silkSheen} d={SILK_PATH} pathLength={1} />
+          <path
+            className={styles.ribbonUnderside}
+            d={MISSION_RIBBON_UNDERPASS_PATH}
+          />
+          <path className={styles.ribbonPath} d={MISSION_RIBBON_BAND_PATH} />
+          <path
+            className={styles.ribbonPath}
+            d={MISSION_RIBBON_UNDERPASS_PATH}
+            clipPath={`url(#${ribbonCrossingGapId})`}
+          />
+          <g clipPath={"url(#" + ribbonBandId + ")"}>
+            <path className={styles.ribbonHighlight} d={MISSION_RIBBON_PATH} />
+            <path
+              className={styles.ribbonGlint}
+              data-ribbon-glint="true"
+              d={MISSION_RIBBON_PATH}
+              pathLength={1}
+            />
+          </g>
         </g>
       </svg>
 
