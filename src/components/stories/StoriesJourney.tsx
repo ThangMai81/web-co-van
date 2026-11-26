@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import Image from "next/image";
 import { CloudRain, HeartHandshake, Sunrise, type LucideIcon } from "lucide-react";
 import styles from "./Stories.module.css";
 
@@ -9,24 +10,32 @@ const STAGES: {
   label: string;
   title: string;
   body: string;
+  art: string;
+  artAlt: string;
 }[] = [
   {
     icon: CloudRain,
     label: "Trước khi đến",
     title: "Những điều chưa nói thành lời",
     body: "Cảm xúc dồn nén, khoảng cách giữa cha mẹ và con, hoặc cảm giác lạc hướng mà không biết bắt đầu từ đâu.",
+    art: "/images/stories/cau-chuyen-truoc-khi-den.svg",
+    artAlt: "Tranh động: một người ngồi co gối dưới đám mây mưa nhỏ, lòng còn nhiều điều rối",
   },
   {
     icon: HeartHandshake,
     label: "Trong hành trình",
     title: "Được lắng nghe và cùng bước",
     body: "Qua trải nghiệm, thử thách và những cuộc trò chuyện thật, mỗi người được đồng hành để nhìn lại chính mình.",
+    art: "/images/stories/cau-chuyen-trong-hanh-trinh.svg",
+    artAlt: "Tranh động: người đồng hành ngồi lắng nghe, trái tim nhỏ đập giữa hai người",
   },
   {
     icon: Sunrise,
     label: "Sau hành trình",
     title: "Vững vàng hơn từ bên trong",
     body: "Kết nối gia đình được hàn gắn, ý chí được bồi đắp và mỗi người mang về một hướng đi rõ ràng hơn.",
+    art: "/images/stories/cau-chuyen-sau-hanh-trinh.svg",
+    artAlt: "Tranh động: người ấy đứng dang tay đón bình minh, mặt trời sáng lên trong lòng",
   },
 ];
 
@@ -137,6 +146,16 @@ export function StoriesJourney() {
                       i === 1 ? "bg-blue text-white" : "bg-[#eef2fa] text-blue"
                     }`}
                   >
+                    <div className={styles.stageArt}>
+                      <Image
+                        src={stage.art}
+                        alt={stage.artAlt}
+                        width={1600}
+                        height={1000}
+                        unoptimized
+                        sizes="(min-width: 768px) 30vw, 85vw"
+                      />
+                    </div>
                     <div
                       className={`font-mono text-xs font-bold uppercase tracking-widest ${
                         i === 1 ? "text-yellow" : "text-blue/55"
