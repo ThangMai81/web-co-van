@@ -25,7 +25,7 @@ export const PROGRAM_VIDEOS: Record<string, ProgramLocalVideo> = {
   },
   "off-chua-lanh-thang-6": {
     src: "/videos/chuong-trinh-off-chua-lanh.mp4?v=3",
-    poster: "/images/programs/video-off-chua-lanh-poster.jpg?v=3",
+    poster: "/images/programs/video-off-chua-lanh-poster.jpg?v=4",
     title: "Video giới thiệu buổi Off Chữa Lành",
   },
 };
