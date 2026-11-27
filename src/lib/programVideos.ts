@@ -3,13 +3,14 @@ export type ProgramLocalVideo = { src: string; poster: string; title: string };
 
 export const PROGRAM_VIDEOS: Record<string, ProgramLocalVideo> = {
   "chinh-phuc-fansipan-noc-nha-dong-duong": {
-    src: "/videos/chuong-trinh-fansipan.mp4",
-    poster: "/images/programs/video-fansipan-poster.jpg",
+    // ?v=: đổi số khi thay file để trình duyệt không dùng bản cũ đã lưu (cache 7 ngày)
+    src: "/videos/chuong-trinh-fansipan.mp4?v=3",
+    poster: "/images/programs/video-fansipan-poster.jpg?v=2",
     title: "Video giới thiệu hành trình Chinh Phục Fansipan",
   },
   "kinabalu-gap-go-chinh-minh": {
-    src: "/videos/chuong-trinh-kinabalu.mp4",
-    poster: "/images/programs/video-kinabalu-poster.jpg",
+    src: "/videos/chuong-trinh-kinabalu.mp4?v=3",
+    poster: "/images/programs/video-kinabalu-poster.jpg?v=2",
     title: "Video giới thiệu hành trình Kinabalu - Gặp Gỡ Chính Mình",
   },
   "trai-he-khai-tam-2027": {
