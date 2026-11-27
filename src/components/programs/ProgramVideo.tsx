@@ -1,7 +1,14 @@
 import { toYoutubeEmbedUrl } from "@/lib/programLabels";
+import type { ProgramLocalVideo } from "@/lib/programVideos";
 
-export default function ProgramVideo({ url }: { url: string }) {
-  const embedUrl = toYoutubeEmbedUrl(url);
+export default function ProgramVideo({
+  url,
+  local,
+}: {
+  url?: string;
+  local?: ProgramLocalVideo;
+}) {
+  const embedUrl = url ? toYoutubeEmbedUrl(url) : null;
 
   return (
     <div className="mt-8 overflow-hidden rounded-xl border border-blue/15 shadow-md shadow-blue/5">
@@ -15,7 +22,7 @@ export default function ProgramVideo({ url }: { url: string }) {
             className="h-full w-full"
           />
         </div>
-      ) : (
+      ) : url ? (
         <a
           href={url}
           target="_blank"
@@ -24,7 +31,18 @@ export default function ProgramVideo({ url }: { url: string }) {
         >
           Xem video chương trình →
         </a>
-      )}
+      ) : local ? (
+        <video
+          src={local.src}
+          poster={local.poster}
+          title={local.title}
+          aria-label={local.title}
+          controls
+          playsInline
+          preload="metadata"
+          className="aspect-video w-full bg-black object-cover"
+        />
+      ) : null}
     </div>
   );
 }

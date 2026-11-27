@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import ProgramHero from "./ProgramHero";
 import ProgramVideo from "./ProgramVideo";
+import { PROGRAM_VIDEOS, realVideoUrl } from "@/lib/programVideos";
 import ProgramHighlights from "./ProgramHighlights";
 import ProgramGallery from "./ProgramGallery";
 import ProgramRegistration from "./ProgramRegistration";
@@ -75,7 +76,9 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
   if (!program) notFound();
   const coverImage = getProgramCoverImage(program);
   const displayProgram = { ...program, coverImage };
-  const videoUrl = program.videoUrl?.trim() || undefined;
+  const videoUrl = realVideoUrl(program.videoUrl);
+  const localVideo = videoUrl ? undefined : PROGRAM_VIDEOS[slug];
+  const hasVideo = Boolean(videoUrl || localVideo);
   const description = program.description.trim();
   const stats = program.stats.filter(
     (stat) => stat.label.trim() && stat.value.trim(),
@@ -95,10 +98,10 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
       ? contactPhone.trim()
       : undefined;
   const hasInformationSections = Boolean(
-    videoUrl || hasRegistration || description,
+    hasVideo || hasRegistration || description,
   );
   const sectionItems = [
-    ...(videoUrl ? [{ id: "program-video", label: "Video" }] : []),
+    ...(hasVideo ? [{ id: "program-video", label: "Video" }] : []),
     ...(hasRegistration
       ? [{ id: "program-registration", label: "Đăng ký" }]
       : []),
@@ -135,9 +138,9 @@ export default async function ProgramDetailPage({ slug }: { slug: string }) {
               />
 
               <div className="mx-auto max-w-4xl">
-                {videoUrl && (
+                {hasVideo && (
                   <div id="program-video" className="scroll-mt-28 md:scroll-mt-32">
-                    <ProgramVideo url={videoUrl} />
+                    <ProgramVideo url={videoUrl} local={localVideo} />
                   </div>
                 )}
 
