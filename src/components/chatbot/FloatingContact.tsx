@@ -1,70 +1,55 @@
+import { FACEBOOK_URL, YOUTUBE_URL } from "@/lib/social";
+
 export function FloatingContact({ motionActive }: { motionActive: boolean }) {
   return (
     <div className="absolute left-6 top-[88px] z-40 flex flex-col items-center gap-4 md:top-[132px] lg:fixed lg:bottom-6 lg:left-auto lg:right-6 lg:top-auto">
       <a
-        href="https://zalo.me/0935626186"
+        href={FACEBOOK_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Nhắn tin qua Zalo"
+        aria-label="Facebook Sunshine Center"
         className="group relative flex h-14 w-14 items-center justify-center"
       >
-        <span className="absolute inset-0 rounded-full bg-blue-600/60 [animation:ping_2.5s_ease-out_infinite]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
-        <span className="absolute inset-0 rounded-full bg-blue-600/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-110">
-          <ZaloIcon className="h-full w-full p-1.5 text-white" />
+        <span className="absolute inset-0 rounded-full bg-[#1877F2]/60 [animation:ping_2.5s_ease-out_infinite]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
+        <span className="absolute inset-0 rounded-full bg-[#1877F2]/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#1877F2] shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-110">
+          <FacebookIcon className="h-7 w-7 text-white" />
         </span>
       </a>
 
       <a
-        href="https://m.me/sunshinecenter"
+        href={YOUTUBE_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Nhắn tin qua Messenger"
+        aria-label="Kênh YouTube Sunshine Center"
         className="group relative flex h-14 w-14 items-center justify-center"
       >
-        <span className="absolute inset-0 rounded-full bg-blue-400/60 [animation:ping_2.5s_ease-out_infinite]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
-        <span className="absolute inset-0 rounded-full bg-blue-400/40 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#00B2FF] via-[#2E5EFF] to-[#B026FF] shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-110">
-          <MessengerIcon className="h-7 w-7 text-white" />
+        <span className="absolute inset-0 rounded-full bg-[#FF0000]/50 [animation:ping_2.5s_ease-out_infinite]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
+        <span className="absolute inset-0 rounded-full bg-[#FF0000]/30 [animation:ping_2.5s_ease-out_infinite] [animation-delay:1.25s]" style={{ animationPlayState: motionActive ? "running" : "paused" }} />
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#FF0000] shadow-[-6px_10px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-110">
+          <YoutubeIcon className="h-7 w-7 text-white" />
         </span>
       </a>
     </div>
   );
 }
 
-function ZaloIcon({ className }: { className?: string }) {
+function FacebookIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className}>
-      <path
-        d="M12 1.5C5.7 1.5 1 5.85 1 11.2c0 3.1 1.6 5.9 4.15 7.7-.13 1.05-.5 2.4-1.13 3.6a.4.4 0 0 0 .5.55c1.65-.55 3.1-1.25 4.05-1.8A13 13 0 0 0 12 21.9c6.3 0 11-4.85 11-10.7S18.3 1.5 12 1.5Z"
-        fill="currentColor"
-      />
-      <text
-        x="12"
-        y="14.5"
-        textAnchor="middle"
-        fontSize="7.5"
-        fontWeight="600"
-        fill="#1D4ED8"
-        fontFamily="Arial, sans-serif"
-      >
-        Zalo
-      </text>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
+      <path d="M13.5 21.5v-7.7h2.6l.4-3h-3V8.9c0-.87.25-1.46 1.5-1.46h1.6V4.76c-.28-.04-1.22-.12-2.32-.12-2.3 0-3.88 1.4-3.88 3.98v2.2H7.8v3h2.6v7.7h3.1Z" />
     </svg>
   );
 }
 
-function MessengerIcon({ className }: { className?: string }) {
+function YoutubeIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
-        d="M12 2C6.48 2 2 6.15 2 11.25c0 2.9 1.44 5.49 3.7 7.19V22l3.38-1.86c.9.25 1.87.39 2.92.39 5.52 0 10-4.15 10-9.28S17.52 2 12 2Z"
+        d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.3 5 12 5 12 5s-6.3 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.7 19 12 19 12 19s6.3 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8Z"
         fill="currentColor"
       />
-      <path
-        d="M6.5 13.87l3.4-3.6 3.28 2.53 3.32-3.6-3.4 3.6-3.28-2.53-3.32 3.6Z"
-        fill="#4267FF"
-      />
+      <path d="M10 15.2 15.2 12 10 8.8v6.4Z" fill="#FF0000" />
     </svg>
   );
 }

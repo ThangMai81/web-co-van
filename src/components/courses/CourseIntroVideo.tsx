@@ -44,8 +44,8 @@ export default function CourseIntroVideo({
             <>
               <video
                 ref={videoRef}
-                src="/videos/home-yen-intro.mp4"
-                poster="/images/home-yen-poster.jpg"
+                src="/videos/gioi-thieu-khoa-hoc.mp4"
+                poster="/images/courses/video-gioi-thieu-khoa-hoc-poster.jpg"
                 preload="metadata"
                 playsInline
                 controls={playing}
@@ -58,7 +58,7 @@ export default function CourseIntroVideo({
                 <button
                   type="button"
                   onClick={() => void videoRef.current?.play()}
-                  aria-label={`Phát video giới thiệu giảng viên ${instructorName ?? ""}`}
+                  aria-label="Phát video giới thiệu khóa học tại Sunshine Center"
                   className="absolute inset-0 grid place-items-center bg-gradient-to-t from-blue/80 via-blue/20 to-transparent focus-visible:outline-none"
                 >
                   <span className="relative grid h-20 w-20 place-items-center rounded-full bg-yellow text-blue shadow-2xl transition-transform duration-500 group-hover:scale-110">
@@ -74,15 +74,15 @@ export default function CourseIntroVideo({
         </div>
         <div className="flex flex-col justify-center gap-4 p-7 md:p-10">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-yellow">
-            {embed ? "Video khóa học" : "Gặp giảng viên"}
+            {embed ? "Video khóa học" : "Video giới thiệu"}
           </p>
           <h2 id="course-video-heading" className="font-display text-2xl font-bold leading-snug md:text-3xl">
-            {embed ? `Giới thiệu ${courseTitle}` : `Lời chào từ Coach ${instructorName ?? "Yến Lê"}`}
+            {embed ? `Giới thiệu ${courseTitle}` : "Một khóa học tại Sunshine Center"}
           </h2>
           <p className="leading-relaxed text-white/75">
             {embed
               ? "Xem nhanh khóa học diễn ra thế nào trước khi đăng ký."
-              : "Nghe người trực tiếp dẫn dắt khóa học chia sẻ về Sunshine Center và cách cô đồng hành cùng học viên."}
+              : `Xem nhanh cách Coach ${instructorName ?? "Yến Lê"} và Sunshine Center đồng hành cùng học viên qua từng buổi học.`}
           </p>
         </div>
       </div>

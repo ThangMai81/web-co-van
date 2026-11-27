@@ -48,8 +48,8 @@ export function VideoDemo() {
               Coaching 1:1 thực sự diễn ra như thế nào?
             </h2>
             <p className="mt-4 text-lg text-white/70">
-              Nghe Coach Yến Lê chia sẻ — và hình dung một buổi đồng hành
-              của riêng bạn.
+              Xem một buổi đồng hành 1:1 diễn ra thế nào — và hình dung buổi
+              trò chuyện của riêng bạn.
             </p>
           </div>
         </Reveal>
@@ -59,8 +59,8 @@ export function VideoDemo() {
             <div className="group relative aspect-video overflow-hidden rounded-3xl border border-white/15 bg-black shadow-2xl shadow-black/40">
               <video
                 ref={videoRef}
-                src="/videos/home-yen-intro.mp4"
-                poster="/images/home-yen-poster.jpg"
+                src="/videos/coaching-1-1-dien-ra-the-nao.mp4"
+                poster="/images/coaching/video-buoi-coaching-poster.jpg"
                 preload="metadata"
                 playsInline
                 className="h-full w-full object-cover"
@@ -72,7 +72,7 @@ export function VideoDemo() {
                 <button
                   type="button"
                   onClick={play}
-                  aria-label="Phát video giới thiệu Coach Yến Lê"
+                  aria-label="Phát video: một buổi coaching 1:1 diễn ra thế nào"
                   className="absolute inset-0 grid place-items-center bg-gradient-to-t from-blue/80 via-blue/20 to-transparent focus-visible:outline-none"
                 >
                   <span className="relative grid h-20 w-20 place-items-center rounded-full bg-yellow text-blue shadow-2xl transition-transform duration-500 group-hover:scale-110 group-focus-visible:ring-4 group-focus-visible:ring-white">
@@ -82,7 +82,7 @@ export function VideoDemo() {
                     </svg>
                   </span>
                   <span className="absolute bottom-5 left-6 font-mono text-xs font-bold uppercase tracking-[0.2em] text-white/85">
-                    Coach Yến Lê · Sunshine Center
+                    Một buổi coaching 1:1 · Sunshine Center
                   </span>
                 </button>
               )}

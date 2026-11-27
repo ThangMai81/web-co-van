@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "@/lib/icons";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { FACEBOOK_URL, YOUTUBE_URL } from "@/lib/social";
 
 const FOOT_LINKS = [
   { href: "/programs", label: "Chương trình" },
@@ -12,10 +13,9 @@ const FOOT_LINKS = [
 ];
 
 const SOCIAL_LINKS = [
-  { href: process.env.NEXT_PUBLIC_YOUTUBE_URL, label: "YouTube" },
-  { href: process.env.NEXT_PUBLIC_ZALO_URL, label: "Zalo" },
-  { href: process.env.NEXT_PUBLIC_FACEBOOK_URL, label: "Facebook" },
-].filter((link): link is { href: string; label: string } => Boolean(link.href));
+  { href: FACEBOOK_URL, label: "Facebook" },
+  { href: YOUTUBE_URL, label: "YouTube" },
+];
 
 const PHONE = process.env.NEXT_PUBLIC_CONTACT_PHONE || "0935 626 186";
 const EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
